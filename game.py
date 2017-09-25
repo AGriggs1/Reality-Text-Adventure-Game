@@ -2,7 +2,7 @@
 # Author: Anthony Griggs
 # Date: 9/12/17
 
-<<<<<<< HEAD
+
 gLocStart = ("You awake to find a white empty space. You seem to be floating in an exetensial 'nothingness'."
             "A chill runs down your spine: what exactly is this place, this unfamiliar void that you find yourself imprisoned within?")
             #
@@ -19,24 +19,23 @@ gLocTrice = ("Old, rusted cars litter the streets; most buildings -- those that 
 gLocFinal = ("Suddenly you are in a room. The floor is encompassed with a soft gray carpet. In the corner you see a bed with a nightstand beside it."
             "The bed is made, and it looks unused. The walls are painted a sleek, bright red, but... wait a second. There are no windows! There's no door!"
             "There's no way in or out! You've been trapped.")
-=======
-gLocStart = "You awake to find a white empty space. You seem to be floating in an exetensial 'nothingness'."
-            "A chill runs down your spine: what exactly is this place, this unfamiliar void that you find yourself imprisoned within?"
             #
-gLocSegun = "Suddenly the empty void is replaced in an instant with the hubris of a city street!"
+gLocStart = ("You awake to find a white empty space. You seem to be floating in an exetensial 'nothingness'."
+            "A chill runs down your spine: what exactly is this place, this unfamiliar void that you find yourself imprisoned within?")
+            #
+gLocSegun = ("Suddenly the empty void is replaced in an instant with the hubris of a city street!"
             "Your mind races to find an answer, to find some logical reasoning as for what is going on here!"
-            "There is nothing. A sense of panic and fear begins creep from within."
+            "There is nothing. A sense of panic and fear begins creep from within.")
             #
-gLocTrice = "Old, rusted cars litter the streets; most buildings -- those that still are standing -- are overgrown with moss, as nature reclaims what it once lost."
+gLocTrice = ("Old, rusted cars litter the streets; most buildings -- those that still are standing -- are overgrown with moss, as nature reclaims what it once lost."
             "You can't get over the insanity of it all! What's going on? Suddenly you come across what appears to be a central plaza."
             "It's then you notice it's littered with human remains. Everywhere you look, the bones of what you assume to be the long deceased."
-            "But... wait! There weren't any remains anywhere else you saw! That little fact makes this all the more perplexing!
-            "You need answers! SOME DAMN SANITY FOR ONCE! You cry out in frustration and fear."
+            "But... wait! There weren't any remains anywhere else you saw! That little fact makes this all the more perplexing!"
+            "You need answers! SOME DAMN SANITY FOR ONCE! You cry out in frustration and fear.")
             #
-gLocFinal = "Suddenly you are in a room. The floor is encompassed with a soft gray carpet. In the corner you see a bed with a nightstand beside it."
+gLocFinal = ("Suddenly you are in a room. The floor is encompassed with a soft gray carpet. In the corner you see a bed with a nightstand beside it."
             "The bed is made, and it looks unused. The walls are painted a sleek, bright red, but... wait a second. There are no windows! There's no door!"
-            "There's no way in or out! You've been trapped."
->>>>>>> 38796b57bf20cd204c4ea54f0f4e79c24012819e
+            "There's no way in or out! You've been trapped.")
 
 
 #TODO:  *UPHEAVAL - I consider this an interactive demo. I feel the game itself will be much different. It'll have a completely different story, I mean
@@ -80,13 +79,9 @@ def main():
     print(pLocation)
     print()
     print("Whoa, that got you stirring, now didn't it? Hah! I sense you are confused.\n"
-<<<<<<< HEAD
           "What is this place? Where might you be? Who am I? Where am I? What am I?\n"
-=======
-          "What is this place? Where might you be? Who am I? Where am I? What am I?\n
->>>>>>> 38796b57bf20cd204c4ea54f0f4e79c24012819e
           "These are great questions, but now's not the time. Soon you will understand.\n"  
-          "Take a look around.Then we'll talk. Understand?\n")
+          "Take a look around. Then we'll talk. Understand?\n")
     input("<Press enter to understand>")
     
     #Third (Trice) Sequence, setting new location
@@ -100,11 +95,7 @@ def main():
           "Ah I do love the pain you feel! So beautiful! So emotional! So... human...\n"
           "...\n"
           "This... this is your world.\n"
-<<<<<<< HEAD
           "Understand?\n")
-=======
-          "Understand?\n"
->>>>>>> 38796b57bf20cd204c4ea54f0f4e79c24012819e
     input("<Press enter to understand>")
           
     #Player is responding NOTE: Add way to distinct player dialogue from location description and program dialogue
