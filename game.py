@@ -180,6 +180,21 @@ def main(sLocation, sName, bFirstRun):
                     bCanWest = True
             else:
                 print("You can't go that way.")
+        elif(sInput == "help"):
+            print("List of commands:\n"
+                  "North: moves player in the 'north' direction.\n"
+                  "South: moves player in the 'south' direction.\n"
+                  "East: moves player in the 'east' direction.\n"
+                  "West: moves player in the 'west' direction.\n"
+                  "Help: displays a list of commands. Hey, a dictionary's gotta have the definition of a dicitionary in it.\n"
+                  "Quit: ends the game. Considered a game over.\n")#AKA run the game over/copyright function on quit
+        elif(sInput == "quit"):
+            sInput = input("This will end the game and count as a game over. Continue?\n" #Changing sInput shouldn't cause issues
+                  "<Enter 'y' for 'yes or 'n' for no'>\n")
+            sInput = sInput[0].lower()
+            if(sInput == "y"):
+                #Enter gameover function here
+                break
                 
         
         
