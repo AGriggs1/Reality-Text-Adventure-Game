@@ -6,8 +6,13 @@
 #Ver 0.3 9/25/17
 
 
-gLocStart = ("You awake to find a white empty space. You seem to be floating in an exetensial 'nothingness'."
+gLocVoid = ("You awake to find a white empty space. You seem to be floating in an exetensial 'nothingness'."
             "A chill runs down your spine: what exactly is this place, this unfamiliar void that you find yourself imprisoned within?")
+            #
+gLocVoidN = ("You follow one of the lines to a circle that, upon investigation, has the letter 'N' on it.")
+gLocVoidS = ("You follow one of the lines to a circle that, upon investigation, has the letter 'S' on it.")
+gLocVoidE = ("You follow one of the lines to a circle that, upon investigation, has the letter 'E' on it.")
+gLocVoidW = ("You follow one of the lines to a circle that, upon investigation, has the letter 'W' on it.")
             #
 gLocSegun = ("Suddenly the empty void is replaced in an instant with the hubris of a city street!"
             "Your mind races to find an answer, to find some logical reasoning as for what is going on here!"
@@ -41,7 +46,7 @@ gLocFinal = ("Suddenly you are in a room. The floor is encompassed with a soft g
             "There's no way in or out! You've been trapped.")
 
 cont = "<Press enter to "
-sName = ""
+#sName = "" #Unecessary
 #TODO:  *UPHEAVAL - I consider this an interactive demo. I feel the game itself will be much different. It'll have a completely different story, I mean
 #       *Distinct different kinds of texts - Descriptions, player dialogue, Program dialogue, etc.
 #       *dprint(...) when the time comes
@@ -81,89 +86,66 @@ def init(): #Initialization function, runs when the code is run
     input(cont + "understand>")
     sName = input("???: First things first: do you know your name?\n"
                   "Your name? ")
-    print("Good. Now let's see about your sense of orientation.")
-    return sName #Send to global variable
+    print("???: Good. Now let's see about your sense of orientation.\n"
+          "\n"
+          "Suddenly a red circle appears beneath your feet. You notice four lines spreading outward from it in four directions, leading to other circles\n"
+          "\n"
+          "???: Okie-dokie, go ahead and walk towards any of these circles. I know you're confused, but stick with me. If you feel you need help, just say the word.\n"
+          "<Type 'North', 'South', 'East', or 'West' to head in that direction. To see all commands availible to you, type 'Help'>\n")
+    #Update pLocation to showcase changes made
+    pLocation = ("You awake to find a white empty space. You seem to be floating in an exetensial 'nothingness'."
+                "A red circle with four lines leading in four directions to four other circles appears under your feet.")
+    #Enter the gamestate
+    main(pLocation, sName, True)
+    return sName #Send to global variable.
+    
+    
+    
 #####
 #main
 #Gamestate function, always active while player is in the game
+#Parameters:
+#   *sLocation, the location to start the game at
+#   *sName, the name the player chose (Although init does pass sName as a global, it can't be done until the end of the function. Therefore main must rely on it locally)
+#   *bFirstRun, indicate whether or not this is the first instance of firing the loop (In other words, decide if it a part of the intro or not)
 #####
-def main():
-    #My, my
-    pLocation = "NULL" #Not an object, but it will be, right?
-    print("Reality")
-    print("A text-adventure game by Anthony Griggs")
-    #Set beginning location, run first sequence
-    iScore = 0 #For some reason iScore doesn't work outside the function... 
-               #No biggie, since I realized we'll want to reset it on every function call
-    pLocation = gLocStart
-    print("Score:", iScore)
-    print()
-    print(pLocation)
-    print()
-    print("Ah, some brain activity!\n"
-          "Well, well, look who's awake! Hey! Can you here me?\n")
-    input("<Press enter to awake>")
-    
-    #Well, well
-    #Second (Segun) sequence, setting new location 
-    iScore = iScore + 5
-    pLocation = gLocSegun
-    print("Score:", iScore)
-    print()
-    print(pLocation)
-    print()
-    print("Whoa, that got you stirring, now didn't it? Hah! I sense you are confused.\n"
-          "What is this place? Where might you be? Who am I? Where am I? What am I?\n"
-          "These are great questions, but now's not the time. Soon you will understand.\n"  
-          "Take a look around. Then we'll talk. Understand?\n")
-    input("<Press enter to understand>")
-    
-    #Third (Trice) Sequence, setting new location
-    iScore = iScore + 5
-    pLocation = gLocTrice
-    print("Score:", iScore)
-    print()
-    print(pLocation)
-    print()
-    print("Well, well, well, what happended here? Hmhmhm...\n"
-          "Ah I do love the pain you feel! So beautiful! So emotional! So... human...\n"
-          "...\n"
-          "This... this is your world.\n"
-          "Understand?\n")
-    input("<Press enter to understand>")
-          
-    #Player is responding NOTE: Add way to distinct player dialogue from location description and program dialogue
-    input("No! Impossible! <Press enter to continue>")  #Use input to give a pause so player can read everything at a steady pace
-    print("Quite possible. You just don't remember. Understand?\n")
-    input("<Press enter to understand>")
-    input("That's not possible! I refuse to believe it! WHO ARE YOU? <Press enter to continue>")
-    print("Who am I? Irrelevant. Who are you? Come on, dum-dum, answer the question. Prove me wrong.\n\n")
-    sName = input("Who are you? ")
-    print(sName + "? No. No no. You don't even know your own name! Alright, enough games. Let's get to business.")
-
-    #Final (Final) sequence, setting new location
-    iScore = iScore + 5
-    pLocation = gLocFinal
-    print("Score:", iScore)
-    print()
-    print(pLocation)
-    print()
-    print("Ah, much better. See? You don't have to worry about what lies beyond these walls. I'll protect you! I'll keep you safe. Understand?")
-    input("<Press enter to understand>")
-    input("No. You want answers! <Press enter to continue>")
-    print("No. You want to be safe!\n" #Finna start using this method more 
-          "I will keep you safe!\n"
-          "You have to stay here, forever! Understand?")
-    print()
-    input("<Press enter to understand>")
-    input("Safe? Is this some kind of game to you? Stop messing with me! <Press enter to continue>")
-    print("Game? What game? This is very real. I am going to break you. And you will comply. Can't you see what I can do? There's no fighting it. You will break. You will die.\n"
-          "...\n"
-          "Understand?")
-    input("<Press enter to break>")
-    print("Game over!")
-    print("Score:", iScore)
-    print("Copyright Anthony Griggs. Send inquiries to Anthony.Griggs1@marist.edu\nThanks for playing!")
+def main(sLocation, sName, bFirstRun):
+    pLocation = sLocation
+    while True:
+        print(pLocation)
+        sInput = input()
+        sInput = sInput.lower()
+        if(bFirstRun == True and pLocation == sLocation): #Set directions player can go on the first run. This is going to have to change 
+            bCanNorth = True
+            bCanSouth = True
+            bCanEast = True
+            bCanWest = True
+        if(sInput == "north" and bCanNorth == True):
+            pLocation = gLocVoidN
+            bCanNorth = False
+            bCanSouth = True
+            bCanEast = False
+            bCanWest = False
+        elif(sInput == "south" and bCanSouth == True):
+            pLocation = gLocVoidS
+            bCanNorth = True
+            bCanSouth = False
+            bCanEast = False
+            bCanWest = False
+        elif(sInput == "east" and bCanEast == True):
+            pLocation = gLocVoidE
+            bCanNorth = False
+            bCanSouth = False
+            bCanEast = False
+            bCanWest = True
+        elif(sInput == "west" and bCanWest == True):
+            pLocation = gLocVoidW
+            bCanNorth = False
+            bCanSouth = False
+            bCanEast = True
+            bCanWest = False
+        
+        
 
 sName = init()
     
