@@ -86,7 +86,8 @@ def init(): #Initialization function, runs when the code is run
     input(cont + "understand>")
     sName = input("???: First things first: do you know your name?\n"
                   "Your name? ")
-    print("???: Good. Now let's see about your sense of orientation.\n"
+    
+    print("???: " + sName + "? All right. Now let's see about your sense of orientation.\n"
           "\n"
           "Suddenly a red circle appears beneath your feet. You notice four lines spreading outward from it in four directions, leading to other circles\n"
           "\n"
@@ -111,39 +112,75 @@ def init(): #Initialization function, runs when the code is run
 #####
 def main(sLocation, sName, bFirstRun):
     pLocation = sLocation
+    if(bFirstRun == True):
+        bCanNorth = True
+        bCanSouth = True
+        bCanEast = True
+        bCanWest = True
+        #This solution isn't permanent
+        # We need to set these based on the location the player is at
+        #   Thus, we need to be able efficiently check the location once in the if statements
+        # But for now, it'll get job done
     while True:
         print(pLocation)
         sInput = input()
         sInput = sInput.lower()
-        if(bFirstRun == True and pLocation == sLocation): #Set directions player can go on the first run. This is going to have to change 
-            bCanNorth = True
-            bCanSouth = True
-            bCanEast = True
-            bCanWest = True
-        if(sInput == "north" and bCanNorth == True):
-            pLocation = gLocVoidN
-            bCanNorth = False
-            bCanSouth = True
-            bCanEast = False
-            bCanWest = False
-        elif(sInput == "south" and bCanSouth == True):
-            pLocation = gLocVoidS
-            bCanNorth = True
-            bCanSouth = False
-            bCanEast = False
-            bCanWest = False
-        elif(sInput == "east" and bCanEast == True):
-            pLocation = gLocVoidE
-            bCanNorth = False
-            bCanSouth = False
-            bCanEast = False
-            bCanWest = True
-        elif(sInput == "west" and bCanWest == True):
-            pLocation = gLocVoidW
-            bCanNorth = False
-            bCanSouth = False
-            bCanEast = True
-            bCanWest = False
+        if(sInput == "north" or sInput == "south" or sInput == "east" or sInput == "west"):
+            if(sInput == "north" and bCanNorth == True): 
+                if(pLocation != gLocVoidS): #Remember, the command was north, so the location should be the opposite
+                    pLocation = gLocVoidN
+                    bCanNorth = False
+                    bCanSouth = True
+                    bCanEast = False
+                    bCanWest = False
+                else:                   
+                    pLocation = sLocation
+                    bCanNorth = True
+                    bCanSouth = True
+                    bCanEast = True
+                    bCanWest = True
+            elif(sInput == "south" and bCanSouth == True):
+                if(pLocation != gLocVoidN):
+                    pLocation = gLocVoidS
+                    bCanNorth = True
+                    bCanSouth = False
+                    bCanEast = False
+                    bCanWest = False
+                else:
+                    pLocation = sLocation
+                    bCanNorth = True
+                    bCanSouth = True
+                    bCanEast = True
+                    bCanWest = True
+            elif(sInput == "east" and bCanEast == True):
+                if(pLocation != gLocVoidW):
+                    pLocation = gLocVoidE
+                    bCanNorth = False
+                    bCanSouth = False
+                    bCanEast = False
+                    bCanWest = True
+                else:
+                    pLocation = sLocation
+                    bCanNorth = True
+                    bCanSouth = True
+                    bCanEast = True
+                    bCanWest = True
+            elif(sInput == "west" and bCanWest == True):
+                if(pLocation != gLocVoidE):
+                    pLocation = gLocVoidW
+                    bCanNorth = False
+                    bCanSouth = False
+                    bCanEast = True
+                    bCanWest = False
+                else:
+                    pLocation = sLocation
+                    bCanNorth = True
+                    bCanSouth = True
+                    bCanEast = True
+                    bCanWest = True
+            else:
+                print("You can't go that way.")
+                
         
         
 
