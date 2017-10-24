@@ -6,7 +6,7 @@
 #Ver 0.3 9/25/17
 
 from time import sleep # :)
-
+import sys #Learned about this from https://stackoverflow.com/questions/949504/terminating-a-python-program
 
 
 
@@ -145,13 +145,16 @@ def Init(): #Initialization function, runs when the code is run
     #bGameover, used to determine if the gameover statement should be printed
 ##================================
 def Copyright(iScore, bGameover):
+    sMessage = "Copyright Anthony Griggs. Email inquiries to Anthony.Griggs1@marist.edu"
 
-    if(bGameover == True):
-        print("Gameover!\n"
-              "Your score:", iScore)
-        print("Thanks for playing!\n")
-    print("Copyright Anthony Griggs. Email inquiries to Anthony.Griggs1@marist.edu")
+    if bGameover:
+        print("Final score:", iScore)
+        print("Gameover!\nThanks for playing!\n " + sMessage)
+        sys.exit()
+        sys
+    print(sMessage)
 
+    
 ##==========================================
 #Interpret
 #Takes user input and decides what to do
