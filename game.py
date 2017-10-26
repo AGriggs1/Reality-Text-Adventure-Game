@@ -5,7 +5,7 @@
 #Project2
 #Ver 0.3 9/25/17
 
-from time import sleep # :)
+from time import sleep # :) Only once
 import sys #Learned about this from https://stackoverflow.com/questions/949504/terminating-a-python-program
 
 
@@ -14,7 +14,8 @@ import sys #Learned about this from https://stackoverflow.com/questions/949504/t
 
 
 
-
+gLocVoid = ("You awake to find a white empty space. You seem to be floating in an exetensial 'nothingness'."
+            "A chill runs down your spine: what exactly is this place, this unfamiliar void that you find yourself imprisoned within?")
 
 gHelp = ("List of commands:\n"
         "North: moves player in the 'north' direction.\n"
@@ -24,27 +25,40 @@ gHelp = ("List of commands:\n"
         "Help: displays a list of commands. Hey, a dictionary's gotta have the definition of a dicitionary in it.\n"
         "Quit: ends the game. Considered a game over.\n")
 
-gLocVoid = ("You awake to find a white empty space. You seem to be floating in an exetensial 'nothingness'."
-            "A chill runs down your spine: what exactly is this place, this unfamiliar void that you find yourself imprisoned within?")
-            #
-gLocVoidN =("You follow one of the lines to a circle that, upon investigation, has the letter 'N' on it."
-            "The area around you transforms into a forest filled teeming monstrous redwood trees. You hear the songs of various birds, and feel welcome.")
-            #
-gLocVoidS = ("You follow one of the lines to a circle that, upon investigation, has the letter 'S' on it. The area around you transforms."
-             "Suddenly you are at the edge of a cliff overlooking the open sea. You hear the waves crashing against the crags below you, "
-             "smell the mist of saltwater, and feel a sense of somberness.")
-            #
-gLocVoidE = ("You follow one of the lines to a circle that, upon investigation, has the letter 'E' on it. The area around you transforms and you are on the streets of a city that seems to be long abandoned. "
-             "Cars rusted, buildings crumbling, overgrown with moss and vines. You can't help but feel curious about the fate of this place.")
-
-gLocVoidW = ("You follow one of the lines to a circle that, upon investigation, has the letter 'W' on it. The area around you transforms into an office."
-             "Desks teeming with paperwork and the faint smell of morning coffees makes you anxious. ")
-            #
-
 gLocFinal = ("The void disappears and suddenly you are in free fall. You look down to see the gaping maw of a great, big volcano, it's molten rock spewing and spitting, "
              
              "eager to consume you entirely. You are burned alive.") #Great way to ends things yeah?
 
+gMapTut = ("   N    \n"
+           "   |    \n"
+           "W--M--S \n"
+           "   |    \n"
+           "   S    \n")
+
+#Print a description for the tutorial map? Seems self explanatory
+gMap = ("   c--C  c         \n"
+        "   |  |  |         \n"
+        "b--c--c--c--d      \n"
+        "|  |  |  |  |      \n"
+        "a  c--c--c  e      \n"
+        "            |      \n"
+        "         g--f--h--i\n"
+        "                  |\n"
+        "               k--j\n")
+
+gMapDesc = ("a = Closet\n"
+            "b = Hallway Corner\n"
+            "Cc = Office\n"
+            "d = Other Hallway Corner\n"
+            "e = Forest\n"
+            "f = River\n"
+            "g = Lake\n"
+            "h = Waterfall\n"
+            "i = Cave\n"
+            "j = Deep Cave\n"
+            "k = ???")
+            
+print(gMap)
 cont = "<Press enter to "
 bDevMode = True
 
@@ -57,7 +71,30 @@ bDevMode = True
 #       *HAVE FUN!!!
 #       *etcetera
 
+tLocations = [  #0 - VoidM
+                "You are in an empty white space. A red circle with four lines leading in four directions to four other circles appears under your feet.", 
+                #1 - VoidN
+                "You follow one of the lines to a circle that, upon investigation, has the letter 'N' on it."
+                "The area around you transforms into a forest filled teeming monstrous redwood trees. You hear the songs of various birds, and feel welcome.", 
+                #2 - VoidS
+                "You follow one of the lines to a circle that, upon investigation, has the letter 'S' on it. The area around you transforms." 
+                "Suddenly you are at the edge of a cliff overlooking the open sea. You hear the waves crashing against the crags below you, "
+                "smell the mist of saltwater, and feel a sense of somberness.",
+                #3 - VoidE
+                "You follow one of the lines to a circle that, upon investigation, has the letter 'E' on it. The area around you transforms and you are on the streets of a city that seems to be long abandoned. "
+                "Cars rusted, buildings crumbling, overgrown with moss and vines. You can't help but feel curious about the fate of this place.",
+                #4 - VoidW
+                "You follow one of the lines to a circle that, upon investigation, has the letter 'W' on it. The area around you transforms into an office."
+                "Desks teeming with paperwork and the faint smell of morning coffees makes you anxious."
+                ]
+#Define table that holds booleans for whether or not the player has visited certain locations
+tVisited = []
+#For each location, append a False boolean to start with
+for i in tLocations: 
+    tVisited.append(False)
 
+
+print(len(tVisited))
 
 ##=============================================================    
 def Init(): #Initialization function, runs when the code is run
@@ -98,8 +135,7 @@ def Init(): #Initialization function, runs when the code is run
     print("<Type 'North', 'South', 'East', or 'West' to head in that direction. To see all commands availible to you, type 'Help'>\n")
     
     #Update pLocation to showcase changes made
-    pLocation = ("You find yourself in some sort of white void, some, 'nothingness'."
-                "A red circle with four lines leading in four directions to four other circles appears under your feet.")
+    pLocation = ("You are in an empty white space. A red circle with four lines leading in four directions to four other circles appears under your feet.")
     #Enter the gamestate for the first time
     #SO I REMEMBER: in tLocScore, first index is location, second is score
     tLocScore = Main(pLocation, sName, iScore, True) #We need to send pLocation back to init(), don't we? I'll have to think about implementing that #SOLVED leaving so you can probe my thought process
@@ -151,7 +187,6 @@ def Copyright(iScore, bGameover):
         print("Final score:", iScore)
         print("Gameover!\nThanks for playing!\n " + sMessage)
         sys.exit()
-        sys
     print(sMessage)
 
     
@@ -208,116 +243,85 @@ def Interpret(sInput, iScore, FunctionFrom):
 #   *iScore, the player's score at this point of the game
 #   *bFirstRun, indicate whether or not this is the first instance of firing the loop (In other words, is the intro still on-going?)
 ##============================================
+iVoidM = 0
+iVoidN = 1
+iVoidS = 2
+iVoidE = 3
+iVoidW = 4
 def Main(sLocation, sName, iScore, bFirstRun):
     pLocation = sLocation
     bGameState = True
 
-    if(bFirstRun == True):
-        bCanNorth = True
-        bCanSouth = True
-        bCanEast = True
-        bCanWest = True
-        #
-        bVisitedVoid = True
-        bVisitedVoidN = False
-        bVisitedVoidS = False
-        bVisitedVoidE = False
-        bVisitedVoidW = False
-        #This solution isn't permanent
-        # We need to set these based on the location the player is at
-        #   Thus, we need to be able efficiently check the location once in the if statements
-        # But for now, it'll get the job done
+
     while bGameState:
         print("Your score:", iScore)
         print(pLocation)
         sInput = input()
         sInput = sInput.lower()
+        #TODO: Reimplement bFirstRun, it'll make the code more efficient
+        if sInput == "north":
+            
+            if pLocation == tLocations[iVoidM]:
+                #move to goto function
+                pLocation = tLocations[iVoidN]
 
-        if(sInput == "north" or sInput == "south" or sInput == "east" or sInput == "west"):
+                if not tVisited[iVoidN]:
+                    tVisited[iVoidN] = True
 
-            if(sInput == "north" and bCanNorth == True): 
-
-                if(pLocation != gLocVoidS): #Remember, the command was north, so the location should be the opposite
-                    pLocation = gLocVoidN
-
-                    if(bVisitedVoidN == False):
-                        iScore = iScore + 5
-                        bVisitedVoidN = True
-                    bCanNorth = False
-                    bCanSouth = True
-                    bCanEast = False
-                    bCanWest = False
-
-                else:
-                    pLocation = sLocation
-                    bCanNorth = True
-                    bCanSouth = True
-                    bCanEast = True
-                    bCanWest = True
-
-            elif(sInput == "south" and bCanSouth == True):
-
-                if(pLocation != gLocVoidN):
-                    pLocation = gLocVoidS
-
-                    if(bVisitedVoidS == False):
-                        iScore = iScore + 5
-                        bVisitedVoidS = True
-                    bCanNorth = True
-                    bCanSouth = False
-                    bCanEast = False
-                    bCanWest = False
-
-                else:
-                    pLocation = sLocation
-                    bCanNorth = True
-                    bCanSouth = True
-                    bCanEast = True
-                    bCanWest = True
-
-            elif(sInput == "east" and bCanEast == True):
-
-                if(pLocation != gLocVoidW):
-                    pLocation = gLocVoidE
-
-                    if(bVisitedVoidE == False):
-                        iScore = iScore + 5
-                        bVisitedVoidE = True
-                    bCanNorth = False
-                    bCanSouth = False
-                    bCanEast = False
-                    bCanWest = True
-
-                else:
-                    pLocation = sLocation
-                    bCanNorth = True
-                    bCanSouth = True
-                    bCanEast = True
-                    bCanWest = True
-
-            elif(sInput == "west" and bCanWest == True):
-
-                if(pLocation != gLocVoidE):
-                    pLocation = gLocVoidW
-
-                    if(bVisitedVoidW == False):
-                        iScore = iScore + 5
-                        bVisitedVoidW = True
-                    bCanNorth = False
-                    bCanSouth = False
-                    bCanEast = True
-                    bCanWest = False
-
-                else:
-                    pLocation = sLocation
-                    bCanNorth = True
-                    bCanSouth = True
-                    bCanEast = True
-                    bCanWest = True
+            elif pLocation == tLocations[iVoidS]:
+                pLocation = tLocations[iVoidM]
 
             else:
-                print("You can't go that way.")
+                #Can't go that way
+                pass
 
+        elif sInput == "south":
+
+            if pLocation == tLocations[iVoidM]:
+                pLocation = tLocations[iVoidS]
+
+                if not tVisited[iVoidS]:
+                    tVisited[iVoidS] = True
+            elif pLocation == tLocations[iVoidN]:
+                 pLocation = tLocations[iVoidM]
+            else:
+                pass
+
+        elif sInput == "east":
+
+            if pLocation == tLocations[iVoidM]:
+                pLocation = tLocations[iVoidE]
+
+                if not tVisited[iVoidE]:
+                    tVisited[iVoidE] = True
+            elif pLocation == tLocations[iVoidW]:
+                pLocation = tLocations[iVoidM]
+            else:
+                pass
+        elif sInput == "west":
+
+            if pLocation == tLocations[iVoidM]:
+                pLocation = tLocations[iVoidW]
+
+                if not tVisited[iVoidW]:
+                    tVisited[iVoidE] = True
+            elif pLocation == tLocations[iVoidE]:
+                    pLocation = tLocations[iVoidM]
+            else:
+                pass
+        #Check index 0-4 for all trues   
+        #if(bVisitedVoid == True and bVisitedVoidN == True and bVisitedVoidS == True and bVisitedVoidE == True and bVisitedVoidW == True): #Makes more sense down here
+        #while tVisited: #So tempting, but nah
+        #Let finish up other areas first before finishing this loop check
+        #for b in range(tVisited[4]):
+        #    if not b:
+        #        break #This only breaks out of for loop, right?
+        
+        #print("Your score:", iScore) #Realised that a copy of this is needed here too 
+        #print(pLocation)
+        #bGameState = False
+            
+            
         elif(sInput == "help"):
             print("List of commands:\n"
                   "North: moves player in the 'north' direction.\n"
@@ -339,10 +343,7 @@ def Main(sLocation, sName, iScore, bFirstRun):
         else:
             print("Command is not valid.")
 
-        if(bVisitedVoid == True and bVisitedVoidN == True and bVisitedVoidS == True and bVisitedVoidE == True and bVisitedVoidW == True): #Makes more sense down here
-            print("Your score:", iScore) #Realised that a copy of this is needed here too 
-            print(pLocation)
-            bGameState = False 
+        
             
     tLocScore = []
     tLocScore.append(pLocation)
