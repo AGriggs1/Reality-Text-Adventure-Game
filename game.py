@@ -2,47 +2,14 @@
 # Author: Anthony Griggs
 # Date: 9/12/17
 
-#Project2
-#Ver 0.3 9/25/17
+#Project3
+#Ver 0.5 10/27/17
 
 from time import sleep # :) Only once
 import sys #Learned about this from https://stackoverflow.com/questions/949504/terminating-a-python-program
-
-
-
-
-
-
-
-
-gHelp = ("List of commands:\n"
-        "North: moves player in the 'north' direction.\n"
-        "South: moves player in the 'south' direction.\n"
-        "East: moves player in the 'east' direction.\n"
-        "West: moves player in the 'west' direction.\n"
-        "Help: displays a list of commands. Hey, a dictionary's gotta have the definition of a dicitionary in it.\n"
-        "Quit: ends the game. Considered a game over.\n")
-
-gLocFinal = ("The void disappears and suddenly you are in free fall. You look down to see the gaping maw of a great, big volcano, it's molten rock spewing and spitting, "
-             
-             "eager to consume you entirely. You are burned alive.") #Great way to ends things yeah?
-
-
-
-#Print a description for the tutorial map? Seems self explanatory
-
-            
+          
 cont = "<Press enter to "
 bDevMode = True
-
-#TODO:  *Distinct different kinds of texts - Descriptions, player dialogue, Program dialogue, etc.
-#       *dprint(...) when the time comes
-#       *Tables with specific texts
-#       *Table that specializes in interpretting vulgar language from inputs. Yeah I'm already planning for that
-#       *On new branch: Dialogue choices for player! Add a bit of flair, personality via choice while still staying rather linear
-#       *Get in to objects
-#       *HAVE FUN!!!
-#       *etcetera
 
 tLocations = [
                 #0 - VoidM (Intro)
@@ -89,7 +56,7 @@ tLocations = [
                 #18 - Forest
                 "You are in a forest. All you see are trees, but you can hear the sound of running water.",
                 #19 - River
-                "You come to a river bank. You faintly hear what sounds like constant thunder",
+                "You come to a river bank. You faintly hear what sounds like constant thunder.",
                 #20 - Lake
                 "You follow the river to a large lake.",
                 #21 - Waterfall
@@ -106,9 +73,6 @@ tVisited = []
 #For each location, append a False boolean to start with
 for i in tLocations: 
     tVisited.append(False)
-
-
-print(len(tVisited))
 
 ##=============================================================    
 def Init(): #Initialization function, runs when the code is run
@@ -160,8 +124,8 @@ def Init(): #Initialization function, runs when the code is run
         #Enter the gamestate for the first time
         #SO I REMEMBER: in tLocScore, first index is location, second is score
         pLocation, iScore = Main(pLocation, sName, iScore, 0, True) #We need to send pLocation back to init(), don't we? I'll have to think about implementing that #SOLVED leaving so you can probe my thought process
-    #Begin second half of in intro
-        print("???: Excellent, " + sName + ". You seem to be in optimal shape. Excellent indeed.\n"
+        #Begin second half of in intro
+        print("\n???: Excellent, " + sName + ". You seem to be in optimal shape. Excellent indeed.\n"
               "You're patience with me has not gone unnoticed. I... do not have not been aquainted. I am Bx106001-c. I am a Generation IV Class C Artificial Intelligence. You may call me Baby.\n"
               "Baby: I know you are curious as for where you are, but that's a bit more difficult. Could you define what exactly you wish to know about your whereabouts?\n")
     
@@ -184,8 +148,8 @@ def Init(): #Initialization function, runs when the code is run
               "...") #In the future, 'Baby:' should be a var
     
         input(cont + "question Baby>")
-        print("Baby: This test is not optional! Don't worry, " + sName + " you're in sA@e Ha@dS\n"
-          "Baby: Let's g#t sta$%$\n")
+        print("Baby: This test is not optional! You're going to participate and you're going to love it! You'll see...\n"
+              "Baby: Let's start!")
     pLocation = tLocations[iCloset]
     pLocation, iScore = Main(pLocation, sName, iScore, 0, False)
     Copyright(iScore, True)
@@ -207,7 +171,7 @@ def SetLocation(sLocation, iTo, iNumMoves, iScore):
     if not tVisited[iTo]:
         iScore = iScore + 5
         tVisited[iTo] = True
-    iNumMoves = iNumMoves = + 1
+    iNumMoves = iNumMoves + 1
     return sLocation, iNumMoves, iScore
 
 def GetLocation(sLocation):
@@ -366,16 +330,13 @@ def Main(sLocation, sName, iScore, iNumMoves, bFirstRun):
 
     
     while bGameState:
-        print("Your score:", iScore)
         print(pLocation)
         sInput = input()
         sInput = sInput.lower()
-        #TODO: Reimplement bFirstRun, it'll make the code more efficient
         if bFirstRun:
             if sInput == "north":
             
                 if pLocation == tLocations[iVoidM]:
-                    #move to goto function
                     pLocation, iNumMoves, iScore = SetLocation(pLocation, iVoidN, iNumMoves, iScore)
 
                 elif pLocation == tLocations[iVoidS]:
@@ -560,7 +521,7 @@ def Main(sLocation, sName, iScore, iNumMoves, bFirstRun):
                 else:
                     print(sNoGo)
         if sInput == "north" or sInput == "south" or sInput == "west" or sInput == "east":
-            pass #We already did this, now we just have to check if the player entered a valid command or not
+            pass #We already checked for these, now we just need them here to verify if the player entered a valid command or not
         elif(sInput == "help"):
             print("List of commands:\n"
                   "North: moves player in the 'north' direction.\n"
@@ -568,8 +529,10 @@ def Main(sLocation, sName, iScore, iNumMoves, bFirstRun):
                   "East: moves player in the 'east' direction.\n"
                   "West: moves player in the 'west' direction.\n"
                   "Help: displays a list of commands. Hey, a dictionary's gotta have the definition of a dicitionary in it.\n"
-                  "Quit: ends the game. Considered a game over.\n"
-                  "Map: Displays the current map")#AKA run the game over/copyright function on quit
+                  "Quit: ends the game. Considered a game over.\n" #AKA run the game over/copyright function on quit
+                  "Map: Displays the current map.\n"
+                  "Moves: Shows how many moves you've made on this map.\n"
+                  "Score: Displays your score.")
 
         elif(sInput == "quit"):
             sInput = input("This will end the game and count as a game over. Continue?\n" #Changing sInput shouldn't cause issues
@@ -584,18 +547,35 @@ def Main(sLocation, sName, iScore, iNumMoves, bFirstRun):
                 print(gMapTut)
                 index = GetLocation(pLocation)
                 if index is not None:
-                    print("You are at:", tMap[index])
+                    print("\nYou are at:", tMap[index])
                           
             else:
                 print(gMap)
                 print(gMapDesc)
                 index = GetLocation(pLocation)
                 if index is not None:
-                    print("You are at:", tMap[index])
+                    print("\nYou are at:", tMap[index])
 
+        elif sInput == "moves":
+             print("Your moves:", iNumMoves)
+        elif sInput == "score":
+             print("Your score:", iScore)
         else:
             print("Command not valid")
-            
+
+        if bFirstRun and tVisited[iVoidM] and tVisited[iVoidN] and tVisited[iVoidS] and tVisited[iVoidE] and tVisited[iVoidW]:
+            bGameState = False
+            print(pLocation)
+        elif iNumMoves > 30 and not bFirstRun:
+            bGameState = False
+            print(pLocation)
+            print("\nBaby: Well, you certainly seem to be underperforming. It's quite boring actually. Looks like it's back to stasis for you!")
+            #Activate bad end
+        elif pLocation == tLocations[iCaveDeep]:
+            bGameState = False
+            print(pLocation)
+            print("\nBaby: Good. Hmmm, listen, I've got to deal with something, why don't you take a rest, and then we can talk. Probably. See you in 50 years!")
+            #Activate less bad end
     tLocScore = []
     tLocScore.append(pLocation)
     tLocScore.append(iScore)
