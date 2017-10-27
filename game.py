@@ -14,8 +14,6 @@ import sys #Learned about this from https://stackoverflow.com/questions/949504/t
 
 
 
-gLocVoid = ("You awake to find a white empty space. You seem to be floating in an exetensial 'nothingness'."
-            "A chill runs down your spine: what exactly is this place, this unfamiliar void that you find yourself imprisoned within?")
 
 gHelp = ("List of commands:\n"
         "North: moves player in the 'north' direction.\n"
@@ -29,36 +27,11 @@ gLocFinal = ("The void disappears and suddenly you are in free fall. You look do
              
              "eager to consume you entirely. You are burned alive.") #Great way to ends things yeah?
 
-gMapTut = ("   N    \n"
-           "   |    \n"
-           "W--M--S \n"
-           "   |    \n"
-           "   S    \n")
+
 
 #Print a description for the tutorial map? Seems self explanatory
-gMap = ("   c--C  c         \n"
-        "   |  |  |         \n"
-        "b--c--c--c--d      \n"
-        "|  |  |  |  |      \n"
-        "a  c--c--c  e      \n"
-        "            |      \n"
-        "         g--f--h--i\n"
-        "                  |\n"
-        "               k--j\n")
 
-gMapDesc = ("a = Closet\n"
-            "b = Hallway Corner\n"
-            "Cc = Office\n"
-            "d = Other Hallway Corner\n"
-            "e = Forest\n"
-            "f = River\n"
-            "g = Lake\n"
-            "h = Waterfall\n"
-            "i = Cave\n"
-            "j = Deep Cave\n"
-            "k = ???")
             
-print(gMap)
 cont = "<Press enter to "
 bDevMode = True
 
@@ -199,8 +172,12 @@ def SetLocation(sLocation, iTo, iNumMoves, iScore):
     iNumMoves = iNumMoves = + 1
     return sLocation, iNumMoves, iScore
 
-        
-    
+def GetLocation(sLocation):
+    for i in range(len(tLocations) - 1):
+        if tLocations[i] == sLocation:
+            return i
+    print("Error: pLocation not found")
+    return None
 ##================================
 #Copyright
 #Prints the copyright/gameover statement
@@ -228,13 +205,14 @@ def Copyright(iScore, bGameover):
 ##==========================================
 def Interpret(sInput, iScore, FunctionFrom):
     sInput = sInput.lower()
-
+    s = "Interpret:"
     if sInput == "none":
         return True, sInput
     
     if bDevMode and sInput[0:4] == "dev:":
-        print("Developer mode active. Developer command detected.")
-        sInput = sInput[3:len(sInput)] #Go ahead and cut off the first 'dev:' since we already checked that
+        print(s, "Developer mode active. Developer command detected.")
+        sInput = sInput[4:len(sInput)] #Go ahead and cut off the first 'dev:' since we already checked that
+        print(s, "Command is", sInput)
         #TODO: If statements for commands go here
 
     if FunctionFrom == "Init":
@@ -287,12 +265,43 @@ def Interpret(sInput, iScore, FunctionFrom):
 #   *iScore, the player's score at this point of the game
 #   *bFirstRun, indicate whether or not this is the first instance of firing the loop (In other words, is the intro still on-going?)
 ##============================================
+gMapTut = ("   N    \n"
+           "   |    \n"
+           "W--M--S \n"
+           "   |    \n"
+           "   S    \n")
+
+gMap = ("   c1--C   c6            \n"
+        "   |   |   |             \n"
+        "b--c2--c4--c7--d         \n"
+        "|  |   |   |   |         \n"
+        "a  c3--c5--c8  e         \n"
+        "               |         \n"
+        "            g--f--h--i   \n"
+        "                     |   \n"
+        "                  k--j   \n")
+
+gMapDesc = ("a = Closet\n"
+            "b = Hallway Corner\n"
+            "Cc = Office\n"
+            "d = Other Hallway Corner\n"
+            "e = Forest\n"
+            "f = River\n"
+            "g = Lake\n"
+            "h = Waterfall\n"
+            "i = Cave\n"
+            "j = Deep Cave\n"
+            "k = ???")
+tMap = ["Error: Could not determine location", "M", "N", "S", "E", "W", "a", "b", "c1", "c2", "c3", "C", "c4", "c5", "c6", "c7", "c8", "d", "e", "f", "g", "h", "i", "j", "k"]
+#Since the location at 0 is not used in the game loop, it can be used to display an error message
+#But for now we'll stick with the is not None check
 iVoidStart = 0
 iVoidM = 1
 iVoidN = 2
 iVoidS = 3
 iVoidE = 4
 iVoidW = 5
+
 def Main(sLocation, sName, iScore, iNumMoves, bFirstRun):
     pLocation = sLocation
     bGameState = True
@@ -367,7 +376,8 @@ def Main(sLocation, sName, iScore, iNumMoves, bFirstRun):
                   "East: moves player in the 'east' direction.\n"
                   "West: moves player in the 'west' direction.\n"
                   "Help: displays a list of commands. Hey, a dictionary's gotta have the definition of a dicitionary in it.\n"
-                  "Quit: ends the game. Considered a game over.\n")#AKA run the game over/copyright function on quit
+                  "Quit: ends the game. Considered a game over.\n"
+                  "Map: Displays the current map")#AKA run the game over/copyright function on quit
 
         elif(sInput == "quit"):
             sInput = input("This will end the game and count as a game over. Continue?\n" #Changing sInput shouldn't cause issues
@@ -377,7 +387,19 @@ def Main(sLocation, sName, iScore, iNumMoves, bFirstRun):
             if(sInput == "y"):
                 Copyright(iScore, True)
                 break
-
+        elif(sInput == "map"):
+            if bFirstRun:
+                print(gMapTut)
+                index = GetLocation(pLocation)
+                if index is not None:
+                    print("You are at:", tMap[index])
+                          
+            else:
+                print(gMap)
+                print(gMapDesc)
+                index = GetLocation(pLocation)
+                if index is not None:
+                    print("You are at:", tMap[index])
         else:
             print("Command is not valid.")
 
