@@ -61,7 +61,45 @@ tLocations = [
                 "Cars rusted, buildings crumbling, overgrown with moss and vines. You can't help but feel curious about the fate of this place.",
                 #5 - VoidW
                 "You follow one of the lines to a circle that, upon investigation, has the letter 'W' on it. The area around you transforms into an office."
-                "Desks teeming with paperwork and the faint smell of morning coffees makes you anxious."
+                "Desks teeming with paperwork and the faint smell of morning coffees makes you anxious.",
+                #6 - Closet
+                "You are in a broom closet.",
+                #7 - Hallway
+                "You walk down a hallway and come to a corner.",
+                #8 - OfficeNW
+                "You enter one of the office corners. Papers and supplies litter the floor.", 
+                #9 - OfficeW
+                "You are in a large office. All you see are cubicles, cubicles, cubicles.",
+                #10 - OfficeSW
+                "You enter one of the office corners, which has a particuliarly large ficus. You study it with intensity.",
+                #11 - OfficeN
+                "You enter a cubicle that is larger than all the rest. It looks like it's supposed to fit 4, maybe 5 people. The thought makes you feel claustrophobic.",
+                #12 - OfficeC
+                "You enter the center of the office.",
+                #13 - OfficeS
+                "You find a pair of doors, but they appear to be locked. What lies beyond them?",
+                #14 - OfficeNE
+                "You enter on the office corners. There is a water cooler, but's its empty.",
+                #15 - OfficeE
+                "You are in a large office.",
+                #16 - OfficeSE
+                "You enter one of the office corners. There is a painting of a sad clown. What?",
+                #17 - Hallway
+                "You walk down a hallway, and come to a corner.", #We need all the strings to be different for GetLocation to be precise
+                #18 - Forest
+                "You are in a forest. All you see are trees, but you can hear the sound of running water.",
+                #19 - River
+                "You come to a river bank. You faintly hear what sounds like constant thunder",
+                #20 - Lake
+                "You follow the river to a large lake.",
+                #21 - Waterfall
+                "You follow the river to a waterfall. It looks like it's about 15 feet height, but what do you know?",
+                #22 - CaveEntrance
+                "Behind the waterfall you find an entrance to a cavern.",
+                #23 - Cave
+                "You go down into cave. It's pitch black, and you walk slowly and with caution.",
+                #24 - DeepCave, End
+                "You go deeper into the cave. You come to an empty chamber with a small opening to the surface, allowing you to see."
                 ]
 #Define table that holds booleans for whether or not the player has visited certain locations
 tVisited = []
@@ -148,8 +186,8 @@ def Init(): #Initialization function, runs when the code is run
         input(cont + "question Baby>")
         print("Baby: This test is not optional! Don't worry, " + sName + " you're in sA@e Ha@dS\n"
           "Baby: Let's g#t sta$%$\n")
-    pLocation = gLocFinal
-    print(gLocFinal) #ENDING WITH A BANG
+    pLocation = tLocations[iCloset]
+    pLocation, iScore = Main(pLocation, sName, iScore, 0, False)
     Copyright(iScore, True)
     
     
@@ -265,6 +303,7 @@ def Interpret(sInput, iScore, FunctionFrom):
 #   *iScore, the player's score at this point of the game
 #   *bFirstRun, indicate whether or not this is the first instance of firing the loop (In other words, is the intro still on-going?)
 ##============================================
+sNoGo = "You can't go that way."
 gMapTut = ("   N    \n"
            "   |    \n"
            "W--M--S \n"
@@ -302,6 +341,25 @@ iVoidS = 3
 iVoidE = 4
 iVoidW = 5
 
+iCloset = 6
+iHallway1 = 7
+iOfficeNW = 8
+iOfficeW = 9
+iOfficeSW = 10
+iOfficeN = 11
+iOfficeC = 12
+iOfficeS = 13
+iOfficeNE = 14
+iOfficeE = 15
+iOfficeSE = 16
+iHallway2 = 17
+iForest = 18
+iRiver = 19
+iLake = 20
+iWaterfall = 21
+iCaveEnt = 22
+iCave = 23
+iCaveDeep = 24
 def Main(sLocation, sName, iScore, iNumMoves, bFirstRun):
     pLocation = sLocation
     bGameState = True
@@ -313,62 +371,196 @@ def Main(sLocation, sName, iScore, iNumMoves, bFirstRun):
         sInput = input()
         sInput = sInput.lower()
         #TODO: Reimplement bFirstRun, it'll make the code more efficient
-        if sInput == "north":
+        if bFirstRun:
+            if sInput == "north":
             
-            if pLocation == tLocations[iVoidM]:
-                #move to goto function
-                pLocation, iNumMoves, iScore = SetLocation(pLocation, iVoidN, iNumMoves, iScore)
+                if pLocation == tLocations[iVoidM]:
+                    #move to goto function
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iVoidN, iNumMoves, iScore)
 
-            elif pLocation == tLocations[iVoidS]:
-                pLocation, iNumMoves, iScore = SetLocation(pLocation, iVoidM, iNumMoves, iScore)
-
-            else:
-                #Can't go that way
-                pass
-
-        elif sInput == "south":
-
-            if pLocation == tLocations[iVoidM]:
-                pLocation, iNumMoves, iScore = SetLocation(pLocation, iVoidS, iNumMoves, iScore)
-
-            elif pLocation == tLocations[iVoidN]:
-                 pLocation, iNumMoves, iScore = SetLocation(pLocation, iVoidM, iNumMoves, iScore)
-
-            else:
-                pass
-
-        elif sInput == "east":
-
-            if pLocation == tLocations[iVoidM]:
-                pLocation, iNumMoves, iScore = SetLocation(pLocation, iVoidE, iNumMoves, iScore)
-
-            elif pLocation == tLocations[iVoidW]:
-                pLocation, iNumMoves, iScore = SetLocation(pLocation, iVoidM, iNumMoves, iScore)
-
-            else:
-                pass
-        elif sInput == "west":
-
-            if pLocation == tLocations[iVoidM]:
-                pLocation, iNumMoves, iScore = SetLocation(pLocation, iVoidW, iNumMoves, iScore)
-
-            elif pLocation == tLocations[iVoidE]:
+                elif pLocation == tLocations[iVoidS]:
                     pLocation, iNumMoves, iScore = SetLocation(pLocation, iVoidM, iNumMoves, iScore)
-            else:
-                pass
-        #Check index 0-4 for all trues   
-        #if(bVisitedVoid == True and bVisitedVoidN == True and bVisitedVoidS == True and bVisitedVoidE == True and bVisitedVoidW == True): #Makes more sense down here
-        #while tVisited: #So tempting, but nah
-        #Let finish up other areas first before finishing this loop check
-        #for b in range(tVisited[4]):
-        #    if not b:
-        #        break #This only breaks out of for loop, right?
-        
-        #print("Your score:", iScore) #Realised that a copy of this is needed here too 
-        #print(pLocation)
-        #bGameState = False
             
-            
+                else:
+                    #Can't go that way
+                    print(sNoGo)
+
+            elif sInput == "south":
+
+                if pLocation == tLocations[iVoidM]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iVoidS, iNumMoves, iScore)
+
+                elif pLocation == tLocations[iVoidN]:
+                     pLocation, iNumMoves, iScore = SetLocation(pLocation, iVoidM, iNumMoves, iScore)
+
+                else:
+                    print(sNoGo)
+
+            elif sInput == "east":
+
+                if pLocation == tLocations[iVoidM]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iVoidE, iNumMoves, iScore)
+
+                elif pLocation == tLocations[iVoidW]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iVoidM, iNumMoves, iScore)
+
+                else:
+                   print(sNoGo)
+            elif sInput == "west":
+
+                if pLocation == tLocations[iVoidM]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iVoidW, iNumMoves, iScore)
+
+                elif pLocation == tLocations[iVoidE]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iVoidM, iNumMoves, iScore)
+                else:
+                    print(sNoGo)
+        elif not bFirstRun:
+            if sInput == "north":
+
+                if pLocation == tLocations[iCloset]:
+                     pLocation, iNumMoves, iScore = SetLocation(pLocation, iHallway1, iNumMoves, iScore)
+
+                elif pLocation == tLocations[iOfficeSW]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeW, iNumMoves, iScore)
+
+                elif pLocation == tLocations[iOfficeS]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeC, iNumMoves, iScore)
+
+                elif pLocation == tLocations[iOfficeSE]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeE, iNumMoves, iScore)
+
+                elif pLocation == tLocations[iOfficeW]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeNW, iNumMoves, iScore)
+
+                elif pLocation == tLocations[iOfficeC]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeN, iNumMoves, iScore)
+
+                elif pLocation == tLocations[iOfficeE]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeNE, iNumMoves, iScore)
+                #You can't go back to the office from the forest
+                elif pLocation == tLocations[iRiver]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iForest, iNumMoves, iScore)
+
+                elif pLocation == tLocations[iCave]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iCaveEnt, iNumMoves, iScore)
+                
+                else:
+                    print(sNoGo)
+            elif sInput == "south":
+
+                if pLocation == tLocations[iHallway1]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iCloset, iNumMoves, iScore)
+
+                elif pLocation == tLocations[iOfficeNW]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeW, iNumMoves, iScore)
+
+                elif pLocation == tLocations[iOfficeN]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeC, iNumMoves, iScore)
+
+                elif pLocation == tLocations[iOfficeNE]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeE, iNumMoves, iScore)
+
+                elif pLocation == tLocations[iOfficeW]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeSW, iNumMoves, iScore)
+
+                elif pLocation == tLocations[iOfficeC]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeS, iNumMoves, iScore)
+
+                elif pLocation == tLocations[iOfficeE]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeSE, iNumMoves, iScore)
+
+                elif pLocation == tLocations[iHallway2]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iForest, iNumMoves, iScore)
+
+                elif pLocation == tLocations[iForest]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iRiver, iNumMoves, iScore)
+
+                elif pLocation == tLocations[iCaveEnt]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iCave, iNumMoves, iScore)
+
+                else:
+                    print(sNoGo)
+            elif sInput == "east":
+
+                if pLocation == tLocations[iHallway1]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeW, iNumMoves, iScore)
+
+                elif pLocation == tLocations[iOfficeNW]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeN, iNumMoves, iScore)
+
+                #elif pLocation == tLocations[iOfficeN]:
+                #    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeNE, iNumMoves, iScore)
+
+                elif pLocation == tLocations[iOfficeW]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeC, iNumMoves, iScore)
+
+                elif pLocation == tLocations[iOfficeC]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeE, iNumMoves, iScore)
+
+                elif pLocation == tLocations[iOfficeE]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iHallway2, iNumMoves, iScore)
+
+                elif pLocation == tLocations[iOfficeSW]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeS, iNumMoves, iScore)
+
+                elif pLocation == tLocations[iOfficeS]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeSE, iNumMoves, iScore)
+
+                elif pLocation == tLocations[iLake]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iRiver, iNumMoves, iScore)
+
+                elif pLocation == tLocations[iRiver]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iWaterfall, iNumMoves, iScore)
+
+                elif pLocation == tLocations[iWaterfall]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iCaveEnt, iNumMoves, iScore)
+
+                else:
+                    print(sNoGo)
+
+            elif sInput == "west":
+
+                if pLocation == tLocations[iOfficeW]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iHallway1, iNumMoves, iScore)
+
+                elif pLocation == tLocations[iOfficeN]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeNW, iNumMoves, iScore)
+
+                #elif pLocation == tLocations[iOfficeNE]:
+                #    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeN, iNumMoves, iScore)
+
+                elif pLocation == tLocations[iOfficeC]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeW, iNumMoves, iScore)
+
+                elif pLocation == tLocations[iOfficeE]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeC, iNumMoves, iScore)
+
+                elif pLocation == tLocations[iHallway2]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeE, iNumMoves, iScore)
+
+                elif pLocation == tLocations[iOfficeS]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeSW, iNumMoves, iScore)
+
+                elif pLocation == tLocations[iOfficeSE]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeS, iNumMoves, iScore)
+
+                elif pLocation == tLocations[iRiver]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iLake, iNumMoves, iScore)
+
+                elif pLocation == tLocations[iWaterfall]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iRiver, iNumMoves, iScore)
+
+                elif pLocation == tLocations[iCaveEnt]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iWaterFall, iNumMoves, iScore)
+
+                elif pLocation == tLocations[iCave]:
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iCaveDeep, iNumMoves, iScore)
+                    
+                else:
+                    print(sNoGo)
+        if sInput == "north" or sInput == "south" or sInput == "west" or sInput == "east":
+            pass #We already did this, now we just have to check if the player entered a valid command or not
         elif(sInput == "help"):
             print("List of commands:\n"
                   "North: moves player in the 'north' direction.\n"
@@ -381,12 +573,12 @@ def Main(sLocation, sName, iScore, iNumMoves, bFirstRun):
 
         elif(sInput == "quit"):
             sInput = input("This will end the game and count as a game over. Continue?\n" #Changing sInput shouldn't cause issues
-                  "<Enter 'y' for 'yes or 'n' for no'>\n")
+                    "<Enter 'y' for 'yes or 'n' for no'>\n")
             sInput = sInput[0].lower()
 
             if(sInput == "y"):
                 Copyright(iScore, True)
-                break
+
         elif(sInput == "map"):
             if bFirstRun:
                 print(gMapTut)
@@ -400,10 +592,9 @@ def Main(sLocation, sName, iScore, iNumMoves, bFirstRun):
                 index = GetLocation(pLocation)
                 if index is not None:
                     print("You are at:", tMap[index])
-        else:
-            print("Command is not valid.")
 
-        
+        else:
+            print("Command not valid")
             
     tLocScore = []
     tLocScore.append(pLocation)
