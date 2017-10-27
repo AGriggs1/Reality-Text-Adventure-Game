@@ -71,19 +71,22 @@ bDevMode = True
 #       *HAVE FUN!!!
 #       *etcetera
 
-tLocations = [  #0 - VoidM
+tLocations = [
+                #0 - VoidM (Intro)
+                "You awake to find yourself in an empty white space.",
+                #1 - VoidM
                 "You are in an empty white space. A red circle with four lines leading in four directions to four other circles appears under your feet.", 
-                #1 - VoidN
+                #2 - VoidN
                 "You follow one of the lines to a circle that, upon investigation, has the letter 'N' on it."
                 "The area around you transforms into a forest filled teeming monstrous redwood trees. You hear the songs of various birds, and feel welcome.", 
-                #2 - VoidS
+                #3 - VoidS
                 "You follow one of the lines to a circle that, upon investigation, has the letter 'S' on it. The area around you transforms." 
                 "Suddenly you are at the edge of a cliff overlooking the open sea. You hear the waves crashing against the crags below you, "
                 "smell the mist of saltwater, and feel a sense of somberness.",
-                #3 - VoidE
+                #4 - VoidE
                 "You follow one of the lines to a circle that, upon investigation, has the letter 'E' on it. The area around you transforms and you are on the streets of a city that seems to be long abandoned. "
                 "Cars rusted, buildings crumbling, overgrown with moss and vines. You can't help but feel curious about the fate of this place.",
-                #4 - VoidW
+                #5 - VoidW
                 "You follow one of the lines to a circle that, upon investigation, has the letter 'W' on it. The area around you transforms into an office."
                 "Desks teeming with paperwork and the faint smell of morning coffees makes you anxious."
                 ]
@@ -114,65 +117,90 @@ def Init(): #Initialization function, runs when the code is run
                "*        *  *           **     **   *               *           *           *\n"           
                "*        *  *********   *       *   *********   *********       *           *\n")           #Dios ayudame si yo decido hacer un titulo nuevo.
     print(sTitle)
-    pLocation = gLocVoid #Change to function call once function is defined
+    tVisited[iVoidStart] = True
+    tVisited[iVoidM] = True #They're technically the same
+    pLocation, iNumMoves, iScore = SetLocation("None", iVoidStart, 0, 0) #Change to function call once function is defined
+    
     #Begin introduction
-    print(gLocVoid)      
-    input("input: ") 
-    print("???: Hey! Can you hear me?")
-    input(cont + "continue>") #Must use concatenation for input
+    print(pLocation)      
+    sInput = input("input: ") or "None"  #If sInput is None (player hits enter without typing anything) then fill it in with "None"
+
     
-    print("???: Good. Now, I know you must have plenty of questions, such as where you are, or who I am. We'll get to them when the time comes.\n\n"
-          "???: There are more pressing matters. Protocol insists that I perform a sitrep on your state of being before we can address any inquiries.\n"
-          "Understand?")
+    sInput, sName = Interpret(sInput, 0, "Init") #Hmmmm
+    if sInput:
+        print("???: Hey! Can you hear me?")
+        input(cont + "continue>") #Must use concatenation for input
     
-    input(cont + "understand>")
-    #Get player name
-    sName = input("???: First things first: do you know your name?\nYour name? ")
+        print("???: Good. Now, I know you must have plenty of questions, such as where you are, or who I am. We'll get to them when the time comes.\n\n"
+              "???: There are more pressing matters. Protocol insists that I perform a sitrep on your state of being before we can address any inquiries.\n"
+              "Understand?")
     
-    print("???: " + sName + "? All right. Now let's see about your sense of orientation.\n")
-    print("Suddenly a red circle appears beneath your feet. You notice four lines spreading outward from it in four directions, leading to other circles\n")
-    print("???: Okie-dokie, go ahead and walk towards any of these circles. I know you're confused, but stick with me. If you feel you need help, just say the word.\n")
-    print("<Type 'North', 'South', 'East', or 'West' to head in that direction. To see all commands availible to you, type 'Help'>\n")
+        input(cont + "understand>")
+        #Get player name
+        sName = input("???: First things first: do you know your name?\nYour name? ")
     
-    #Update pLocation to showcase changes made
-    pLocation = ("You are in an empty white space. A red circle with four lines leading in four directions to four other circles appears under your feet.")
-    #Enter the gamestate for the first time
-    #SO I REMEMBER: in tLocScore, first index is location, second is score
-    tLocScore = Main(pLocation, sName, iScore, True) #We need to send pLocation back to init(), don't we? I'll have to think about implementing that #SOLVED leaving so you can probe my thought process
+        print("???: " + sName + "? All right. Now let's see about your sense of orientation.\n")
+        print("Suddenly a red circle appears beneath your feet. You notice four lines spreading outward from it in four directions, leading to other circles\n")
+        print("???: Okie-dokie, go ahead and walk towards any of these circles. I know you're confused, but stick with me. If you feel you need help, just say the word.\n")
+        print("<Type 'North', 'South', 'East', or 'West' to head in that direction. To see all commands availible to you, type 'Help'>\n")
+    
+        #Update pLocation to showcase changes made
+        pLocation, iNumMoves, iScore = SetLocation("None", iVoidM, 0, 0)
+        #Enter the gamestate for the first time
+        #SO I REMEMBER: in tLocScore, first index is location, second is score
+        pLocation, iScore = Main(pLocation, sName, iScore, 0, True) #We need to send pLocation back to init(), don't we? I'll have to think about implementing that #SOLVED leaving so you can probe my thought process
     #Begin second half of in intro
-    print("???: Excellent, " + sName + ". You seem to be in optimal shape. Excellent indeed.\n"
-          "You're patience with me has not gone unnoticed. I... do not have not been aquainted. I am Bx106001-c. I am a Generation IV Class C Artificial Intelligence. You may call me Baby.\n"
-          "Baby: I know you are curious as for where you are, but that's a bit more difficult. Could you define what exactly you wish to know about your whereabouts?\n")
+        print("???: Excellent, " + sName + ". You seem to be in optimal shape. Excellent indeed.\n"
+              "You're patience with me has not gone unnoticed. I... do not have not been aquainted. I am Bx106001-c. I am a Generation IV Class C Artificial Intelligence. You may call me Baby.\n"
+              "Baby: I know you are curious as for where you are, but that's a bit more difficult. Could you define what exactly you wish to know about your whereabouts?\n")
     
-    input() #Hm, is Baby decieving you?
-    print("Baby: ERROR: Acess denied.")
-    sleep(1)
+        input() #Hm, is Baby decieving you?
+        print("Baby: ERROR: Acess denied.")
+        sleep(1)
     
-    for i in range(150):
-        print("x003334" + str(i) + ".FATAL: Bx106001-c Gen IV 'Bravo-Alfa-Bravo-Yankee' has @#4uNt2#d an is$3@ that has co#$Afg0sed *&ad$%3-sufficient operations!") #Baby has ecountered an issue that has compromised self-sufficient operations!
-    #for i in range(20):
-       # print()
-    print("Baby: Oops! Looks I had a little hiccup there.\n"
-          "Baby: I'm sorry, but you don't have permission to access such information without the correct access code. Please input access code now.")
-    #Hmmm, maybe I could add a little easter egg here
-    input("Access code: ")
+        for i in range(150):
+            print("x003334" + str(i) + ".FATAL: Bx106001-c Gen IV 'Bravo-Alfa-Bravo-Yankee' has @#4uNt2#d an is$3@ that has co#$Afg0sed *&ad$%3-sufficient operations!") #Baby has ecountered an issue that has compromised self-sufficient operations!
+        #for i in range(20):
+           # print()
+        print("Baby: Oops! Looks I had a little hiccup there.\n"
+              "Baby: I'm sorry, but you don't have permission to access such information without the correct access code. Please input access code now.")
+        #Hmmm, maybe I could add a little easter egg here
+        input("Access code: ")
     
-    print("Baby: Nuh-uh. Wrong, as expected. Hm, tell you what, I'll at least tell you what you're here for. This place, whatever it may be to you, is to test your physical and cognitive abilities.\n"
-          "Baby: I... am to test you. You pass this, and Baby will tell you anything.\n"
-          "I may even let you go free!\n"
-          "...") #In the future, 'Baby:' should be a var
+        print("Baby: Nuh-uh. Wrong, as expected. Hm, tell you what, I'll at least tell you what you're here for. This place, whatever it may be to you, is to test your physical and cognitive abilities.\n"
+              "Baby: I... am to test you. You pass this, and Baby will tell you anything.\n"
+              "I may even let you go free!\n"
+              "...") #In the future, 'Baby:' should be a var
     
-    input(cont + "question Baby>")
-    print("Baby: This test is not optional! Don't worry, " + sName + " you're in sA@e Ha@dS\n"
+        input(cont + "question Baby>")
+        print("Baby: This test is not optional! Don't worry, " + sName + " you're in sA@e Ha@dS\n"
           "Baby: Let's g#t sta$%$\n")
     pLocation = gLocFinal
     print(gLocFinal) #ENDING WITH A BANG
-    Copyright(tLocScore[1], True)
+    Copyright(iScore, True)
     
     
     
     #return sName #Send to global variable. #NEVER GETS USED
+##==============================================
+#SetLocation
+#Sets the player's location
+#Parameters:
+    #sLocation, the player's current location
+    #iTo, the index of the location the player is moving to
+    #iMoves, the number of moves
+##==============================================
+def SetLocation(sLocation, iTo, iNumMoves, iScore):
+    sLocation = tLocations[iTo]
 
+    if not tVisited[iTo]:
+        iScore = iScore + 5
+        tVisited[iTo] = True
+    iNumMoves = iNumMoves = + 1
+    return sLocation, iNumMoves, iScore
+
+        
+    
 ##================================
 #Copyright
 #Prints the copyright/gameover statement
@@ -201,12 +229,28 @@ def Copyright(iScore, bGameover):
 def Interpret(sInput, iScore, FunctionFrom):
     sInput = sInput.lower()
 
+    if sInput == "none":
+        return True, sInput
+    
     if bDevMode and sInput[0:4] == "dev:":
         print("Developer mode active. Developer command detected.")
         sInput = sInput[3:len(sInput)] #Go ahead and cut off the first 'dev:' since we already checked that
         #TODO: If statements for commands go here
 
+    if FunctionFrom == "Init":
+        if sInput.lower() == "skip":
+            sInput = input("???: Hey, hey, what do you think you're doing trying to skip my glorius introduction, bub? Do you even know my name? ")
+
+            if sInput.lower() == "baby":
+
+                print("Baby: ...")
+                sInput = input("Baby: Fine! What's you're name, dum-dum?")
+                return False, sInput #May change the return values in the future
+            else:
+                print("???: Hmph! Hm hm! HM HM HM HM! Let's reimmerse ourselves, yeah? *Ahem*")
+                return True, "It's Baby"
     #Consider spliting up a string by spaces and interpreting every word in it
+    elif FunctionFrom == "Main":
         if sInput == "north":
             pass
 
@@ -229,8 +273,8 @@ def Interpret(sInput, iScore, FunctionFrom):
 
             if(sInput == "y"):
                 Copyright(iScore, True)
-                return False, iScore #For use in main?
-    
+                return False, "End loop"
+            
     #Also reworking if statment logic while we're at it
     #Todo: Insert function into main where necessary
         
@@ -243,16 +287,17 @@ def Interpret(sInput, iScore, FunctionFrom):
 #   *iScore, the player's score at this point of the game
 #   *bFirstRun, indicate whether or not this is the first instance of firing the loop (In other words, is the intro still on-going?)
 ##============================================
-iVoidM = 0
-iVoidN = 1
-iVoidS = 2
-iVoidE = 3
-iVoidW = 4
-def Main(sLocation, sName, iScore, bFirstRun):
+iVoidStart = 0
+iVoidM = 1
+iVoidN = 2
+iVoidS = 3
+iVoidE = 4
+iVoidW = 5
+def Main(sLocation, sName, iScore, iNumMoves, bFirstRun):
     pLocation = sLocation
     bGameState = True
 
-
+    
     while bGameState:
         print("Your score:", iScore)
         print(pLocation)
@@ -263,13 +308,10 @@ def Main(sLocation, sName, iScore, bFirstRun):
             
             if pLocation == tLocations[iVoidM]:
                 #move to goto function
-                pLocation = tLocations[iVoidN]
-
-                if not tVisited[iVoidN]:
-                    tVisited[iVoidN] = True
+                pLocation, iNumMoves, iScore = SetLocation(pLocation, iVoidN, iNumMoves, iScore)
 
             elif pLocation == tLocations[iVoidS]:
-                pLocation = tLocations[iVoidM]
+                pLocation, iNumMoves, iScore = SetLocation(pLocation, iVoidM, iNumMoves, iScore)
 
             else:
                 #Can't go that way
@@ -278,35 +320,31 @@ def Main(sLocation, sName, iScore, bFirstRun):
         elif sInput == "south":
 
             if pLocation == tLocations[iVoidM]:
-                pLocation = tLocations[iVoidS]
+                pLocation, iNumMoves, iScore = SetLocation(pLocation, iVoidS, iNumMoves, iScore)
 
-                if not tVisited[iVoidS]:
-                    tVisited[iVoidS] = True
             elif pLocation == tLocations[iVoidN]:
-                 pLocation = tLocations[iVoidM]
+                 pLocation, iNumMoves, iScore = SetLocation(pLocation, iVoidM, iNumMoves, iScore)
+
             else:
                 pass
 
         elif sInput == "east":
 
             if pLocation == tLocations[iVoidM]:
-                pLocation = tLocations[iVoidE]
+                pLocation, iNumMoves, iScore = SetLocation(pLocation, iVoidE, iNumMoves, iScore)
 
-                if not tVisited[iVoidE]:
-                    tVisited[iVoidE] = True
             elif pLocation == tLocations[iVoidW]:
-                pLocation = tLocations[iVoidM]
+                pLocation, iNumMoves, iScore = SetLocation(pLocation, iVoidM, iNumMoves, iScore)
+
             else:
                 pass
         elif sInput == "west":
 
             if pLocation == tLocations[iVoidM]:
-                pLocation = tLocations[iVoidW]
+                pLocation, iNumMoves, iScore = SetLocation(pLocation, iVoidW, iNumMoves, iScore)
 
-                if not tVisited[iVoidW]:
-                    tVisited[iVoidE] = True
             elif pLocation == tLocations[iVoidE]:
-                    pLocation = tLocations[iVoidM]
+                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iVoidM, iNumMoves, iScore)
             else:
                 pass
         #Check index 0-4 for all trues   
@@ -348,7 +386,7 @@ def Main(sLocation, sName, iScore, bFirstRun):
     tLocScore = []
     tLocScore.append(pLocation)
     tLocScore.append(iScore)
-    return tLocScore
+    return pLocation, iScore
         
 
 Init()
