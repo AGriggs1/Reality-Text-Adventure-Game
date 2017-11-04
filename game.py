@@ -11,6 +11,7 @@ import sys #Learned about this from https://stackoverflow.com/questions/949504/t
 cont = "<Press enter to "
 bDevMode = True
 
+            
 tLocations = [
                 #0 - VoidM (Intro)
                 "You awake to find yourself in an empty white space.",
@@ -94,14 +95,14 @@ def Init(): #Initialization function, runs when the code is run
     print(sTitle)
     tVisited[iVoidStart] = True
     tVisited[iVoidM] = True #They're technically the same
-    pLocation, iNumMoves, iScore = SetLocation("None", iVoidStart, 0, 0) #Change to function call once function is defined
+    pLocation, iNumMoves, iScore = SetLocation("None", iVoidStart, 0, 0)
     
     #Begin introduction
     print(pLocation)      
     sInput = input("input: ") or "None"  #If sInput is None (player hits enter without typing anything) then fill it in with "None"
 
     
-    sInput, sName = Interpret(sInput, 0, "Init") #Hmmmm
+    sInput, sName = Interpret(sInput, None, 0, 0, "Init") #Hmmmm
     if sInput:
         print("???: Hey! Can you hear me?")
         input(cont + "continue>") #Must use concatenation for input
@@ -196,27 +197,81 @@ def Copyright(iScore, bGameover):
         sys.exit()
     print(sMessage)
 
-    
+#Used for a dev command
+#Lower case since Interpret makes use of .lower()
+gDevKeys = {
+            "voidm"     :0,
+            "voidmreal" :1,
+            "voidn"     :2,
+            "voids"     :3,
+            "voide"     :4,
+            "voidw"     :5,
+            "closet"    :6,
+            "hallway1"  :7,
+            "officenw"  :8,
+            "officew"   :9,
+            "officesw"  :10,
+            "officen"   :11,
+            "officec"   :12,
+            "offices"   :13,
+            "officene"  :14,
+            "officee"   :15,
+            "officese"  :16,
+            "hallway2"  :17,
+            "forest"    :18,
+            "river"     :19,
+            "lake"      :20,
+            "waterfall" :21,
+            "caveent"   :22,
+            "cave"      :23,
+            "deepcave"  :24
+            }
 ##==========================================
 #Interpret
 #Takes user input and decides what to do
 #Parameters:
 #   sInput, the player input to read
+#   pLocation, the player's location
 #   iScore, the player's score
+#   iNumMoves, the player's moves
 #   FunctionFrom, the function Interpret is being called from. This will likely be a short string
+#
+#The parameters required will be a lot less once objects are used
+#   
 ##==========================================
-def Interpret(sInput, iScore, FunctionFrom):
+def Interpret(sInput, pLocation, iScore, iNumMoves, FunctionFrom): #Parameters can be reduced once the player becomes an object with methods that can get these for us
     sInput = sInput.lower()
+    sNone = "None"
     s = "Interpret:"
+    #If sInput was empty, just end
     if sInput == "none":
         return True, sInput
-    
+
+    #Special commands (where they can be used will depend on the command)
     if bDevMode and sInput[0:4] == "dev:":
         print(s, "Developer mode active. Developer command detected.")
         sInput = sInput[4:len(sInput)] #Go ahead and cut off the first 'dev:' since we already checked that
         print(s, "Command is", sInput)
-        #TODO: If statements for commands go here
+        
+        try:
+            sInput, sArg = sInput.split() #Split sInput by white spaces if needed
+        except:
+            print("sInput does not need to be split")
 
+        if sInput == "setlocation" and FunctionFrom == "Main":
+
+            try:
+                print(sArg)
+                i = gDevKeys[sArg] #Find the location using the split sArg and the special dictionary
+                pLocation, iNumMoves, iScore = SetLocation("Irrelevant", i, iNumMoves, iScore) 
+            except:
+                print("Error: key not found")
+           
+            return True, pLocation, None, iNumMoves, iScore, "setlocation"
+        
+        #TODO: If statements for commands go here
+        
+    #Valid commands in Init
     if FunctionFrom == "Init":
         if sInput.lower() == "skip":
             sInput = input("???: Hey, hey, what do you think you're doing trying to skip my glorius introduction, bub? Do you even know my name? ")
@@ -225,27 +280,32 @@ def Interpret(sInput, iScore, FunctionFrom):
 
                 print("Baby: ...")
                 sInput = input("Baby: Fine! What's you're name, dum-dum?")
-                return False, sInput #May change the return values in the future
+                return False, sInput  #May change the return values in the future
             else:
                 print("???: Hmph! Hm hm! HM HM HM HM! Let's reimmerse ourselves, yeah? *Ahem*")
                 return True, "It's Baby"
     #Consider spliting up a string by spaces and interpreting every word in it
+
+    #Valid commands in Main
+                #returns a boolean, then two strings, then two ints, then another string
     elif FunctionFrom == "Main":
         if sInput == "north":
             pass
+            #return pLocation, None, iNumMoves, iScore, "setlocation"
 
         elif sInput == "south":
             pass
-
+            #return ditto
         elif sInput == "east":
             pass
-
+            #return ditto
         elif sInput == "west":
             pass
+            #return ditto
 
         elif sInput == "help":
             print(gHelp) #I feel globals are okay IF they are intended to not be changed by the program
-
+            return True, None, None, None, None, "help" 
         elif sInput == "quit":
             sInput = input("This will end the game and count as a game over. Continue?\n" #Changing sInput shouldn't cause issues
                   "<Enter 'y' for 'yes or 'n' for no'>\n")
@@ -253,11 +313,12 @@ def Interpret(sInput, iScore, FunctionFrom):
 
             if(sInput == "y"):
                 Copyright(iScore, True)
-                return False, "End loop"
+            return True, pLocation, None, iNumMoves, iScore, "quit exempt"
             
-    #Also reworking if statment logic while we're at it
+    return True, pLocation, None, iNumMoves, iScore, None  #Input could not be interpreted
     #Todo: Insert function into main where necessary
-        
+
+
 ##===========================================
 #Main
 #Gamestate function, always active while player is in the game
@@ -333,6 +394,14 @@ def Main(sLocation, sName, iScore, iNumMoves, bFirstRun):
         print(pLocation)
         sInput = input()
         sInput = sInput.lower()
+        bVar1, sVar1, sVar2, iVar1, iVar2, sResult = Interpret(sInput, pLocation, iScore, iNumMoves, "Main")#This is going to get hideous
+        #Now we just need to interpret the return values here by looking at sResult
+        #if sResult is not none:
+        #   if sResult is "setlocation":
+        #        pLocation, iNumMoves, iScore = sVar1, iVar1, iVar2
+        #That's all we have for now
+        #THIS SHOULD BE ANOTHER FUNCTION. THESE IF STATEMENTS ARE THE RESULT OF AN OVERSIGHT WITH INTERPRET BEING MULTI-PURPOSE, AND THEREFORE RETURNING VARIOUS DIFFERENT VALUES
+        
         if bFirstRun:
             if sInput == "north":
             
