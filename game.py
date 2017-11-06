@@ -11,8 +11,42 @@ import sys #Learned about this from https://stackoverflow.com/questions/949504/t
 cont = "<Press enter to "
 bDevMode = True
 
+#Navigation Matrix
+#This SHOULD be mutable'
+#I just need to devise a way to mutate it
+mLocations = [
+            #c0-3 = N, S, E, W
+            ##===FIRST MAP=========##
+            [None, None, None, None],   #-------------r0 - VoidM (Intro)
+            [VoidN, VoidS, VoidE, VoidS], #-----------r1 - VoidM
+            [None, VoidM, None, None], #--------------r2 - VoidN
+            [VoidM, None, None, None], #--------------r3 - VoidS
+            [None, None, VoidM, None], #--------------r4 - VoidE
+            [None, None, None, VoidM], #--------------r5 - VoidW
+            ##===SECOND MAP========##
+            [Hallway1, None, None, None], #-----------r6 - Closet
+            [None, Closet, OfficeW, None], #----------r7 - Hallway1
+            [None, OfficeW, OfficeN, None], #---------r8 - OfficeNW
+            [OfficeNW, OfficeSW, OfficeC, Hallway1], #r9 - OfficeW
+            [OfficeW, None, OfficeS, None], #---------r10 - OfficeSW
+            [None, OfficeC, None, OfficeNW], #--------r11 - OfficeN
+            [OfficeN, OfficeS, OfficeE, OfficeW], #---r12 - OfficeC
+            [OfficeC, None, OfficeSE, OfficeSW], #----r13 - OfficeS
+            [None, OfficeE, None, None], #------------r14 - OfficeNE
+            [OfficeNE, OfficeSE, Hallway2, OfficeC], #r15 - OfficeE
+            [OfficeE, None, None, OfficeS], #---------r16 - OfficeSE
+            [None, Forest, None, OfficeE], #----------r17 - Hallway2
+            [None, River, None, None], #--------------r18 - Forest
+            [Forest, None, Waterfall, Lake], #--------r19 - River
+            [None, None, River, None], #--------------r20 - Lake
+            [None, None, CaveEnt, River], #-----------r21 - Waterfall
+            [None, Cave, None, Waterfall], #----------r22 - CaveEnt
+            [CaveEnt, None, None, CaveDeep], #--------r23 - Cave
+            [None, None, None, None] #----------------r24 - CaveDeep
+            ]
+    
             
-tLocations = [
+tLocations = [  
                 #0 - VoidM (Intro)
                 "You awake to find yourself in an empty white space.",
                 #1 - VoidM
@@ -72,7 +106,7 @@ tLocations = [
 #Define table that holds booleans for whether or not the player has visited certain locations
 tVisited = []
 #For each location, append a False boolean to start with
-for i in tLocations: 
+for i in tLocations:
     tVisited.append(False)
 
 ##=============================================================    
@@ -176,7 +210,9 @@ def SetLocation(sLocation, iTo, iNumMoves, iScore):
     return sLocation, iNumMoves, iScore
 
 def GetLocation(sLocation):
+    
     for i in range(len(tLocations) - 1):
+        
         if tLocations[i] == sLocation:
             return i
     print("Error: pLocation not found")
@@ -199,6 +235,7 @@ def Copyright(iScore, bGameover):
 
 #Used for a dev command
 #Lower case since Interpret makes use of .lower()
+#In hinesight I could have done something like "string".lower() and kept everything readable 
 gDevKeys = {
             "voidm"     :0,
             "voidmreal" :1,
@@ -246,8 +283,10 @@ def Interpret(sInput, pLocation, iScore, iNumMoves, FunctionFrom): #Parameters c
     #If sInput was empty, just end
     if sInput == "none":
         return True, sInput
-
+    ##===============
     #Special commands (where they can be used will depend on the command)
+    ##===============
+        #therefore, what they return depends on FunctionFrom
     if bDevMode and sInput[0:4] == "dev:":
         print(s, "Developer mode active. Developer command detected.")
         sInput = sInput[4:len(sInput)] #Go ahead and cut off the first 'dev:' since we already checked that
@@ -270,8 +309,10 @@ def Interpret(sInput, pLocation, iScore, iNumMoves, FunctionFrom): #Parameters c
             return True, pLocation, None, iNumMoves, iScore, "setlocation"
         
         #TODO: If statements for commands go here
-        
+    ##=====================    
     #Valid commands in Init
+    ##=====================
+        #returns a boolean and a string
     if FunctionFrom == "Init":
         if sInput.lower() == "skip":
             sInput = input("???: Hey, hey, what do you think you're doing trying to skip my glorius introduction, bub? Do you even know my name? ")
@@ -285,8 +326,9 @@ def Interpret(sInput, pLocation, iScore, iNumMoves, FunctionFrom): #Parameters c
                 print("???: Hmph! Hm hm! HM HM HM HM! Let's reimmerse ourselves, yeah? *Ahem*")
                 return True, "It's Baby"
     #Consider spliting up a string by spaces and interpreting every word in it
-
+    ##=====================
     #Valid commands in Main
+    ##=====================        
                 #returns a boolean, then two strings, then two ints, then another string
     elif FunctionFrom == "Main":
         if sInput == "north":
@@ -400,7 +442,6 @@ def Main(sLocation, sName, iScore, iNumMoves, bFirstRun):
         #   if sResult is "setlocation":
         #        pLocation, iNumMoves, iScore = sVar1, iVar1, iVar2
         #That's all we have for now
-        #THIS SHOULD BE ANOTHER FUNCTION. THESE IF STATEMENTS ARE THE RESULT OF AN OVERSIGHT WITH INTERPRET BEING MULTI-PURPOSE, AND THEREFORE RETURNING VARIOUS DIFFERENT VALUES
         
         if bFirstRun:
             if sInput == "north":
@@ -591,6 +632,7 @@ def Main(sLocation, sName, iScore, iNumMoves, bFirstRun):
                     print(sNoGo)
         if sInput == "north" or sInput == "south" or sInput == "west" or sInput == "east":
             pass #We already checked for these, now we just need them here to verify if the player entered a valid command or not
+        
         elif(sInput == "help"):
             print("List of commands:\n"
                   "North: moves player in the 'north' direction.\n"
@@ -612,9 +654,11 @@ def Main(sLocation, sName, iScore, iNumMoves, bFirstRun):
                 Copyright(iScore, True)
 
         elif(sInput == "map"):
+
             if bFirstRun:
                 print(gMapTut)
                 index = GetLocation(pLocation)
+
                 if index is not None:
                     print("\nYou are at:", tMap[index])
                           
@@ -622,24 +666,29 @@ def Main(sLocation, sName, iScore, iNumMoves, bFirstRun):
                 print(gMap)
                 print(gMapDesc)
                 index = GetLocation(pLocation)
+
                 if index is not None:
                     print("\nYou are at:", tMap[index])
 
         elif sInput == "moves":
              print("Your moves:", iNumMoves)
+
         elif sInput == "score":
              print("Your score:", iScore)
+
         else:
             print("Command not valid")
 
         if bFirstRun and tVisited[iVoidM] and tVisited[iVoidN] and tVisited[iVoidS] and tVisited[iVoidE] and tVisited[iVoidW]:
             bGameState = False
             print(pLocation)
+
         elif iNumMoves > 30 and not bFirstRun:
             bGameState = False
             print(pLocation)
             print("\nBaby: Well, you certainly seem to be underperforming. It's quite boring actually. Looks like it's back to stasis for you!")
             #Activate bad end
+
         elif pLocation == tLocations[iCaveDeep]:
             bGameState = False
             print(pLocation)
