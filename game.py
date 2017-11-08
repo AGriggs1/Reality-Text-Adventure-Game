@@ -2,15 +2,42 @@
 # Author: Anthony Griggs
 # Date: 9/12/17
 
-#Project3
-#Ver 0.5 10/27/17
+#Project4
+#Ver 0.7 11/8/17
 
 from time import sleep # :) Only once
 import sys #Learned about this from https://stackoverflow.com/questions/949504/terminating-a-python-program
           
 cont = "<Press enter to "
 bDevMode = True
+#These have to defined before the nav matrix now
+iVoidStart = 0
+iVoidM = 1
+iVoidN = 2
+iVoidS = 3
+iVoidE = 4
+iVoidW = 5
 
+iCloset = 6
+iHallway1 = 7
+iOfficeNW = 8
+iOfficeW = 9
+iOfficeSW = 10
+iOfficeN = 11
+iOfficeC = 12
+iOfficeS = 13
+iOfficeNE = 14
+iOfficeE = 15
+iOfficeSE = 16
+iHallway2 = 17
+iForest = 18
+iRiver = 19
+iLake = 20
+iWaterfall = 21
+iCaveEnt = 22
+iCave = 23
+iCaveDeep = 24
+iRavine = 25
 #Navigation Matrix
 #This SHOULD be mutable'
 #I just need to devise a way to mutate it
@@ -18,35 +45,37 @@ mLocations = [
             #c0-3 = N, S, E, W
             ##===FIRST MAP=========##
             [None, None, None, None],   #-------------r0 - VoidM (Intro)
-            [VoidN, VoidS, VoidE, VoidS], #-----------r1 - VoidM
-            [None, VoidM, None, None], #--------------r2 - VoidN
-            [VoidM, None, None, None], #--------------r3 - VoidS
-            [None, None, VoidM, None], #--------------r4 - VoidE
-            [None, None, None, VoidM], #--------------r5 - VoidW
+            [iVoidN, iVoidS, iVoidE, iVoidS], #-----------r1 - VoidM
+            [None, iVoidM, None, None], #--------------r2 - VoidN
+            [iVoidM, None, None, None], #--------------r3 - VoidS
+            [None, None, iVoidM, None], #--------------r4 - VoidE
+            [None, None, None, iVoidM], #--------------r5 - VoidW
             ##===SECOND MAP========##
-            [Hallway1, None, None, None], #-----------r6 - Closet
-            [None, Closet, OfficeW, None], #----------r7 - Hallway1
-            [None, OfficeW, OfficeN, None], #---------r8 - OfficeNW
-            [OfficeNW, OfficeSW, OfficeC, Hallway1], #r9 - OfficeW
-            [OfficeW, None, OfficeS, None], #---------r10 - OfficeSW
-            [None, OfficeC, None, OfficeNW], #--------r11 - OfficeN
-            [OfficeN, OfficeS, OfficeE, OfficeW], #---r12 - OfficeC
-            [OfficeC, None, OfficeSE, OfficeSW], #----r13 - OfficeS
-            [None, OfficeE, None, None], #------------r14 - OfficeNE
-            [OfficeNE, OfficeSE, Hallway2, OfficeC], #r15 - OfficeE
-            [OfficeE, None, None, OfficeS], #---------r16 - OfficeSE
-            [None, Forest, None, OfficeE], #----------r17 - Hallway2
-            [None, River, None, None], #--------------r18 - Forest
-            [Forest, None, Waterfall, Lake], #--------r19 - River
-            [None, None, River, None], #--------------r20 - Lake
-            [None, None, CaveEnt, River], #-----------r21 - Waterfall
-            [None, Cave, None, Waterfall], #----------r22 - CaveEnt
-            [CaveEnt, None, None, CaveDeep], #--------r23 - Cave
-            [None, None, None, None] #----------------r24 - CaveDeep
+            [iHallway1, None, None, None], #---------------r6 -- Closet
+            [None, iCloset, iOfficeW, None], #-------------r7 -- Hallway1
+            [None, iOfficeW, iOfficeN, None], #------------r8 -- OfficeNW
+            [iOfficeNW, iOfficeSW, iOfficeC, iHallway1], #-r9 -- OfficeW
+            [iOfficeW, None, iOfficeS, None], #------------r10 - OfficeSW
+            [None, iOfficeC, None, iOfficeNW], #-----------r11 - OfficeN
+            [iOfficeN, iOfficeS, iOfficeE, iOfficeW], #----r12 - OfficeC
+            [iOfficeC, None, iOfficeSE, iOfficeSW], #------r13 - OfficeS
+            [None, iOfficeE, None, None], #----------------r14 - OfficeNE
+            [iOfficeNE, iOfficeSE, iHallway2, iOfficeC], #-r15 - OfficeE
+            [iOfficeE, None, None, iOfficeS], #------------r16 - OfficeSE
+            [None, iForest, None, iOfficeE], #-------------r17 - Hallway2
+            [None, iRiver, None, None], #------------------r18 - Forest
+            [iForest, None, iWaterfall, iLake], #----------r19 - River
+            [None, None, iRiver, None], #------------------r20 - Lake
+            [None, None, iCaveEnt, iRiver], #--------------r21 - Waterfall
+            [None, iCave, None, iWaterfall], #-------------r22 - CaveEnt
+            [iCaveEnt, iRavine, None, iCaveDeep], #--------r23 - Cave
+            [None, None, None, None], #---------------------r24 - CaveDeep
+            [None, None, None, None] #---------------------r25 - Ravine(Hidden location, does not appear on map. Eventually the entire cave system won't appear on the map)
+
             ]
     
-            
-tLocations = [  
+#Table of locations (long description) Displayed on first entry to location, or with 'look'           
+tLocationsLong = [  
                 #0 - VoidM (Intro)
                 "You awake to find yourself in an empty white space.",
                 #1 - VoidM
@@ -65,13 +94,13 @@ tLocations = [
                 "You follow one of the lines to a circle that, upon investigation, has the letter 'W' on it. The area around you transforms into an office."
                 "Desks teeming with paperwork and the faint smell of morning coffees makes you anxious.",
                 #6 - Closet
-                "You are in a broom closet.",
+                "You are in a broom closet. The shelves are littered with various objects. Perhaps there is something of use?",
                 #7 - Hallway
                 "You walk down a hallway and come to a corner.",
                 #8 - OfficeNW
                 "You enter one of the office corners. Papers and supplies litter the floor.", 
                 #9 - OfficeW
-                "You are in a large office. All you see are cubicles, cubicles, cubicles.",
+                "You come to a large room full of cubicles, cubicles, cubicles. The building you're in must be an office, then.",
                 #10 - OfficeSW
                 "You enter one of the office corners, which has a particuliarly large ficus. You study it with intensity.",
                 #11 - OfficeN
@@ -79,17 +108,18 @@ tLocations = [
                 #12 - OfficeC
                 "You enter the center of the office.",
                 #13 - OfficeS
-                "You find a pair of doors, but they appear to be locked. What lies beyond them?",
+                "You find a pair of doors. What lies beyond them?",
                 #14 - OfficeNE
                 "You enter on the office corners. There is a water cooler, but's its empty.",
                 #15 - OfficeE
-                "You are in a large office.",
+                "You are now on the other side of the office. Something feels off, or perhaps you just sick of this place.", #I wonder why
                 #16 - OfficeSE
                 "You enter one of the office corners. There is a painting of a sad clown. What?",
                 #17 - Hallway
                 "You walk down a hallway, and come to a corner.", #We need all the strings to be different for GetLocation to be precise
                 #18 - Forest
-                "You are in a forest. All you see are trees, but you can hear the sound of running water.",
+                "You open the door and you suddenly find yourself in a forest. You look behind to find all traces of the office building to be gone."
+                " All you see are trees, but you can hear the sound of running water.",
                 #19 - River
                 "You come to a river bank. You faintly hear what sounds like constant thunder.",
                 #20 - Lake
@@ -97,16 +127,77 @@ tLocations = [
                 #21 - Waterfall
                 "You follow the river to a waterfall. It looks like it's about 15 feet height, but what do you know?",
                 #22 - CaveEntrance
-                "Behind the waterfall you find an entrance to a cavern.",
+                "Behind the waterfall you find an entrance to a cavern. What lies within?",
                 #23 - Cave
                 "You go down into cave. It's pitch black, and you walk slowly and with caution.",
                 #24 - DeepCave, End
-                "You go deeper into the cave. You come to an empty chamber with a small opening to the surface, allowing you to see."
+                "You go deeper into the cave. You come to an empty chamber with a small opening to the surface, allowing you to see.",
+                #25 - Ravine, End
+                "You take a step forward, not knowing there is nowhere to place your foot. Suddenly, you find yourself tumbling down, down, down..."
+                " You hit the bottom of the ravine. Hard. You cannot see how broken you are, but you know it's bad. You begin to lose consciousness."
+                ]
+bHasLight = True #I know globals are no-nos, but I NEED
+sRavine = "With your source of light, you see a large drop-off to the south side. You can't see the bottom from here." #I'm not sure you can use other parts of a list when defining a list.
+#Table of short location descriptions. Displayed after the location has been visited by default
+tLocationsShort = [
+                #0 - Void (Intro)
+                None,
+                #1 - VoidM
+                "You are in the center of the void.",
+                #2 - VoidN
+                "You return to the forest.",
+                #3 - VoidS
+                "You return to the cliffside.",
+                #4 - VoidE
+                "You return to the city ruins.",
+                #5 - VoidW
+                "You return to the office.",
+                #6 - Closet
+                "You are in a broom closet.",
+                #7 - Hallway
+                "You are at a hallway corner.",
+                #8 - OfficeNW
+                "You enter the Northwest corner of the office.",
+                #9 - OfficeW
+                "You are in the office.",
+                #10 - OfficeSW
+                "You enter the Southwest corner of the office.",
+                #11 - OfficeN
+                "You are in the large cubicle.",
+                #12 - OfficeC
+                "You are in the center of the office.",
+                #13 - OfficeS
+                "You head towards the double doors.",
+                #14 - OfficeNE
+                "You are in the Northeast corner of the office.",
+                #15 - OfficeE
+                "You are in the office. ", #The space should make it unique...
+                #16 - OfficeSE
+                "You're in the Southeast corner of the office.",
+                #17 - Hallway
+                "You are at a hallway corner. ",
+                #18 - Forest
+                "You are in the forest. ",
+                #19 - River
+                "You are at the river.",
+                #20 - Lake
+                "You return to the lake.",
+                #21 - Waterfall
+                "The waterfall stands before you. Lovely.",
+                #22 - Cave Entrance
+                "You are behind the waterfall, at the maw of a cavern.",
+                #23 - Cave
+                "You are within the Cavern. ", #+ bHasLight and sRavine or None, #(<Boolean> AND <String> OR None) chooses <String> at True, None at False :( Python ain't havin it
+    
+                #24 - Deep Cave
+                None, #I'M LAZY
+                #25 - Ravine
+                "With your source of light, you see a large drop-off to the south side. You can't see the bottom from here."
                 ]
 #Define table that holds booleans for whether or not the player has visited certain locations
 tVisited = []
 #For each location, append a False boolean to start with
-for i in tLocations:
+for i in tLocationsShort:
     tVisited.append(False)
 
 ##=============================================================    
@@ -347,7 +438,7 @@ def Interpret(sInput, pLocation, iScore, iNumMoves, FunctionFrom): #Parameters c
 
         elif sInput == "help":
             print(gHelp) #I feel globals are okay IF they are intended to not be changed by the program
-            return True, None, None, None, None, "help" 
+            return True, None, None, None, None, None #Nothing to distribute
         elif sInput == "quit":
             sInput = input("This will end the game and count as a game over. Continue?\n" #Changing sInput shouldn't cause issues
                   "<Enter 'y' for 'yes or 'n' for no'>\n")
@@ -357,7 +448,7 @@ def Interpret(sInput, pLocation, iScore, iNumMoves, FunctionFrom): #Parameters c
                 Copyright(iScore, True)
             return True, pLocation, None, iNumMoves, iScore, "quit exempt"
             
-    return True, pLocation, None, iNumMoves, iScore, None  #Input could not be interpreted
+    return True, pLocation, None, iNumMoves, iScore, "failed"  #Input could not be interpreted
     #Todo: Insert function into main where necessary
 
 
@@ -401,32 +492,7 @@ gMapDesc = ("a = Closet\n"
 tMap = ["Error: Could not determine location", "M", "N", "S", "E", "W", "a", "b", "c1", "c2", "c3", "C", "c4", "c5", "c6", "c7", "c8", "d", "e", "f", "g", "h", "i", "j", "k"]
 #Since the location at 0 is not used in the game loop, it can be used to display an error message
 #But for now we'll stick with the is not None check
-iVoidStart = 0
-iVoidM = 1
-iVoidN = 2
-iVoidS = 3
-iVoidE = 4
-iVoidW = 5
 
-iCloset = 6
-iHallway1 = 7
-iOfficeNW = 8
-iOfficeW = 9
-iOfficeSW = 10
-iOfficeN = 11
-iOfficeC = 12
-iOfficeS = 13
-iOfficeNE = 14
-iOfficeE = 15
-iOfficeSE = 16
-iHallway2 = 17
-iForest = 18
-iRiver = 19
-iLake = 20
-iWaterfall = 21
-iCaveEnt = 22
-iCave = 23
-iCaveDeep = 24
 def Main(sLocation, sName, iScore, iNumMoves, bFirstRun):
     pLocation = sLocation
     bGameState = True
