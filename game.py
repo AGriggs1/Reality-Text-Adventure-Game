@@ -73,7 +73,9 @@ mLocations = [
             [None, None, None, None] #---------------------r25 - Ravine(Hidden location, does not appear on map. Eventually the entire cave system won't appear on the map)
 
             ]
-    
+bHasLight = True #I know globals are no-nos, but I NEED
+sRavine = "With your source of light, you see a large drop-off to the south side. You can't see the bottom from here." #I'm not sure you can use other parts of a list when defining a list.
+
 #Table of locations (long description) Displayed on first entry to location, or with 'look'           
 tLocationsLong = [  
                 #0 - VoidM (Intro)
@@ -129,15 +131,14 @@ tLocationsLong = [
                 #22 - CaveEntrance
                 "Behind the waterfall you find an entrance to a cavern. What lies within?",
                 #23 - Cave
-                "You go down into cave. It's pitch black, and you walk slowly and with caution.",
+                "You go down into cave. It's pitch black, and you walk slowly and with caution." + ((bHasLight and sRavine) or (not False and "")),
                 #24 - DeepCave, End
                 "You go deeper into the cave. You come to an empty chamber with a small opening to the surface, allowing you to see.",
                 #25 - Ravine, End
                 "You take a step forward, not knowing there is nowhere to place your foot. Suddenly, you find yourself tumbling down, down, down..."
                 " You hit the bottom of the ravine. Hard. You cannot see how broken you are, but you know it's bad. You begin to lose consciousness."
                 ]
-bHasLight = True #I know globals are no-nos, but I NEED
-sRavine = "With your source of light, you see a large drop-off to the south side. You can't see the bottom from here." #I'm not sure you can use other parts of a list when defining a list.
+
 #Table of short location descriptions. Displayed after the location has been visited by default
 tLocationsShort = [
                 #0 - Void (Intro)
@@ -186,13 +187,131 @@ tLocationsShort = [
                 "The waterfall stands before you. Lovely.",
                 #22 - Cave Entrance
                 "You are behind the waterfall, at the maw of a cavern.",
-                #23 - Cave
-                "You are within the Cavern. " + (bHasLight and sRavine or None), #(<Boolean> AND <String> OR None) chooses <String> at True, None at False
+                #23 - Cave                             
+                "You are within the dark cavern. " + ((bHasLight and sRavine) or (not False and "")), #Has to have both options as strings in order to work, I found out
                 #24 - Deep Cave
                 None, 
                 #25 - Ravine
                 "With your source of light, you see a large drop-off to the south side. You can't see the bottom from here." #Theoretically you'll be dead on the first visit
                 ]
+#Define examine results
+sNoUse = "You see nothing of use."
+tLocationsExamine = [           #Examine is dual purpose. It prints the index of this list based on location index and it checks if the location has an item
+                #0 - None
+                None,
+                #1 - VoidM, None
+                sNoUse,
+                #2 - VoidN, Doll
+                sNoUse,
+                #3 - VoidS, None
+                sNoUse,
+                #4 - VoidE, None
+                sNoUse,
+                #5 - VoidW, None
+                sNoUse,
+                #6 - Closet, Map
+                "On one of the shelves you find what looks like some sort of map.",
+                #7 - Hallway, None
+                sNoUse,
+                #8 - OfficeNW, None
+                "You rumage through the various papers and see nothing particuliarly interesting. Wait! Oh. Nevermind.",
+                #9 - OfficeW, None
+                sNoUse,
+                #10 - OfficeSW, Flashlight
+                "You look in the plant pot, and see what looks like a flashlight.",
+                #11 - OfficeN, None
+                "You try turning on one of the cubicle computers. It boots instantly to a text document that reads: 'The sun sets, the water chasing it\n\nWhere they meet the secret of their journey shall be revealed'",
+                #12 - OfficeC, None
+                sNoUse,
+                #13 - OfficeS, None
+                "The doors simply won't budge. Is there a key somewhere?" #No
+                #14 - OfficeNE, None
+                "Just an empty watercooler. What a shame.",
+                #15 - OfficeE, None
+                sNoUse,
+                #16 - OfficeSE, None
+                "The portrait has an inscription. It reads 'Chairman Bobbo the Clown, may he grace you with his gaze.' Yeah-huh.",
+                #17 - Hallway, None
+                "You don't see anything." #Very subtle way to tell the difference between hallways
+                #18 - Forest, Rope (In the future, this combined with the flashlight will let you safely explore the ravine
+                "Among the trees you see some sort of rope.",
+                #19 - River, None
+                "Just a river here, nothing to see.",
+                #20 - Lake, Idol
+                "Along the lake shores you find some sort of small wooden figureine.",
+                #21 - Waterfall, None
+                sNoUse,
+                #22 - Cave Entrance, None
+                sNoUse,
+                #23 - Cave, None
+                sNoUse,
+                #24 - Deep Cave, None
+                sNoUse,
+                #25, Ravine
+                None
+                ]
+#Define items
+pDoll = "Doll"
+pMap = "Map"
+pFlashlight = "Flashlight"
+pRope = "Rope"
+pIdol = "Idol"
+tLocationsItem = [
+                #0 - Void
+                None,
+                #1 - VoidM
+                None,
+                #2 - VoidN
+                None, 
+                #3 - VoidS
+                None,
+                #4 - VoidE
+                None,
+                #5 - VoidW
+                None,
+                #6 - Closet
+                pMap,   #Let's play pretend again
+                #7 - Hallway
+                None,
+                #8 - OfficeNW
+                None,
+                #9 - OfficeW
+                None,
+                #10 - OfficeSW
+                pFlashlight,
+                #11 - OfficeN
+                None,
+                #12 - OfficeC
+                None,
+                #13 - OfficeS
+                None,
+                #14 - OfficeNE
+                None,
+                #15 - OfficeE
+                None,
+                #16 - OfficeSE
+                None,
+                #17 - Hallway
+                None,
+                #18 - Forest
+                pRope,
+                #19 - River
+                None,
+                #20 - Lake
+                pIdol,
+                #21 - Waterfall
+                None,
+                #22 - Cave Entrance
+                None,
+                #23 - Cave
+                None,
+                #24 - Deep Cave
+                None,
+                #25 - Ravine
+                None
+                ]
+
+                
 #Define table that holds booleans for whether or not the player has visited certain locations
 tVisited = []
 #For each location, append a False boolean to start with
@@ -206,7 +325,7 @@ def Init(): #Initialization function, runs when the code is run
             #I actually had a second run through main planned. That's why its def calls for a boolean called 'bFirstRun'
             #Thank me
 ##=============================================================
-    tLocScore = [] #Let's just define this here
+    tInventory = []
     iScore = 0
     sTitle = ( "*********   *********      ***      *           *********   *********   *       *\n" 
                "*       **  *              * *      *               *           *        *     *\n"
@@ -284,6 +403,24 @@ def Init(): #Initialization function, runs when the code is run
     
     
     #return sName #Send to global variable. #NEVER GETS USED
+
+def DoesHaveItem(pItem):
+    #Check the inventory for the defined item
+    for p in tInventory:
+
+        if p == pItem:
+            return True
+    #Not found in table
+    return False
+
+def Pickup(sLocation):
+    i = GetLocation(sLocation)
+    pItem = tLocationsItem[i]
+    
+    if not DoesHaveItem(pItem):
+        tInventory.append(pItem)
+        print("Picked up the", pItem + ".")
+    
 ##==============================================
 #SetLocation
 #Sets the player's location
@@ -294,6 +431,7 @@ def Init(): #Initialization function, runs when the code is run
 ##==============================================
 def SetLocation(sLocation, iDirection, iNumMoves, iScore):
     iTo = mLocations[GetLocation(sLocation)][iDirection] or GetLocation(sLocation) #if going that direction is None
+
     if sLocation == tLocationsLong[iTo] or sLocation == tLocationsShort[iTo]:
         print("You can't go that way")
         return sLocation, iNumMoves, iScore
@@ -305,6 +443,7 @@ def SetLocation(sLocation, iDirection, iNumMoves, iScore):
         #Use short description table instead
         iScore = iScore + 5
         tVisited[iTo] = True
+
     else:
         sLocation = tLocationsShort[iTo]
     iNumMoves = iNumMoves + 1
@@ -514,6 +653,7 @@ def Main(sLocation, sName, iScore, iNumMoves, bFirstRun):
 
     
     while bGameState:
+        bHasLight = DoesHaveItem(pFlashlight)
         print(pLocation)
         sInput = input()
         sInput = sInput.lower()
