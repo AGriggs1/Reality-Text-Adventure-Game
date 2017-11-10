@@ -114,7 +114,7 @@ tLocationsLong = [
                 #14 - OfficeNE
                 "You enter on the office corners. There is a water cooler, but's its empty.",
                 #15 - OfficeE
-                "You are now on the other side of the office. Something feels off, or perhaps you just sick of this place.", #I wonder why
+                "You are now on the other side of the office. Something feels off, or perhaps you're just sick of this place.", #I wonder why
                 #16 - OfficeSE
                 "You enter one of the office corners. There is a painting of a sad clown. What?",
                 #17 - Hallway
@@ -131,7 +131,7 @@ tLocationsLong = [
                 #22 - CaveEntrance
                 "Behind the waterfall you find an entrance to a cavern. What lies within?",
                 #23 - Cave
-                "You go down into cave. It's pitch black, and you walk slowly and with caution." + ((bHasLight and sRavine) or (not False and "")),
+                "You go down into cave. It's pitch black, and you walk slowly and with caution. " + ((bHasLight and sRavine) or (not False and "")),
                 #24 - DeepCave, End
                 "You go deeper into the cave. You come to an empty chamber with a small opening to the surface, allowing you to see.",
                 #25 - Ravine, End
@@ -224,7 +224,7 @@ tLocationsExamine = [           #Examine is dual purpose. It prints the index of
                 #12 - OfficeC, None
                 sNoUse,
                 #13 - OfficeS, None
-                "The doors simply won't budge. Is there a key somewhere?" #No
+                "The doors simply won't budge. Is there a key somewhere?", #No
                 #14 - OfficeNE, None
                 "Just an empty watercooler. What a shame.",
                 #15 - OfficeE, None
@@ -232,7 +232,7 @@ tLocationsExamine = [           #Examine is dual purpose. It prints the index of
                 #16 - OfficeSE, None
                 "The portrait has an inscription. It reads 'Chairman Bobbo the Clown, may he grace you with his gaze.' Yeah-huh.",
                 #17 - Hallway, None
-                "You don't see anything." #Very subtle way to tell the difference between hallways
+                "You don't see anything.", #Very subtle way to tell the difference between hallways
                 #18 - Forest, Rope (In the future, this combined with the flashlight will let you safely explore the ravine
                 "Among the trees you see some sort of rope.",
                 #19 - River, None
@@ -317,13 +317,11 @@ tVisited = []
 #For each location, append a False boolean to start with
 for i in tLocationsShort:
     tVisited.append(False)
-
+#Create a copy of tVisited that will act as a check as for whether or not the player can be pickup any item at a location
+tCanPickup = tVisited
 ##=============================================================    
 def Init(): #Initialization function, runs when the code is run
-            #Basically, it's the introduction, and in hinesight it's really, really long, now that I think about it.
-            #Hm, I'll see about cuttting it down, or making it skippable, since the first game loop is only there as a tutorial
-            #I actually had a second run through main planned. That's why its def calls for a boolean called 'bFirstRun'
-            #Thank me
+            #Delete irrelevant comments you mong
 ##=============================================================
     tInventory = []
     iScore = 0
@@ -369,7 +367,7 @@ def Init(): #Initialization function, runs when the code is run
         pLocation = tLocationsLong[1]
         #Enter the gamestate for the first time
         #SO I REMEMBER: in tLocScore, first index is location, second is score
-        pLocation, iScore = Main(pLocation, sName, iScore, 0, True) #We need to send pLocation back to init(), don't we? I'll have to think about implementing that #SOLVED leaving so you can probe my thought process
+        pLocation, iScore, tInventory = Main(pLocation, sName, iScore, 0, tInventory) #We need to send pLocation back to init(), don't we? I'll have to think about implementing that #SOLVED leaving so you can probe my thought process
         #Begin second half of in intro
         print("\n???: Excellent, " + sName + ". You seem to be in optimal shape. Excellent indeed.\n"
               "You're patience with me has not gone unnoticed. I... do not have not been aquainted. I am Bx106001-c. I am a Generation IV Class C Artificial Intelligence. You may call me Baby.\n"
@@ -397,30 +395,44 @@ def Init(): #Initialization function, runs when the code is run
         print("Baby: This test is not optional! You're going to participate and you're going to love it! You'll see...\n"
               "Baby: Let's start!")
     pLocation = tLocationsLong[iCloset]
-    pLocation, iScore = Main(pLocation, sName, iScore, 0, False)
+    pLocation, iScore, tInventory = Main(pLocation, sName, iScore, 0, tInventory)
     Copyright(iScore, True)
     
     
     
     #return sName #Send to global variable. #NEVER GETS USED
-
-def DoesHaveItem(pItem):
+##======================
+#DoesHaveItem    
+#Determines if the player has the defined item
+##======================
+def DoesHaveItem(pItem, tPlayerInventory):
     #Check the inventory for the defined item
-    for p in tInventory:
+    for p in tPlayerInventory:
 
         if p == pItem:
             return True
     #Not found in table
     return False
 
-def Pickup(sLocation):
+##============================
+#Pickup
+#Gives the player the item at sLocation
+##============================
+def Pickup(sLocation, tPlayerInventory):
     i = GetLocation(sLocation)
+    
     pItem = tLocationsItem[i]
     
-    if not DoesHaveItem(pItem):
-        tInventory.append(pItem)
+    if  tCanPickup[i] and pItem is not None:
+        tPlayerInventory.append(pItem)
         print("Picked up the", pItem + ".")
-    
+        #Remove the item from the examine list, but NOT the item list since that will break DoesHaveItem
+        tLocationsExamine[i] = sNoUse 
+        return tPlayerInventory
+    print("Nothing to pickup.")
+    #Set location as visited
+    tVisited[i] = True
+    return tPlayerInventory 
 ##==============================================
 #SetLocation
 #Sets the player's location
@@ -647,13 +659,14 @@ tMap = ["Error: Could not determine location", "M", "N", "S", "E", "W", "a", "b"
 #Since the location at 0 is not used in the game loop, it can be used to display an error message
 #But for now we'll stick with the is not None check
 
-def Main(sLocation, sName, iScore, iNumMoves, bFirstRun):
+def Main(sLocation, sName, iScore, iNumMoves, tPlayerInventory):
     pLocation = sLocation
     bGameState = True
 
     
     while bGameState:
-        bHasLight = DoesHaveItem(pFlashlight)
+        bHasLight = DoesHaveItem(pFlashlight, tPlayerInventory)
+      #  pLocation = UpdateLocation(pLocation)
         print(pLocation)
         sInput = input()
         sInput = sInput.lower()
@@ -724,15 +737,28 @@ def Main(sLocation, sName, iScore, iNumMoves, bFirstRun):
 
         elif sInput == "score":
              print("Your score:", iScore)
+             
+        elif sInput == "examine":
+            i = GetLocation(pLocation)
+            print(tLocationsExamine[i])
+            
+            if not DoesHaveItem(tLocationsItem[i], tPlayerInventory): 
+                tCanPickup[i] = True
+                  
+        elif sInput == "look":
+            print(tLocationsLong[GetLocation(pLocation)])
 
+        elif sInput == "take":
+           tPlayerInventory = Pickup(pLocation, tPlayerInventory) 
+            
         else:
             print("Command not valid")
 
-        if bFirstRun and tVisited[iVoidM] and tVisited[iVoidN] and tVisited[iVoidS] and tVisited[iVoidE] and tVisited[iVoidW]:
+        if GetLocation(pLocation) < 6 and tVisited[iVoidM] and tVisited[iVoidN] and tVisited[iVoidS] and tVisited[iVoidE] and tVisited[iVoidW]:
             bGameState = False
             print(pLocation)
 
-        elif iNumMoves > 30 and not bFirstRun:
+        elif iNumMoves > 30 and GetLocation(pLocation) < 6:
             bGameState = False
             print(pLocation)
             print("\nBaby: Well, you certainly seem to be underperforming. It's quite boring actually. Looks like it's back to stasis for you!")
@@ -746,7 +772,7 @@ def Main(sLocation, sName, iScore, iNumMoves, bFirstRun):
     tLocScore = []
     tLocScore.append(pLocation)
     tLocScore.append(iScore)
-    return pLocation, iScore
+    return pLocation, iScore, tPlayerInventory
         
 
 Init()
