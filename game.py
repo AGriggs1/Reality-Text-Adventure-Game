@@ -483,7 +483,16 @@ def GetLocation(sLocation):
             return i
     print("Error: pLocation not found")
     return None
+##==================================
+#SwitchLocations
+#Takes two rows(location) and two columns(direction) and switches their place on the navigation matrix
+##==================================
+def SwitchLocations(r1, c1, r2, c2):
+    iLocation = mLocations[r1][c1]
+    mLocations[r1][c1] = mLocations[r2][c2]
+    mLocations[r2][c2] = iLocation
 
+    
 ##================================
 #Copyright
 #Prints the copyright/gameover statement
@@ -837,6 +846,10 @@ def Main(sLocation, sName, iScore, iNumMoves, tPlayerInventory):
             
         else:
             print("Command not valid")
+
+        if pLocation == tLocationsLong[iOfficeC] or pLocation == tLocationsShort[iOfficeC]:
+            SwitchLocations(iOfficeW, 3, iOfficeE, 2)
+            print("Switched!")
         ##ENDINGS
         #End of tutorial
         if GetLocation(pLocation) < 6 and tVisited[iVoidM] and tVisited[iVoidN] and tVisited[iVoidS] and tVisited[iVoidE] and tVisited[iVoidW]:
