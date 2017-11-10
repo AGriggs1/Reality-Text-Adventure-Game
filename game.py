@@ -73,7 +73,7 @@ mLocations = [
             [None, None, None, None] #---------------------r25 - Ravine(Hidden location, does not appear on map. Eventually the entire cave system won't appear on the map)
 
             ]
-bHasLight = True #I know globals are no-nos, but I NEED
+bHasLight = False #I know globals are no-nos, but I NEED
 sRavine = "With your source of light, you see a large drop-off to the south side. You can't see the bottom from here." #I'm not sure you can use other parts of a list when defining a list.
 
 #Table of locations (long description) Displayed on first entry to location, or with 'look'           
@@ -90,7 +90,8 @@ tLocationsLong = [
                 "Suddenly you are at the edge of a cliff overlooking the open sea. You hear the waves crashing against the crags below you, "
                 "smell the mist of saltwater, and feel a sense of somberness.",
                 #4 - VoidE
-                "You follow one of the lines to a circle that, upon investigation, has the letter 'E' on it. The area around you transforms and you are on the streets of a city that seems to be long abandoned. "
+                "You follow one of the lines to a circle that, upon investigation, has the letter"
+                "'E' on it. The area around you transforms and you are on the streets of a city that seems to be long abandoned. "
                 "Cars rusted, buildings crumbling, overgrown with moss and vines. You can't help but feel curious about the fate of this place.",
                 #5 - VoidW
                 "You follow one of the lines to a circle that, upon investigation, has the letter 'W' on it. The area around you transforms into an office."
@@ -118,20 +119,20 @@ tLocationsLong = [
                 #16 - OfficeSE
                 "You enter one of the office corners. There is a painting of a sad clown. What?",
                 #17 - Hallway
-                "You walk down a hallway, and come to a corner.", #We need all the strings to be different for GetLocation to be precise
+                "You walk down a hallway, and come to a corner.",
                 #18 - Forest
-                "You come to a door. Upon opening it you suddenly find yourself in a forest. You look enter, and as you look behind you, you find all traces of the office building to be gone."
+                "You come to a door. Upon opening it you suddenly find yourself in a forest. You enter, and as you look behind you, you find all traces of the office building to be gone."
                 " All you see are trees, but you can hear the sound of running water.",
                 #19 - River
                 "You come to a river bank. You faintly hear what sounds like constant thunder.",
                 #20 - Lake
                 "You follow the river to a large lake. It's shores are sandy, interestingly enough.",
                 #21 - Waterfall
-                "You follow the river to a waterfall. It looks like it's about 15 feet height, but what do you know?",
+                "You follow the river to a waterfall. It looks like it's about 15 feet high, but what do you know?",
                 #22 - CaveEntrance
                 "Behind the waterfall you find an entrance to a cavern. What lies within?",
                 #23 - Cave
-                "You go down into cave. It's pitch black, and you walk slowly and with caution. " + ((bHasLight and sRavine) or (not False and "")),
+                "You go down into cave. It's pitch black, and you walk slowly and with caution. ", #+ ((bHasLight and sRavine) or (not False and "")), #I THOUGHT I WAS BEING CLEVER
                 #24 - DeepCave, End
                 "You go deeper into the cave. You come to an empty chamber with a small opening to the surface, allowing you to see.",
                 #25 - Ravine, End
@@ -188,7 +189,7 @@ tLocationsShort = [
                 #22 - Cave Entrance
                 "You are behind the waterfall, at the maw of a cavern.",
                 #23 - Cave                             
-                "You are within the dark cavern. " + ((bHasLight and sRavine) or (not False and "")), #Has to have both options as strings in order to work, I found out
+                "You are within the dark cavern. ",
                 #24 - Deep Cave
                 None, 
                 #25 - Ravine
@@ -220,7 +221,7 @@ tLocationsExamine = [           #Examine is dual purpose. It prints the index of
                 #10 - OfficeSW, Flashlight
                 "You look in the plant pot, and see what looks like a flashlight.",
                 #11 - OfficeN, None
-                "You try turning on one of the cubicle computers. It boots instantly to a text document that reads: 'The sun sets, the water chasing it\n\nWhere they meet the secret of their journey shall be revealed'",
+                "You try turning on one of the cubicle computers. It boots instantly to a text document that reads:\n'The sun sets, the water chasing it\n\nWhere they meet the secret of their journey shall be revealed'",
                 #12 - OfficeC, None
                 sNoUse,
                 #13 - OfficeS, None
@@ -270,7 +271,7 @@ tLocationsItem = [
                 #5 - VoidW
                 None,
                 #6 - Closet
-                pMap,   #Let's play pretend again
+                pMap,
                 #7 - Hallway
                 None,
                 #8 - OfficeNW
@@ -337,7 +338,7 @@ def Init(): #Initialization function, runs when the code is run
     tVisited[iVoidStart] = True
     tVisited[iVoidM] = True #They're technically the same
    # pLocation, iNumMoves, iScore = SetLocation("None", iVoidStart, 0, 0)
-    pLocation = tLocationsLong[0] #The traditional way won't work for initilizing locations, since SetLocation now requires the location you're currently at to work
+    pLocation = tLocationsLong[0] #The traditional way won't work for initializing locations, since SetLocation now requires the location you're currently at to work
                                   #That means it more than likely will not work for forcing a location via interpret
     
     #Begin introduction
@@ -366,9 +367,8 @@ def Init(): #Initialization function, runs when the code is run
         #Update pLocation to showcase changes made
         pLocation = tLocationsLong[1]
         #Enter the gamestate for the first time
-        #SO I REMEMBER: in tLocScore, first index is location, second is score
-        pLocation, iScore, tInventory = Main(pLocation, sName, iScore, 0, tInventory) #We need to send pLocation back to init(), don't we? I'll have to think about implementing that #SOLVED leaving so you can probe my thought process
-        #Begin second half of in intro
+        pLocation, iScore, tInventory = Main(pLocation, sName, iScore, 0, tInventory)
+        #Begin second half of intro
         print("\n???: Excellent, " + sName + ". You seem to be in optimal shape. Excellent indeed.\n"
               "You're patience with me has not gone unnoticed. I... do not have not been aquainted. I am Bx106001-c. I am a Generation IV Class C Artificial Intelligence. You may call me Baby.\n"
               "Baby: I know you are curious as for where you are, but that's a bit more difficult. Could you define what exactly you wish to know about your whereabouts?\n")
@@ -379,12 +379,11 @@ def Init(): #Initialization function, runs when the code is run
     
         for i in range(150):
             print("x003334" + str(i) + ".FATAL: Bx106001-c Gen IV 'Bravo-Alfa-Bravo-Yankee' has @#4uNt2#d an is$3@ that has co#$Afg0sed *&ad$%3-sufficient operations!") #Baby has ecountered an issue that has compromised self-sufficient operations!
-        #for i in range(20):
-           # print()
+
         print("Baby: Oops! Looks I had a little hiccup there.\n"
               "Baby: I'm sorry, but you don't have permission to access such information without the correct access code. Please input access code now.")
         #Hmmm, maybe I could add a little easter egg here
-        input("Access code: ")
+        sInput = input("Access code: ")
     
         print("Baby: Nuh-uh. Wrong, as expected. Hm, tell you what, I'll at least tell you what you're here for. This place, whatever it may be to you, is to test your physical and cognitive abilities.\n"
               "Baby: I... am to test you. You pass this, and Baby will tell you anything.\n"
@@ -395,12 +394,10 @@ def Init(): #Initialization function, runs when the code is run
         print("Baby: This test is not optional! You're going to participate and you're going to love it! You'll see...\n"
               "Baby: Let's start!")
     pLocation = tLocationsLong[iCloset]
+    tVisited[iCloset] = True
     pLocation, iScore, tInventory = Main(pLocation, sName, iScore, 0, tInventory)
     Copyright(iScore, True)
     
-    
-    
-    #return sName #Send to global variable. #NEVER GETS USED
 ##======================
 #DoesHaveItem    
 #Determines if the player has the defined item
@@ -466,10 +463,9 @@ def GetLocation(sLocation):
     for i in range(len(tLocationsShort) - 1): #The length should be the same
         
         if tLocationsShort[i] == sLocation:
-            print(i)
             return i
+        
         if tLocationsLong[i] == sLocation:
-            print(i)
             return i
     print("Error: pLocation not found")
     return None
@@ -629,6 +625,7 @@ def UpdateLocation(pLocation):
 def GenerateMap(Map, MapDescription, tMap, bDoRegenerate):
     if bDoRegenerate:
         #Get the Nav Matrix Sequence (Map one is r0-5, Map two is r6-25)
+        #Wipe Matrix (set everything to NA)
         #Try to interpret how its currently put together
         #Redesign Grid to match
         pass
@@ -724,8 +721,8 @@ gMapDesc = ("a = Closet\n"
             "f = River\n"
             "g = Lake\n"
             "h = Waterfall\n"
-            "i = Cave\n"
-            "j = Deep Cave\n"
+            "i = Cave Entrance\n"
+            "j = Cave\n"
             "k = ???")
 
 m = GenerateMap(mMap, gMapDesc, None, False)
@@ -736,12 +733,13 @@ tMap = ["Error: Could not determine location", "M", "N", "S", "E", "W", "a", "b"
 def Main(sLocation, sName, iScore, iNumMoves, tPlayerInventory):
     pLocation = sLocation
     bGameState = True
-
+    bDoShowSequence = True
     
     while bGameState:
         bHasLight = DoesHaveItem(pFlashlight, tPlayerInventory)
-      #  pLocation = UpdateLocation(pLocation)
         print(pLocation)
+        #Update pLocation
+        pLocation = UpdateLocation(pLocation)
         sInput = input()
         sInput = sInput.lower()
         bVar1, sVar1, sVar2, iVar1, iVar2, sResult = Interpret(sInput, pLocation, iScore, iNumMoves, "Main")#This is going to get hideous
@@ -751,7 +749,6 @@ def Main(sLocation, sName, iScore, iNumMoves, tPlayerInventory):
         #        pLocation, iNumMoves, iScore = sVar1, iVar1, iVar2
         #That's all we have for now
         
-       # if bFirstRun:
             
         if sInput == "north":
             pLocation, iNumMoves, iScore = SetLocation(pLocation, 0, iNumMoves, iScore) #0 = North
@@ -764,9 +761,6 @@ def Main(sLocation, sName, iScore, iNumMoves, tPlayerInventory):
 
         elif sInput == "west":
             pLocation, iNumMoves, iScore = SetLocation(pLocation, 3, iNumMoves, iScore) #3 = West
-                
-     #   if sInput == "north" or sInput == "south" or sInput == "west" or sInput == "east":
-     #       pass #We already checked for these, now we just need them here to verify if the player entered a valid command or not
         
         elif(sInput == "help"):
             print("List of commands:\n"
@@ -778,34 +772,33 @@ def Main(sLocation, sName, iScore, iNumMoves, tPlayerInventory):
                   "Quit: ends the game. Considered a game over.\n" #AKA run the game over/copyright function on quit
                   "Map: Displays the current map.\n"
                   "Moves: Shows how many moves you've made on this map.\n"
-                  "Score: Displays your score.")
+                  "Score: Displays your score.\n"
+                  "Look: Displays the long description of the current location\n"
+                  "Examine: Searches the location. Will reveal any item, if there is one.\n"
+                  "Take: Take any item found at location with examine.")
 
         elif(sInput == "quit"):
             sInput = input("This will end the game and count as a game over. Continue?\n" #Changing sInput shouldn't cause issues
-                    "<Enter 'y' for 'yes or 'n' for no'>\n")
+                           "<Enter 'y' for 'yes or 'n' for no'>\n")
             sInput = sInput[0].lower()
 
             if(sInput == "y"):
                 Copyright(iScore, True)
 
         elif(sInput == "map"):
-            pass
-        #REDESIGN
-         #   if bFirstRun:
-         #       print(gMapTut)
-         #       index = GetLocation(pLocation)
-
-#                if index is not None:
- #                   print("\nYou are at:", tMap[index])
-  #                        
-   #         else:
-    #            print(gMap)
-     #           print(gMapDesc)
-      #          index = GetLocation(pLocation)
-#
- #               if index is not None:
-  #                  print("\nYou are at:", tMap[index])
-
+            i = GetLocation(pLocation)
+            #Does the player HAVE a map?
+            if DoesHaveItem(pMap, tPlayerInventory) or i < 6:
+            
+                if i > 5 and i < 26: #Always plan for the future... not that I have anything planned
+                    print(gMap)
+                    print(gMapDesc)
+                    print("You are at:", tMap[i])
+                else:
+                    print(gMapTut)
+            else:
+                print("Map?")
+                
         elif sInput == "moves":
              print("Your moves:", iNumMoves)
 
@@ -827,25 +820,48 @@ def Main(sLocation, sName, iScore, iNumMoves, tPlayerInventory):
             
         else:
             print("Command not valid")
-
+        ##ENDINGS
+        #End of tutorial
         if GetLocation(pLocation) < 6 and tVisited[iVoidM] and tVisited[iVoidN] and tVisited[iVoidS] and tVisited[iVoidE] and tVisited[iVoidW]:
             bGameState = False
             print(pLocation)
-
-        elif iNumMoves > 30 and GetLocation(pLocation) < 6:
+        #Reaching move limit
+        elif iNumMoves > 30 and GetLocation(pLocation) > 5 and bDoShowSequence:
+            print(pLocation)
+            print("\nBaby: Well, you certainly seem to be underperforming. It's quite boring actually. SERIOUSLY, what could be taking you so long?")
+            #If the player is missing this item, end the game
+            if not DoesHaveItem(pIdol, tPlayerInventory):
+                bGameState = False
+                print("Baby: Whatever. Nap time!")
+                
+            else:
+                print("Baby: Mm. You're close, I'll give you that. Don't. Waste. My. Time.")
+                bDoShowSequence = False
+        #Cave Ending
+        elif pLocation == tLocationsLong[iCaveDeep] or pLocation == tLocationsShort[iCaveDeep]:
+           bGameState = False
+           print(pLocation)
+           
+           if DoesHaveItem(pIdol, tPlayerInventory):
+              print("\nBaby: Welcome! Aw, look at that, you brought a gift. How thoughtful.")
+              print("Baby: Anyways, let's stop for now. Got a clue as for where you are? Here's a hint: you're not in the real world! You're a smart being; it'll come to you. Love love!")
+              print("Final Score:", iScore)
+              Copyright(iScore, False) #It is the end game but not a game over
+              sys.exit()
+              
+           else:
+              print("\nBaby: Welcome!")
+              print("Baby: To the great Greek god Zeus, a second is a thousand years. Now give me a second to congratulate you.")
+              #sleep(1000) #I'm not that cruel
+              Copyright(iScore, True)
+          
+        #My favorite ending
+        elif pLocation == tLocationsShort[iCloset] and iNumMoves > 0:
             bGameState = False
             print(pLocation)
-            print("\nBaby: Well, you certainly seem to be underperforming. It's quite boring actually. Looks like it's back to stasis for you!")
-            #Activate bad end
+            print("Suddenly the door slams shut behind you. You go to open it, only for the handle to fall off.")
+            print("Baby: Eh, did you get the Broom Closet Ending? The Broom Closet Ending is my favourite!") #I spelt favourite like that intentionally by the by
 
- #       elif pLocation == tLocations[iCaveDeep]:
- #          bGameState = False
- #           print(pLocation)
- #          print("\nBaby: Good. Hmmm, listen, I've got to deal with something, why don't you take a rest, and then we can talk. Probably. See you in 50 years!")
-          #Activate less bad end
-    tLocScore = []
-    tLocScore.append(pLocation)
-    tLocScore.append(iScore)
     return pLocation, iScore, tPlayerInventory
         
 
