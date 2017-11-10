@@ -94,7 +94,8 @@ tLocationsLong = [
                 "'E' on it. The area around you transforms and you are on the streets of a city that seems to be long abandoned. "
                 "Cars rusted, buildings crumbling, overgrown with moss and vines. You can't help but feel curious about the fate of this place.",
                 #5 - VoidW
-                "You follow one of the lines to a circle that, upon investigation, has the letter 'W' on it. The area around you transforms into an office."
+                "You follow one of the lines to a circle that, upon investigation, has the letter 'W' on it. "
+                "The area around you transforms into an office."
                 "Desks teeming with paperwork and the faint smell of morning coffees makes you anxious.",
                 #6 - Closet
                 "You are in a broom closet. The shelves are littered with various objects. Perhaps there is something of use?",
@@ -107,7 +108,8 @@ tLocationsLong = [
                 #10 - OfficeSW
                 "You enter one of the office corners, which has a particuliarly large ficus. You study it with intensity.",
                 #11 - OfficeN
-                "You enter a cubicle that is larger than all the rest. It looks like it's supposed to fit 4, maybe 5 people. The thought makes you feel claustrophobic.",
+                "You enter a cubicle that is larger than all the rest. It looks like it's supposed to fit 4, maybe 5 people. "
+                "The thought makes you feel claustrophobic.",
                 #12 - OfficeC
                 "You enter the center of the office, the center of the universe.",
                 #13 - OfficeS
@@ -121,7 +123,8 @@ tLocationsLong = [
                 #17 - Hallway
                 "You walk down a hallway, and come to a corner.",
                 #18 - Forest
-                "You come to a door. Upon opening it you suddenly find yourself in a forest. You enter, and as you look behind you, you find all traces of the office building to be gone."
+                "You come to a door. Upon opening it you suddenly find yourself in a forest. "
+                "You enter, and as you look behind you, you find all traces of the office building to be gone."
                 " All you see are trees, but you can hear the sound of running water.",
                 #19 - River
                 "You come to a river bank. You faintly hear what sounds like constant thunder.",
@@ -136,8 +139,10 @@ tLocationsLong = [
                 #24 - DeepCave, End
                 "You go deeper into the cave. You come to an empty chamber with a small opening to the surface, allowing you to see.",
                 #25 - Ravine, End
-                "You take a step forward, not knowing there is nowhere to place your foot. Suddenly, you find yourself tumbling down, down, down..."
-                " You hit the bottom of the ravine. Hard. You cannot see how broken you are, but you know it's bad. You begin to lose consciousness."
+                "You take a step forward, not knowing there is nowhere to place your foot. "
+                "Suddenly, you find yourself tumbling down, down, down..."
+                " You hit the bottom of the ravine. Hard. You cannot see how broken you are, but you know it's bad. "
+                "You begin to lose consciousness."
                 ]
 
 #Table of short location descriptions. Displayed after the location has been visited by default
@@ -221,7 +226,8 @@ tLocationsExamine = [           #Examine is dual purpose. It prints the index of
                 #10 - OfficeSW, Flashlight
                 "You look in the plant pot, and see what looks like a flashlight.",
                 #11 - OfficeN, None
-                "You try turning on one of the cubicle computers. It boots instantly to a text document that reads:\n'The sun sets, the water chasing it\n\nWhere they meet the secret of their journey shall be revealed'",
+                "You try turning on one of the cubicle computers. It boots instantly to a text document that reads:\n"
+                "\n'The sun sets, the water chasing it\n\nWhere they meet the secret of their journey shall be revealed'",
                 #12 - OfficeC, None
                 sNoUse,
                 #13 - OfficeS, None
@@ -249,7 +255,7 @@ tLocationsExamine = [           #Examine is dual purpose. It prints the index of
                 #24 - Deep Cave, None
                 sNoUse,
                 #25, Ravine
-                None
+                ""
                 ]
 #Define items
 pDoll = "Doll"
@@ -360,8 +366,10 @@ def Init(): #Initialization function, runs when the code is run
         sName = input("???: First things first: do you know your name?\nYour name? ")
     
         print("???: " + sName + "? All right. Now let's see about your sense of orientation.\n")
-        print("Suddenly a red circle appears beneath your feet. You notice four lines spreading outward from it in four directions, leading to other circles\n")
-        print("???: Okie-dokie, go ahead and walk towards any of these circles. I know you're confused, but stick with me. If you feel you need help, just say the word.\n")
+        print("Suddenly a red circle appears beneath your feet. You notice four lines spreading outward from it in four directions,"
+              " leading to other circles\n")
+        print("???: Okie-dokie, go ahead and walk towards any of these circles. I know you're confused, but stick with me."
+              " If you feel you need help, just say the word.\n")
         print("<Type 'North', 'South', 'East', or 'West' to head in that direction. To see all commands availible to you, type 'Help'>\n")
     
         #Update pLocation to showcase changes made
@@ -370,22 +378,28 @@ def Init(): #Initialization function, runs when the code is run
         pLocation, iScore, tInventory = Main(pLocation, sName, iScore, 0, tInventory)
         #Begin second half of intro
         print("\n???: Excellent, " + sName + ". You seem to be in optimal shape. Excellent indeed.\n"
-              "You're patience with me has not gone unnoticed. I... do not have not been aquainted. I am Bx106001-c. I am a Generation IV Class C Artificial Intelligence. You may call me Baby.\n"
-              "Baby: I know you are curious as for where you are, but that's a bit more difficult. Could you define what exactly you wish to know about your whereabouts?\n")
+              "You're patience with me has not gone unnoticed. I... do not have not been aquainted."
+              " I am Bx106001-c. I am a Generation IV Class C Artificial Intelligence. You may call me Baby.\n"
+              "Baby: I know you are curious as for where you are, but that's a bit more difficult. "
+              "Could you define what exactly you wish to know about your whereabouts?\n")
     
         input() #Hm, is Baby decieving you?
         print("Baby: ERROR: Acess denied.")
         sleep(1)
     
         for i in range(150):
-            print("x003334" + str(i) + ".FATAL: Bx106001-c Gen IV 'Bravo-Alfa-Bravo-Yankee' has @#4uNt2#d an is$3@ that has co#$Afg0sed *&ad$%3-sufficient operations!") #Baby has ecountered an issue that has compromised self-sufficient operations!
+            print("x003334" + str(i) + ".FATAL: Bx106001-c Gen IV 'Bravo-Alfa-Bravo-Yankee'"
+                  " has @#4uNt2#d an is$3@ that has co#$Afg0sed *&ad$%3-sufficient operations!")
+            #Baby has ecountered an issue that has compromised self-sufficient operations!
 
         print("Baby: Oops! Looks I had a little hiccup there.\n"
-              "Baby: I'm sorry, but you don't have permission to access such information without the correct access code. Please input access code now.")
+              "Baby: I'm sorry, but you don't have permission to access such information without the correct access code."
+              " Please input access code now.")
         #Hmmm, maybe I could add a little easter egg here
         sInput = input("Access code: ")
     
-        print("Baby: Nuh-uh. Wrong, as expected. Hm, tell you what, I'll at least tell you what you're here for. This place, whatever it may be to you, is to test your physical and cognitive abilities.\n"
+        print("Baby: Nuh-uh. Wrong, as expected. Hm, tell you what, I'll at least tell you what you're here for."
+              " This place, whatever it may be to you, is to test your physical and cognitive abilities.\n"
               "Baby: I... am to test you. You pass this, and Baby will tell you anything.\n"
               "I may even let you go free!\n"
               "...") #In the future, 'Baby:' should be a var
@@ -460,7 +474,7 @@ def SetLocation(sLocation, iDirection, iNumMoves, iScore):
 
 def GetLocation(sLocation):
      
-    for i in range(len(tLocationsShort) - 1): #The length should be the same
+    for i in range(len(tLocationsShort)): #The length should be the same
         
         if tLocationsShort[i] == sLocation:
             return i
@@ -549,7 +563,7 @@ def Interpret(sInput, pLocation, iScore, iNumMoves, FunctionFrom): #Parameters c
             sInput, sArg = sInput.split() #Split sInput by white spaces if needed
         except:
             print("sInput does not need to be split")
-
+        ##WILL NOT WORK THIS VERSION
         if sInput == "setlocation" and FunctionFrom == "Main":
 
             try:
@@ -568,7 +582,8 @@ def Interpret(sInput, pLocation, iScore, iNumMoves, FunctionFrom): #Parameters c
         #returns a boolean and a string
     if FunctionFrom == "Init":
         if sInput.lower() == "skip":
-            sInput = input("???: Hey, hey, what do you think you're doing trying to skip my glorius introduction, bub? Do you even know my name? ")
+            sInput = input("???: Hey, hey, what do you think you're doing trying to skip my glorius introduction,"
+                           " bub? Do you even know my name? ")
 
             if sInput.lower() == "baby":
 
@@ -578,6 +593,7 @@ def Interpret(sInput, pLocation, iScore, iNumMoves, FunctionFrom): #Parameters c
             else:
                 print("???: Hmph! Hm hm! HM HM HM HM! Let's reimmerse ourselves, yeah? *Ahem*")
                 return True, "It's Baby"
+        return False, "What?"
     #Consider spliting up a string by spaces and interpreting every word in it
     ##=====================
     #Valid commands in Main
@@ -645,7 +661,7 @@ def GenerateMap(Map, MapDescription, tMap, bDoRegenerate):
 #   *sLocation, the location to start the game at
 #   *sName, the name the player chose
 #   *iScore, the player's score at this point of the game
-#   *bFirstRun, indicate whether or not this is the first instance of firing the loop (In other words, is the intro still on-going?)
+#   *tPlayerInventory, the player's inventory
 ##============================================
 sNoGo = "You can't go that way."
 gMapTut = ("   N    \n"
@@ -726,7 +742,8 @@ gMapDesc = ("a = Closet\n"
             "k = ???")
 
 m = GenerateMap(mMap, gMapDesc, None, False)
-tMap = ["Error: Could not determine location", "M", "N", "S", "E", "W", "a", "b", "c1", "c2", "c3", "C", "c4", "c5", "c6", "c7", "c8", "d", "e", "f", "g", "h", "i", "j", "k"]
+tMap = ["Error: Could not determine location", "M", "N", "S", "E", "W", "a", "b", "c1", "c2", "c3",
+        "C", "c4", "c5", "c6", "c7", "c8", "d", "e", "f", "g", "h", "i", "j", "k"]
 #Since the location at 0 is not used in the game loop, it can be used to display an error message
 #But for now we'll stick with the is not None check
 
@@ -768,7 +785,7 @@ def Main(sLocation, sName, iScore, iNumMoves, tPlayerInventory):
                   "South: moves player in the 'south' direction.\n"
                   "East: moves player in the 'east' direction.\n"
                   "West: moves player in the 'west' direction.\n"
-                  "Help: displays a list of commands. Hey, a dictionary's gotta have the definition of a dicitionary in it.\n"
+                  "Help: displays a list of commands.\n"
                   "Quit: ends the game. Considered a game over.\n" #AKA run the game over/copyright function on quit
                   "Map: Displays the current map.\n"
                   "Moves: Shows how many moves you've made on this map.\n"
@@ -828,7 +845,8 @@ def Main(sLocation, sName, iScore, iNumMoves, tPlayerInventory):
         #Reaching move limit
         elif iNumMoves > 30 and GetLocation(pLocation) > 5 and bDoShowSequence:
             print(pLocation)
-            print("\nBaby: Well, you certainly seem to be underperforming. It's quite boring actually. SERIOUSLY, what could be taking you so long?")
+            print("\nBaby: Well, you certainly seem to be underperforming. It's quite boring actually. "
+                  "SERIOUSLY, what could be taking you so long?")
             #If the player is missing this item, end the game
             if not DoesHaveItem(pIdol, tPlayerInventory):
                 bGameState = False
@@ -844,24 +862,28 @@ def Main(sLocation, sName, iScore, iNumMoves, tPlayerInventory):
            
            if DoesHaveItem(pIdol, tPlayerInventory):
               print("\nBaby: Welcome! Aw, look at that, you brought a gift. How thoughtful.")
-              print("Baby: Anyways, let's stop for now. Got a clue as for where you are? Here's a hint: you're not in the real world! You're a smart being; it'll come to you. Love love!")
+              print("Baby: Anyways, let's stop for now. Got a clue as for where you are? Here's a hint: "
+                    "you're not in the real world! You're a smart being; it'll come to you. Love love!")
               print("Final Score:", iScore)
               Copyright(iScore, False) #It is the end game but not a game over
               sys.exit()
               
            else:
+              bGameState = False
               print("\nBaby: Welcome!")
               print("Baby: To the great Greek god Zeus, a second is a thousand years. Now give me a second to congratulate you.")
               #sleep(1000) #I'm not that cruel
-              Copyright(iScore, True)
-          
         #My favorite ending
         elif pLocation == tLocationsShort[iCloset] and iNumMoves > 0:
             bGameState = False
             print(pLocation)
             print("Suddenly the door slams shut behind you. You go to open it, only for the handle to fall off.")
             print("Baby: Eh, did you get the Broom Closet Ending? The Broom Closet Ending is my favourite!") #I spelt favourite like that intentionally by the by
-
+        #Fell down the Ravine ending
+        elif pLocation == tLocationsLong[iRavine]:
+            bGameState = False
+            print(pLocation)
+            print("\nBaby: Oops, looks like someone found their mortality!")           
     return pLocation, iScore, tPlayerInventory
         
 
