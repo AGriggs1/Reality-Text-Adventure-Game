@@ -616,8 +616,31 @@ def Interpret(sInput, pLocation, iScore, iNumMoves, FunctionFrom): #Parameters c
             
     return True, pLocation, None, iNumMoves, iScore, "failed"  #Input could not be interpreted
     #Todo: Insert function into main where necessary
+##============================
+#UpdateLocation
+#Simple function that checks if the game should use the short description
+##============================
+def UpdateLocation(pLocation):
+    i = GetLocation(pLocation)
+    if tVisited[i] == True:
+        return tLocationsShort[i]
+    return pLocation
 
-
+def GenerateMap(Map, MapDescription, tMap, bDoRegenerate):
+    if bDoRegenerate:
+        #Get the Nav Matrix Sequence (Map one is r0-5, Map two is r6-25)
+        #Try to interpret how its currently put together
+        #Redesign Grid to match
+        pass
+    for r in Map:
+        s = ""
+        for c in r:
+            #c = c + c
+            s = s + c
+        print(s)
+    print(Map) #Remove in future
+    print(MapDescription)
+    return Map
 ##===========================================
 #Main
 #Gamestate function, always active while player is in the game
@@ -634,7 +657,7 @@ gMapTut = ("   N    \n"
            "   |    \n"
            "   S    \n")
 
-gMap = ("   c1--C   c6            \n"
+gMap = ("   c1--C   c6           \n"
         "   |   |   |             \n"
         "b--c2--c4--c7--d         \n"
         "|  |   |   |   |         \n"
@@ -643,6 +666,55 @@ gMap = ("   c1--C   c6            \n"
         "            g--f--h--i   \n"
         "                     |   \n"
         "                  k--j   \n")
+
+
+
+NA = "  "
+HD = "--"
+VD = "| "
+N_ = "N "
+S_ = "S "
+E_ = "E "
+W_ = "W "
+a_ = "a "
+b_ = "b "
+c1 = "c1"
+c2 = "c2"
+c3 = "c3"
+cC = "C "
+c4 = "c4"
+c5 = "c5"
+c6 = "c6"
+c7 = "c7"
+c8 = "c8"
+d_ = "d "
+e_ = "e "
+f_ = "f "
+g_ = "g "
+h_ = "h "
+i_ = "i "
+j_ = "j "
+k_ = "k "
+        
+#Beginning to experiment with mutable map
+#This is going to be a coordinate grid
+mMap = [
+        [NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA], 
+        [NA, NA, c1, HD, cC, NA, c6, NA, NA, NA, NA, NA, NA, NA],
+        [NA, NA, VD, NA, VD, NA, VD, NA, NA, NA, NA, NA, NA, NA],
+        [b_, HD, c2, HD, c4, HD, c7, HD, d_, NA, NA, NA, NA, NA],
+        [VD, NA, VD, NA, VD, NA, VD, NA, VD, NA, NA, NA, NA, NA],
+        [a_, NA, c3, HD, c5, HD, c8, NA, e_, NA, NA, NA, NA, NA],
+        [NA, NA, NA, NA, NA, NA, NA, NA, VD, NA, NA, NA, NA, NA],
+        [NA, NA, NA, NA, NA, NA, g_, HD, f_, HD, h_, HD, i_, NA],
+        [NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, VD, NA],
+        [NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, k_, HD, j_, NA],
+        [NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA]
+        ]
+
+
+        
+
 
 gMapDesc = ("a = Closet\n"
             "b = Hallway Corner\n"
@@ -655,6 +727,8 @@ gMapDesc = ("a = Closet\n"
             "i = Cave\n"
             "j = Deep Cave\n"
             "k = ???")
+
+m = GenerateMap(mMap, gMapDesc, None, False)
 tMap = ["Error: Could not determine location", "M", "N", "S", "E", "W", "a", "b", "c1", "c2", "c3", "C", "c4", "c5", "c6", "c7", "c8", "d", "e", "f", "g", "h", "i", "j", "k"]
 #Since the location at 0 is not used in the game loop, it can be used to display an error message
 #But for now we'll stick with the is not None check
