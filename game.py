@@ -38,39 +38,41 @@ iCaveEnt = 22
 iCave = 23
 iCaveDeep = 24
 iRavine = 25
+iWaterfallTop = 26
 #Navigation Matrix
 #This SHOULD be mutable'
 #I just need to devise a way to mutate it
 mLocations = [
-            #c0-3 = N, S, E, W
-            ##===FIRST MAP=========##
-            [None, None, None, None],   #-------------r0 - VoidM (Intro)
-            [iVoidN, iVoidS, iVoidE, iVoidW], #-----------r1 - VoidM
-            [None, iVoidM, None, None], #--------------r2 - VoidN
-            [iVoidM, None, None, None], #--------------r3 - VoidS
-            [None, None, None, iVoidM], #--------------r4 - VoidE
-            [None, None, iVoidM, None], #--------------r5 - VoidW
-            ##===SECOND MAP========##
-            [iHallway1, None, None, None], #---------------r6 -- Closet
-            [None, iCloset, iOfficeW, None], #-------------r7 -- Hallway1
-            [None, iOfficeW, iOfficeN, None], #------------r8 -- OfficeNW
-            [iOfficeNW, iOfficeSW, iOfficeC, iHallway1], #-r9 -- OfficeW
-            [iOfficeW, None, iOfficeS, None], #------------r10 - OfficeSW
-            [None, iOfficeC, None, iOfficeNW], #-----------r11 - OfficeN
-            [iOfficeN, iOfficeS, iOfficeE, iOfficeW], #----r12 - OfficeC
-            [iOfficeC, None, iOfficeSE, iOfficeSW], #------r13 - OfficeS
-            [None, iOfficeE, None, None], #----------------r14 - OfficeNE
-            [iOfficeNE, iOfficeSE, iHallway2, iOfficeC], #-r15 - OfficeE
-            [iOfficeE, None, None, iOfficeS], #------------r16 - OfficeSE
-            [None, iForest, None, iOfficeE], #-------------r17 - Hallway2
-            [None, iRiver, None, None], #------------------r18 - Forest
-            [iForest, None, iWaterfall, iLake], #----------r19 - River
-            [None, None, iRiver, None], #------------------r20 - Lake
-            [None, None, iCaveEnt, iRiver], #--------------r21 - Waterfall
-            [None, iCave, None, iWaterfall], #-------------r22 - CaveEnt
-            [iCaveEnt, iRavine, None, iCaveDeep], #--------r23 - Cave
-            [None, None, None, None], #---------------------r24 - CaveDeep
-            [None, None, None, None] #---------------------r25 - Ravine(Hidden location, does not appear on map. Eventually the entire cave system won't appear on the map)
+        #c0-3 = N, S, E, W
+        ##===FIRST MAP=========##
+        [None, None, None, None],   #-------------r0 - VoidM (Intro)
+        [iVoidN, iVoidS, iVoidE, iVoidW], #-----------r1 - VoidM
+        [None, iVoidM, None, None], #--------------r2 - VoidN
+        [iVoidM, None, None, None], #--------------r3 - VoidS
+        [None, None, None, iVoidM], #--------------r4 - VoidE
+        [None, None, iVoidM, None], #--------------r5 - VoidW
+        ##===SECOND MAP========##
+        [iHallway1, None, None, None], #---------------r6 -- Closet
+        [None, iCloset, iOfficeW, None], #-------------r7 -- Hallway1
+        [None, iOfficeW, iOfficeN, None], #------------r8 -- OfficeNW
+        [iOfficeNW, iOfficeSW, iOfficeC, iHallway1], #-r9 -- OfficeW
+        [iOfficeW, None, iOfficeS, None], #------------r10 - OfficeSW
+        [None, iOfficeC, None, iOfficeNW], #-----------r11 - OfficeN
+        [iOfficeN, iOfficeS, iOfficeE, iOfficeW], #----r12 - OfficeC
+        [iOfficeC, None, iOfficeSE, iOfficeSW], #------r13 - OfficeS
+        [None, iOfficeE, None, None], #----------------r14 - OfficeNE
+        [iOfficeNE, iOfficeSE, iHallway2, iOfficeC], #-r15 - OfficeE
+        [iOfficeE, None, None, iOfficeS], #------------r16 - OfficeSE
+        [None, iForest, None, iOfficeE], #-------------r17 - Hallway2
+        [None, iRiver, None, None], #------------------r18 - Forest
+        [iForest, None, iWaterfall, iLake], #----------r19 - River
+        [None, None, iRiver, None], #------------------r20 - Lake
+        [None, None, iCaveEnt, iRiver], #--------------r21 - Waterfall
+        [None, iCave, None, iWaterfall], #-------------r22 - CaveEnt
+        [iCaveEnt, iRavine, None, iCaveDeep], #--------r23 - Cave
+        [None, None, None, None], #---------------------r24 - CaveDeep
+        [None, None, None, None], #--------------------r25 - Ravine(Hidden location, does not appear on map. Eventually the entire cave system won't appear on the map)
+        [None, None, iRiver, iWaterfall] #-------------r26 - WaterfallTop(replaces lake)
 
             ]
 bHasLight = False #I know globals are no-nos, but I NEED
@@ -142,7 +144,9 @@ tLocationsLong = [
                 "You take a step forward, not knowing there is nowhere to place your foot. "
                 "Suddenly, you find yourself tumbling down, down, down..."
                 " You hit the bottom of the ravine. Hard. You cannot see how broken you are, but you know it's bad. "
-                "You begin to lose consciousness."
+                "You begin to lose consciousness.",
+                #26 - WaterfallTop
+                "Following the current, you come across the top of a waterfall. It looks like a 15-foot drop, but what do you know?"
                 ]
 
 #Table of short location descriptions. Displayed after the location has been visited by default
@@ -198,7 +202,9 @@ tLocationsShort = [
                 #24 - Deep Cave
                 None, 
                 #25 - Ravine
-                "With your source of light, you see a large drop-off to the south side. You can't see the bottom from here." #Theoretically you'll be dead on the first visit
+                "With your source of light, you see a large drop-off to the south side. You can't see the bottom from here.",
+                #26 - WaterFallTop
+                "It's the top of a waterfall. Again."
                 ]
 #Define examine results
 sNoUse = "You see nothing of use."
@@ -255,7 +261,9 @@ tLocationsExamine = [           #Examine is dual purpose. It prints the index of
                 #24 - Deep Cave, None
                 sNoUse,
                 #25, Ravine
-                ""
+                None,
+                #26, WaterfallTop
+                sNoUse
                 ]
 #Define items
 pDoll = "Doll"
@@ -315,6 +323,8 @@ tLocationsItem = [
                 #24 - Deep Cave
                 None,
                 #25 - Ravine
+                None,
+                #26 - WaterfallTop
                 None
                 ]
 
@@ -407,6 +417,8 @@ def Init(): #Initialization function, runs when the code is run
         input(cont + "question Baby>")
         print("Baby: This test is not optional! You're going to participate and you're going to love it! You'll see...\n"
               "Baby: Let's start!")
+    #Block Cave
+    ReplaceLocation(iWaterfall, 2, None)
     pLocation = tLocationsLong[iCloset]
     tVisited[iCloset] = True
     pLocation, iScore, tInventory = Main(pLocation, sName, iScore, 0, tInventory)
@@ -492,7 +504,13 @@ def SwitchLocations(r1, c1, r2, c2):
     mLocations[r1][c1] = mLocations[r2][c2]
     mLocations[r2][c2] = iLocation
 
-    
+##======================================
+#ReplaceLocation
+#Takes a row and column and replaces it with iLocation
+##======================================
+def ReplaceLocation(r, c, iReplaceWith):
+    mLocations[r][c] = iReplaceWith
+
 ##================================
 #Copyright
 #Prints the copyright/gameover statement
@@ -750,7 +768,7 @@ gMapDesc = ("a = Closet\n"
             "j = Cave\n"
             "k = ???")
 
-m = GenerateMap(mMap, gMapDesc, None, False)
+#m = GenerateMap(mMap, gMapDesc, None, False)
 tMap = ["Error: Could not determine location", "M", "N", "S", "E", "W", "a", "b", "c1", "c2", "c3",
         "C", "c4", "c5", "c6", "c7", "c8", "d", "e", "f", "g", "h", "i", "j", "k"]
 #Since the location at 0 is not used in the game loop, it can be used to display an error message
@@ -816,7 +834,7 @@ def Main(sLocation, sName, iScore, iNumMoves, tPlayerInventory):
             #Does the player HAVE a map?
             if DoesHaveItem(pMap, tPlayerInventory) or i < 6:
             
-                if i > 5 and i < 26: #Always plan for the future... not that I have anything planned
+                if i > 5 and i < 27: #Always plan for the future... not that I have anything planned
                     print(gMap)
                     print(gMapDesc)
                     print("You are at:", tMap[i])
@@ -846,10 +864,27 @@ def Main(sLocation, sName, iScore, iNumMoves, tPlayerInventory):
             
         else:
             print("Command not valid")
-
+        ##LOCATION MUTATORS
+        #Did the player enter the center of the office?
         if pLocation == tLocationsLong[iOfficeC] or pLocation == tLocationsShort[iOfficeC]:
             SwitchLocations(iOfficeW, 3, iOfficeE, 2)
-            print("Switched!")
+        #Did the player go to the lake?
+        elif pLocation == tLocationsLong[iLake] or pLocation == tLocationsShort[iLake]:
+            #Unblock Cave
+            ReplaceLocation(iWaterfall, 2, iCaveEnt)
+
+        #Did the player go to the waterfall before going to the lake?
+        elif pLocation == tLocationsLong[iWaterfall] or pLocation == tLocationsShort[iWaterfall]:
+            if tVisited[iLake] == False:
+                #Block the lake
+                ReplaceLocation(iRiver, 3, iWaterfallTop)
+        #Did the player go the Forest?
+        elif pLocation == tLocationsLong[iForest] or pLocation == tLocationsShort[iForest]:
+            #Is the Lake blocked?
+            if mLocations[iRiver][3] == iWaterfallTop:
+                #Unblock the Lake
+                ReplaceLocation(iRiver, 3, iLake)
+            
         ##ENDINGS
         #End of tutorial
         if GetLocation(pLocation) < 6 and tVisited[iVoidM] and tVisited[iVoidN] and tVisited[iVoidS] and tVisited[iVoidE] and tVisited[iVoidW]:
@@ -876,16 +911,17 @@ def Main(sLocation, sName, iScore, iNumMoves, tPlayerInventory):
            if DoesHaveItem(pIdol, tPlayerInventory):
               print("\nBaby: Welcome! Aw, look at that, you brought a gift. How thoughtful.")
               print("Baby: Anyways, let's stop for now. Got a clue as for where you are? Here's a hint: "
-                    "you're not in the real world! You're a smart being; it'll come to you. Love love!")
+                    "you're not in the real world! You're a smart being; you already knew that, right? Love love!")
               print("Final Score:", iScore)
               Copyright(iScore, False) #It is the end game but not a game over
+              print("Thanks for playing!")
               sys.exit()
               
            else:
               bGameState = False
               print("\nBaby: Welcome!")
               print("Baby: To the great Greek god Zeus, a second is a thousand years. Now give me a second to congratulate you.")
-              #sleep(1000) #I'm not that cruel
+              #sleep(1000) #I'm not that cruel 
         #My favorite ending
         elif pLocation == tLocationsShort[iCloset] and iNumMoves > 0:
             bGameState = False
