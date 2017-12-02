@@ -7,6 +7,7 @@
 
 from time import sleep # :) Only once
 import sys #Learned about this from https://stackoverflow.com/questions/949504/terminating-a-python-program
+
           
 cont = "<Press enter to "
 bDevMode = True
@@ -620,7 +621,7 @@ def Interpret(sInput, pLocation, iScore, iNumMoves, FunctionFrom): #Parameters c
             else:
                 print("???: Hmph! Hm hm! HM HM HM HM! Let's reimmerse ourselves, yeah? *Ahem*")
                 return True, "It's Baby"
-        return False, "What?"
+        return True, "What?"
     #Consider spliting up a string by spaces and interpreting every word in it
     ##=====================
     #Valid commands in Main
@@ -668,7 +669,7 @@ def UpdateLocation(pLocation):
 def GenerateMap(Map, MapDescription, tMap, bDoRegenerate):
     if bDoRegenerate:
         #Get the Nav Matrix Sequence (Map one is r0-5, Map two is r6-25)
-        #Wipe Matrix (set everything to NA)
+        #Wipe Map Matrix (set everything to NA)
         #Try to interpret how its currently put together
         #Redesign Grid to match
         pass
@@ -735,6 +736,10 @@ h_ = "h "
 i_ = "i "
 j_ = "j "
 k_ = "k "
+l_ = "l "
+m_ = "m "
+n_ = "n "
+o_ = "o "
         
 #Beginning to experiment with mutable map
 #This is going to be a coordinate grid
@@ -786,7 +791,7 @@ def Main(sLocation, sName, iScore, iNumMoves, tPlayerInventory):
         pLocation = UpdateLocation(pLocation)
         sInput = input()
         sInput = sInput.lower()
-        bVar1, sVar1, sVar2, iVar1, iVar2, sResult = Interpret(sInput, pLocation, iScore, iNumMoves, "Main")#This is going to get hideous
+        #bVar1, sVar1, sVar2, iVar1, iVar2, sResult = Interpret(sInput, pLocation, iScore, iNumMoves, "Main")#This is going to get hideous
         #Now we just need to interpret the return values here by looking at sResult
         #if sResult is not none:
         #   if sResult is "setlocation":
