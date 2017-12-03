@@ -31,7 +31,17 @@ pBlockE = "E-Block"
 pBlockW = "W-Block"
 pMatches = "Matches"
 pKey = "Key"
+#Define area specific maps
+gMapOffice = ("   c1--C   c6   \n"
+             "   |   |   |     \n"
+             "b--c2--c4--c7--d \n"
+             "|  |   |   |   | \n"
+             "a  c3--c5--c8 ")
 
+
+gMapForest = ("   e    \n"
+              "   |    \n"
+              "g--f--h--i")
 #This matrix defines the indexes of the locations each item can be used at
 #It will be used like this:
 # for i in mCanUseAt[row]:
@@ -53,7 +63,7 @@ mCanUseAt = [
     ]
 pVoidDummy = Locale("You find yourself in an empty white space, a 'nothing'.", None, 0, [])
 pVoid = Locale("You are in an empty white space. A red circle with four lines leading in four directions"
-               "to four other circles appears under your feet.",
+               " to four other circles appears under your feet.",
                "You are in the center of the void.", 1, [pBlockS, pBlockW]) #For now, I just want to define every location, so I'll just list the name of the item.
 
 pVoidN = Locale("You follow one of the lines to a circle that, upon investigation, has the letter 'N' on it."
@@ -80,7 +90,7 @@ pCloset = Locale("You are in a broom closet. The shelves are littered with vario
                  "You're in a broom closet.", 6, [pFlashlight, pMatches, pHammer])
 
 pHallway1 = Locale("You walk down a hallway and come to a corner.",
-                   "You are at a hallway corner. ", 7, [pMap])
+                   "You are at a hallway corner. ", 7, [pMapOffice])
 
 pOfficeNW = Locale("You enter one of the office corners. Papers and supplies litter the floor.",
                    "You enter the Northwest corner of the office.", 8, [])
@@ -89,7 +99,7 @@ pOfficeW = Locale("You come to a large room full of cubicles, cubicles, cubicles
                   "You are in the office.", 9, [])
 
 pOfficeSW = Locale("You enter one of the office corners, which has a particuliarly large ficus. You study it with intensity.",
-                   "You enter the Southwest corner of the office.", 10, ["Batteries"])
+                   "You enter the Southwest corner of the office.", 10, [pBatteries])
                    
 pOfficeN = Locale("You enter a cubicle that is larger than all the rest. It looks like it's supposed to fit 4, maybe 5 people. "
                   "The thought makes you feel claustrophobic.", "You are in the large cubicle.", 11, [])
@@ -110,7 +120,7 @@ pHallway2 = Locale("You walk down a hallway, and come to a corner.", "You are at
 pForest = Locale("You come to a door. Upon opening it you suddenly find yourself in a forest. "
                 "You enter, and as you look behind you, you find all traces of the office building to be gone."
                 " All you see are trees, but you can hear the sound of running water.",
-                 "You are in the forest. ", 18, ["Rope"])
+                 "You are in the forest. ", 18, [pRope, pMapOther])
 
 pLake = Locale("You follow the river to a large lake. It's shores are sandy, interestingly enough.", "You return to the lake.", 19, [pDoll])
 
@@ -184,28 +194,28 @@ tLocationsExamine = [           #Examine is dual purpose. It prints the index of
                 #0 - None
                 None,
                 #1 - VoidM, None
-                sNoUse,
-                #2 - VoidN, Doll
-                sNoUse,
+                "There are two blocks with letters on them. An 'S-Block' and a 'W-Block',",
+                #2 - VoidN, None
+                "It's an 'E-Block'.",
                 #3 - VoidS, None
-                sNoUse,
+                "It's an 'S-Block'.",
                 #4 - VoidE, None
                 sNoUse,
                 #5 - VoidW, None
                 sNoUse,
                 #6 - Closet, Map
-                "On one of the shelves you find what looks like some sort of map.",
+                "Rifling through the shelves, you see a 'Flashlight', some 'Matches', and a 'Hammer'.",
                 #7 - Hallway, None
-                sNoUse,
+                "There's a panel on the wall. Inside you see what could be a 'Map' of this place\n\n" + gMapOffice, #Put map after +
                 #8 - OfficeNW, None
                 "You rumage through the various papers and see nothing particuliarly interesting. Wait! Oh. Nevermind.",
                 #9 - OfficeW, None
                 sNoUse,
                 #10 - OfficeSW, Flashlight
-                "You look in the plant pot, and see what looks like a flashlight.",
+                "You look in the plant pot, and see what looks like some 'Batteries'.",
                 #11 - OfficeN, None
                 "You try turning on one of the cubicle computers. It boots instantly to a text document that reads:\n"
-                "\n'The sun sets, the water chasing it\n\nWhere they meet the secret of their journey shall be revealed'",
+                "\n'When the sun sets, the water shall chase it\n\nWhere they meet the secret of the origin of their journey shall be revealed'",
                 #12 - OfficeC, None
                 sNoUse,
                 #13 - OfficeS, None
@@ -218,12 +228,13 @@ tLocationsExamine = [           #Examine is dual purpose. It prints the index of
                 "The portrait has an inscription. It reads 'Chairman Bobbo the Clown, may he grace you with his gaze.' Yeah-huh.",
                 #17 - Hallway, None
                 "You don't see anything.", #Very subtle way to tell the difference between hallways
-                #18 - Forest, Rope (In the future, this combined with the flashlight will let you safely explore the ravine
-                "Among the trees you see some sort of rope.",
+                #18 - Forest, Rope, ForestMap (In the future, this combined with the flashlight will let you safely explore the ravine
+                "Among the trees you see some sort of 'Rope'. Nearby is a wooden bulletin board enscribed as 'New Pena National Forest'."
+                " On it you see what looks like a map of the area.\n\n" + gMapForest, #Ditto as before
                 #19 - River, None
                 "Just a river here, nothing to see.",
                 #20 - Lake, Idol
-                "Along the lake shores you find some sort of small wooden figureine.",
+                "Along the lake shores you find a small wooden figureine, look some sort of 'Doll'.",
                 #21 - Waterfall, None
                 sNoUse,
                 #22 - Cave Entrance, None
@@ -233,7 +244,7 @@ tLocationsExamine = [           #Examine is dual purpose. It prints the index of
                 #24 - Deep Cave, None
                 sNoUse,
                 #25, Ravine
-                None,
+                sNoUse,
                 #26, WaterfallTop
                 sNoUse
                 ]
@@ -304,7 +315,7 @@ tLocationsItem = [
 
                 
 #Define table that holds booleans for whether or not the player has visited certain locations
-tVisited = []
+#tVisited = []
 #For each location, append a False boolean to start with
 #for i in tLocationsShort:
 #    tVisited.append(False)
@@ -672,10 +683,6 @@ def Interpret(sInput, pLocation, iScore, iNumMoves, FunctionFrom): #Parameters c
 def UpdateLocation(pPlayer):
     if not pPlayer.pLocation.bHasVisited:
         pPlayer.pLocation.bHasVisited = True 
-    #i = GetLocation(pLocation)
-    #if tVisited[i] == True:
-        #return tLocationsShort[i]
-    #return pLocation
 
 def GenerateMap(Map, MapDescription, tMap, bDoRegenerate):
     if bDoRegenerate:
@@ -800,7 +807,7 @@ def Main(pPlayer):
         #Update pLocation
         UpdateLocation(pPlayer)
         sInput = input()
-        sInput = sInput.lower()
+        sInput = sInput.lower().strip()
         #bVar1, sVar1, sVar2, iVar1, iVar2, sResult = Interpret(sInput, pLocation, iScore, iNumMoves, "Main")#This is going to get hideous
         #Now we just need to interpret the return values here by looking at sResult
         #if sResult is not none:
@@ -808,73 +815,87 @@ def Main(pPlayer):
         #        pLocation, iNumMoves, iScore = sVar1, iVar1, iVar2
         #That's all we have for now
         
+        try:
+            sCommand, sParam = sInput.split()
+            if sCommand == "pickup":
+                pass
+                
+                #Can the player pickup any item?
+        except:
             
-        if sInput == "north":
-            pPlayer.pLocation = SetLocation(pPlayer, 0) #0 = North
+            if sInput == "north":
+                pPlayer.pLocation = SetLocation(pPlayer, 0) #0 = North
 
-        elif sInput == "south":
-            pPlayer.pLocation = SetLocation(pPlayer, 1) #1 = South
+            elif sInput == "south":
+               pPlayer.pLocation = SetLocation(pPlayer, 1) #1 = South
+    
+            elif sInput == "east":
+                pPlayer.pLocation = SetLocation(pPlayer, 2) #2 = East
 
-        elif sInput == "east":
-            pPlayer.pLocation = SetLocation(pPlayer, 2) #2 = East
-
-        elif sInput == "west":
-            pPlayer.pLocation = SetLocation(pPlayer, 3) #3 = West
+            elif sInput == "west":
+                pPlayer.pLocation = SetLocation(pPlayer, 3) #3 = West
         
-        elif(sInput == "help"):
-            print("List of commands:\n"
-                  "North: moves player in the 'north' direction.\n"
-                  "South: moves player in the 'south' direction.\n"
-                  "East: moves player in the 'east' direction.\n"
-                  "West: moves player in the 'west' direction.\n"
-                  "Help: displays a list of commands.\n"
-                  "Quit: ends the game. Considered a game over.\n" #AKA run the game over/copyright function on quit
-                  "Map: Displays the current map.\n"
-                  "Moves: Shows how many moves you've made on this map.\n"
-                  "Score: Displays your score.\n"
-                  "Look: Displays the long description of the current location\n"
-                  "Examine: Searches the location. Will reveal any item, if there is one.\n"
-                  "Take: Take any item found at location with examine.")
+            elif(sInput == "help"):
+                print("List of commands:\n"
+                      "North: moves player in the 'north' direction.\n"
+                      "South: moves player in the 'south' direction.\n"
+                      "East: moves player in the 'east' direction.\n"
+                      "West: moves player in the 'west' direction.\n"
+                      "Help: displays a list of commands.\n"
+                      "Quit: ends the game. Considered a game over.\n" #AKA run the game over/copyright function on quit
+                      "Map: Displays the current map.\n"
+                      "Moves: Shows how many moves you've made on this map.\n"
+                      "Score: Displays your score.\n"
+                      "Look: Displays the long description of the current location\n"
+                      "Examine: Searches the location. Will reveal any item, if there is one.\n"
+                      "Take: Take any item found at location with examine.")
 
-        elif(sInput == "quit"):
-            sInput = input("This will end the game and count as a game over. Continue?\n" #Changing sInput shouldn't cause issues
+            elif(sInput == "quit"):
+                sInput = input("This will end the game and count as a game over. Continue?\n" #Changing sInput shouldn't cause issues
                            "<Enter 'y' for 'yes or 'n' for no'>\n")
-            sInput = sInput[0].lower()
+                sInput = sInput[0].lower()
 
-            if(sInput == "y"):
-                Copyright(pPlayer, True)
+                if(sInput == "y"):
+                    Copyright(pPlayer, True)
 
-        elif(sInput == "map"):
-            i = GetLocation(pLocation)
-            #Does the player HAVE a map?
-            if DoesHaveItem(pMap, tPlayerInventory) or i < 6:
+            elif(sInput == "map"):
+                
+                #Does the player HAVE a map?
+                if DoesHaveItem(pMap, pPlayer) or pPlayer.pLocation.i < 6:
             
-                if i > 5 and i < 27: #Always plan for the future... not that I have anything planned
-                    print(gMap)
-                    print(gMapDesc)
-                    print("You are at:", tMap[i])
+                    if pPlayer.pLocation.i > 5 and pPlayer.pLocation.i < 27: #Always plan for the future... not that I have anything planned
+                        print(gMap)
+                        print(gMapDesc)
+                        print("You are at:", tMap[i])
+                    else:
+                        print(gMapTut)
                 else:
-                    print(gMapTut)
-            else:
-                print("Map?")
+                    print("Map?")
                 
-        elif sInput == "moves":
-             print("Your moves:", pPlayer.iMoves)
+            elif sInput == "moves":
+                 print("Your moves:", pPlayer.iMoves)
 
-        elif sInput == "score":
-             print("Your score:", pPlayer.iScore)
+            elif sInput == "score":
+                 print("Your score:", pPlayer.iScore)
              
-        elif sInput == "examine":
-            print(tLocationsExamine[pPlayer.pLocation.i])
-            
-            if not DoesHaveItem(tLocationsItem[i], tPlayerInventory): 
-                tCanPickup[i] = True
+            elif sInput == "examine":
+                print(tLocationsExamine[pPlayer.pLocation.i])
+                pPlayer.pLocation.bHasSearched = True
+                for i in pPlayer.pLocation.tCanPickup:
+                    #Special circumstance items that need more than just examining the location to pick anything up
+                    if not i == pMapOffice or pKey:
+                        pPlayer.pLocation.tCanPickup[i] = True
                 
-        elif sInput == "look":
-            print(pPlayer.pLocation.sDescLong)
+                        
+            
+            #if not DoesHaveItem(tLocationsItem[i], tPlayerInventory): 
+            #    tCanPickup[i] = True
+                
+            elif sInput == "look":
+                print(pPlayer.pLocation.sDescLong)
 
-        elif sInput == "take":
-           tPlayerInventory = Pickup(pPlayer) 
+            elif sInput == "take":
+               tPlayerInventory = Pickup(pPlayer) 
             
         else:
             print("Command not valid")
