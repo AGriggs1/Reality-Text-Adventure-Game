@@ -9,23 +9,62 @@ from time import sleep # :) Only once
 import sys #Learned about this from https://stackoverflow.com/questions/949504/terminating-a-python-program
 from Locale import *
 from Player import *
-          
+
+
+
+
 cont = "<Press enter to "
 bDevMode = True
+
+
+pDoll = "Doll"
+pMapOffice = "Map of the Office"
+pMapOther = "Map of the Forest"
+pMap = "Map" #You can combine items to create a new one
+pFlashlight = "Flashlight"
+pBatteries = "Batteries"
+pHammer = "Hammer"
+pRope = "Rope"
+pBlockN = "N-Block"
+pBlockS = "S-Block"
+pBlockE = "E-Block"
+pBlockW = "W-Block"
+pMatches = "Matches"
+pKey = "Key"
+
+#This matrix defines the indexes of the locations each item can be used at
+#It will be used like this:
+# for i in mCanUseAt[row]:
+#   if i == pLocation.i:
+#etcetera
+mCanUseAt = [
+    [], #r0 - Doll
+    [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27], #r1 - Map Office, Map Other, Map
+    [23, 25], #r2 - Flashlight
+    [], #r3 - Batteries
+    [7, 28], #r4 - Hammer
+    [23], #r5 - Rope
+    [], #r6 - N-Block
+    [], #r7 - S-Block
+    [],  #r8 - E-Block
+    [], #r9 - W-Block
+    [24], #r10 - Matches
+    [13], #r11 - Key
+    ]
 pVoidDummy = Locale("You find yourself in an empty white space, a 'nothing'.", None, 0, [])
 pVoid = Locale("You are in an empty white space. A red circle with four lines leading in four directions"
                "to four other circles appears under your feet.",
-               "You are in the center of the void.", 1, ["BlockN, BlockS, BlockE, Blockw"]) #For now, I just want to define every location, so I'll just list the name of the item.
+               "You are in the center of the void.", 1, [pBlockS, pBlockW]) #For now, I just want to define every location, so I'll just list the name of the item.
 
 pVoidN = Locale("You follow one of the lines to a circle that, upon investigation, has the letter 'N' on it."
                 "The area around you transforms into a forest filled teeming monstrous redwood trees."
                 "You hear the songs of various birds, and feel welcome.",
-                "You return to the forest", 2, [])
+                "You return to the forest", 2, [pBlockE])
 
 pVoidS = Locale("You follow one of the lines to a circle that, upon investigation, has the letter 'S' on it."
                 "The area around you transforms. Suddenly you are at the edge of a cliff overlooking the open sea."
                 "You hear the waves crashing against the crags below you, smell the mist of saltwater, and feel a sense of somberness.",
-                "You return to the cliffside", 3, [])
+                "You return to the cliffside", 3, [pBlockN])
 
 pVoidE = Locale("You follow one of the lines to a circle that, upon investigation, has the letter"
                 "'E' on it. The area around you transforms and you are on the streets of a city that seems to be long abandoned. "
@@ -38,10 +77,10 @@ pVoidW = Locale("You follow one of the lines to a circle that, upon investigatio
                 "You return to the office", 5, [])
 
 pCloset = Locale("You are in a broom closet. The shelves are littered with various objects. Perhaps there is something of use?",
-                 "You're in a broom closet.", 6, ["Flashlight", "Matches", "Hammer"])
+                 "You're in a broom closet.", 6, [pFlashlight, pMatches, pHammer])
 
 pHallway1 = Locale("You walk down a hallway and come to a corner.",
-                   "You are at a hallway corner. ", 7, ["Map"])
+                   "You are at a hallway corner. ", 7, [pMap])
 
 pOfficeNW = Locale("You enter one of the office corners. Papers and supplies litter the floor.",
                    "You enter the Northwest corner of the office.", 8, [])
@@ -73,7 +112,7 @@ pForest = Locale("You come to a door. Upon opening it you suddenly find yourself
                 " All you see are trees, but you can hear the sound of running water.",
                  "You are in the forest. ", 18, ["Rope"])
 
-pLake = Locale("You follow the river to a large lake. It's shores are sandy, interestingly enough.", "You return to the lake.", 19, ["Idol"])
+pLake = Locale("You follow the river to a large lake. It's shores are sandy, interestingly enough.", "You return to the lake.", 19, [pDoll])
 
 pRiver = Locale("You come to a river bank. You faintly hear what sounds like constant thunder.", "You are at the river.", 20, [])
 
@@ -87,7 +126,7 @@ pCave = Locale("You go down into cave. It's pitch black, and you walk slowly and
                "You are within the dark cavern. ", 23, [])
 
 pCaveDeep = Locale("You go deeper into the cave. You come to an empty chamber with a small opening to the surface, allowing you to see.",
-                   "You are deep within the cave", 24, ["Key"])
+                   "You are deep within the cave", 24, [pKey])
 
 pRavine = Locale( "You take a step forward, not knowing there is nowhere to place your foot. "
                 "Suddenly, you find yourself tumbling down, down, down..."
@@ -97,7 +136,10 @@ pRavine = Locale( "You take a step forward, not knowing there is nowhere to plac
 pWaterfallTop = Locale("Following the current, you come across the top of a waterfall. It looks like a 15-foot drop, but what do you know?",
                        "It's the top of a waterfall. Again.", 26, ["I might put something here"])
 
+pElevator = Locale("It's... it's an elevator. Question is, up or down?", "You are in the elevator", 27, [])
 
+pElevatorUp = Locale("You push the 'up' button. You feel your weight shift as the box pushes you upward. The elevator stops at a 'ding!'"
+                     ", the doors slide open to reveal... A wall. This doesn't seem right...", "You are in the elevator", 28, [])
 
 
 
@@ -199,6 +241,7 @@ tLocationsExamine = [           #Examine is dual purpose. It prints the index of
 pDoll = "Doll"
 pMap = "Map"
 pFlashlight = "Flashlight"
+pBatteries = "Batteries"
 pHammer = "Hammer"
 pRope = "Rope"
 pIdol = "Idol"
@@ -628,7 +671,7 @@ def Interpret(sInput, pLocation, iScore, iNumMoves, FunctionFrom): #Parameters c
 ##============================
 def UpdateLocation(pPlayer):
     if not pPlayer.pLocation.bHasVisited:
-        pPlayer.pLocation.bHasVisited = True
+        pPlayer.pLocation.bHasVisited = True 
     #i = GetLocation(pLocation)
     #if tVisited[i] == True:
         #return tLocationsShort[i]
