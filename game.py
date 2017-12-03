@@ -2,17 +2,171 @@
 # Author: Anthony Griggs
 # Date: 9/12/17
 
-#Project3
-#Ver 0.5 10/27/17
+#Project4
+#Ver 0.7 11/8/17
 
 from time import sleep # :) Only once
 import sys #Learned about this from https://stackoverflow.com/questions/949504/terminating-a-python-program
+from Locale import *
+from Player import *
           
 cont = "<Press enter to "
 bDevMode = True
+pVoidDummy = Locale("You find yourself in an empty white space, a 'nothing'.", None, [])
+pVoid = Locale("You are in an empty white space. A red circle with four lines leading in four directions"
+               "to four other circles appears under your feet.",
+               "You are in the center of the void", ["BlockN, BlockS, BlockE, Blockw"]) #For now, I just want to define every location, so I'll just list the name of the item.
 
-            
-tLocations = [
+pVoidN = Locale("You follow one of the lines to a circle that, upon investigation, has the letter 'N' on it."
+                "The area around you transforms into a forest filled teeming monstrous redwood trees."
+                "You hear the songs of various birds, and feel welcome.",
+                "You return to the forest", [])
+
+pVoidS = Locale("You follow one of the lines to a circle that, upon investigation, has the letter 'S' on it."
+                "The area around you transforms. Suddenly you are at the edge of a cliff overlooking the open sea."
+                "You hear the waves crashing against the crags below you, smell the mist of saltwater, and feel a sense of somberness.",
+                "You return to the cliffside", [])
+
+pVoidE = Locale("You follow one of the lines to a circle that, upon investigation, has the letter"
+                "'E' on it. The area around you transforms and you are on the streets of a city that seems to be long abandoned. "
+                "Cars rusted, buildings crumbling, overgrown with moss and vines. You can't help but feel curious about the fate of this place.",
+                "You return to the city ruins", [])
+
+pVoidW = Locale("You follow one of the lines to a circle that, upon investigation, has the letter 'W' on it. "
+                "The area around you transforms into an office."
+                "Desks teeming with paperwork and the faint smell of morning coffees makes you anxious.",
+                "You return to the office", [])
+
+pCloset = Locale("You are in a broom closet. The shelves are littered with various objects. Perhaps there is something of use?",
+                 "You're in a broom closet.", ["Flashlight", "Matches", "Hammer"]) 
+pHallway1 = Locale("You walk down a hallway and come to a corner.",
+                   "You are at a hallway corner. ", ["Map"])
+
+pOfficeNW = Locale("You enter one of the office corners. Papers and supplies litter the floor.",
+                   "You enter the Northwest corner of the office.", [])
+
+pOfficeW = Locale("You come to a large room full of cubicles, cubicles, cubicles. The building you're in must be an office, then.",
+                  "You are in the office.", [])
+
+pOfficeSW = Locale("You enter one of the office corners, which has a particuliarly large ficus. You study it with intensity.",
+                   "You enter the Southwest corner of the office.", ["Batteries"])
+                   
+pOfficeN = Locale("You enter a cubicle that is larger than all the rest. It looks like it's supposed to fit 4, maybe 5 people. "
+                  "The thought makes you feel claustrophobic.", "You are in the large cubicle.", [])
+pOfficeC = Locale("You enter the center of the office, the center of the universe.", "You are in the center of the office.", [])
+
+pOfficeS = Locale("You find a pair of doors. What lies beyond them?", "You head towards the double doors.", [])
+
+pOfficeNE = Locale("You enter on the office corners. There is a water cooler, but's its empty.", "You are in the Northeast corner of the office.", [])
+                   
+pOfficeE = Locale("You are now on the other side of the office. Something feels off, or perhaps you're just sick of this place.",
+                   "You are in the the office. ", [])
+
+pOfficeSE = Locale("You enter one of the office corners. There is a painting of a sad clown. What?",
+                   "You're in the Southeast corner of the office.", [])
+
+pHallway2 = Locale("You walk down a hallway, and come to a corner.", "You are at a hallway corner. ", [])
+
+pForest = Locale("You come to a door. Upon opening it you suddenly find yourself in a forest. "
+                "You enter, and as you look behind you, you find all traces of the office building to be gone."
+                " All you see are trees, but you can hear the sound of running water.",
+                 "You are in the forest. ", ["Rope"])
+
+pLake = Locale("You follow the river to a large lake. It's shores are sandy, interestingly enough.", "You return to the lake.", ["Idol"])
+
+pRiver = Locale("You come to a river bank. You faintly hear what sounds like constant thunder.", "You are at the river.", [])
+
+pWaterfall = Locale("You follow the river to a waterfall. It looks like it's about 15 feet high, but what do you know?", 
+                "The waterfall stands before you. Lovely.", [])
+
+pCaveEnt = Locale("Behind the waterfall you find an entrance to a cavern. What lies within?",
+                  "You are behind the waterfall, at the maw of a cavern.", [])
+
+pCave = Locale("You go down into cave. It's pitch black, and you walk slowly and with caution. ",
+               "You are within the dark cavern. ", [])
+pDeepCave = Locale("You go deeper into the cave. You come to an empty chamber with a small opening to the surface, allowing you to see.",
+                   "You are deep within the cave", ["Key"])
+
+pRavine = Locale( "You take a step forward, not knowing there is nowhere to place your foot. "
+                "Suddenly, you find yourself tumbling down, down, down..."
+                " You hit the bottom of the ravine. Hard. You cannot see how broken you are, but you know it's bad. "
+                "You begin to lose consciousness.", "You are at the bottom of a ravine", [])
+                 
+pWaterfallTop = Locale("Following the current, you come across the top of a waterfall. It looks like a 15-foot drop, but what do you know?",
+                       "It's the top of a waterfall. Again.", ["I might put something here"])
+
+
+
+
+
+#These have to defined before the nav matrix now
+iVoidStart = 0
+iVoidM = 1
+iVoidN = 2
+iVoidS = 3
+iVoidE = 4
+iVoidW = 5
+
+iCloset = 6
+iHallway1 = 7
+iOfficeNW = 8
+iOfficeW = 9
+iOfficeSW = 10
+iOfficeN = 11
+iOfficeC = 12
+iOfficeS = 13
+iOfficeNE = 14
+iOfficeE = 15
+iOfficeSE = 16
+iHallway2 = 17
+iForest = 18
+iRiver = 19
+iLake = 20
+iWaterfall = 21
+iCaveEnt = 22
+iCave = 23
+iCaveDeep = 24
+iRavine = 25
+iWaterfallTop = 26
+#Navigation Matrix
+mLocations = [
+        #c0-3 = N, S, E, W
+        ##===FIRST MAP=========##
+        [None, None, None, None],   #-------------r0 - VoidM (Intro)
+        [iVoidN, iVoidS, iVoidE, iVoidW], #-----------r1 - VoidM
+        [None, iVoidM, None, None], #--------------r2 - VoidN
+        [iVoidM, None, None, None], #--------------r3 - VoidS
+        [None, None, None, iVoidM], #--------------r4 - VoidE
+        [None, None, iVoidM, None], #--------------r5 - VoidW
+        ##===SECOND MAP========##
+        [iHallway1, None, None, None], #---------------r6 -- Closet
+        [None, iCloset, iOfficeW, None], #-------------r7 -- Hallway1
+        [None, iOfficeW, iOfficeN, None], #------------r8 -- OfficeNW
+        [iOfficeNW, iOfficeSW, iOfficeC, iHallway1], #-r9 -- OfficeW
+        [iOfficeW, None, iOfficeS, None], #------------r10 - OfficeSW
+        [None, iOfficeC, None, iOfficeNW], #-----------r11 - OfficeN
+        [iOfficeN, iOfficeS, iOfficeE, iOfficeW], #----r12 - OfficeC
+        [iOfficeC, None, iOfficeSE, iOfficeSW], #------r13 - OfficeS
+        [None, iOfficeE, None, None], #----------------r14 - OfficeNE
+        [iOfficeNE, iOfficeSE, iHallway2, iOfficeC], #-r15 - OfficeE
+        [iOfficeE, None, None, iOfficeS], #------------r16 - OfficeSE
+        [None, iForest, None, iOfficeE], #-------------r17 - Hallway2
+        [None, iRiver, None, None], #------------------r18 - Forest
+        [iForest, None, iWaterfall, iLake], #----------r19 - River
+        [None, None, iRiver, None], #------------------r20 - Lake
+        [None, None, iCaveEnt, iRiver], #--------------r21 - Waterfall
+        [None, iCave, None, iWaterfall], #-------------r22 - CaveEnt
+        [iCaveEnt, iRavine, None, iCaveDeep], #--------r23 - Cave
+        [None, None, None, None], #---------------------r24 - CaveDeep
+        [None, None, None, None], #--------------------r25 - Ravine(Hidden location, does not appear on map. Eventually the entire cave system won't appear on the map)
+        [None, None, iRiver, iWaterfall] #-------------r26 - WaterfallTop(replaces lake)
+
+            ]
+bHasLight = False #I know globals are no-nos, but I NEED
+sRavine = "With your source of light, you see a large drop-off to the south side. You can't see the bottom from here." #I'm not sure you can use other parts of a list when defining a list.
+
+#Table of locations (long description) Displayed on first entry to location, or with 'look'           
+tLocationsLong = [  
                 #0 - VoidM (Intro)
                 "You awake to find yourself in an empty white space.",
                 #1 - VoidM
@@ -25,65 +179,261 @@ tLocations = [
                 "Suddenly you are at the edge of a cliff overlooking the open sea. You hear the waves crashing against the crags below you, "
                 "smell the mist of saltwater, and feel a sense of somberness.",
                 #4 - VoidE
-                "You follow one of the lines to a circle that, upon investigation, has the letter 'E' on it. The area around you transforms and you are on the streets of a city that seems to be long abandoned. "
+                "You follow one of the lines to a circle that, upon investigation, has the letter"
+                "'E' on it. The area around you transforms and you are on the streets of a city that seems to be long abandoned. "
                 "Cars rusted, buildings crumbling, overgrown with moss and vines. You can't help but feel curious about the fate of this place.",
                 #5 - VoidW
-                "You follow one of the lines to a circle that, upon investigation, has the letter 'W' on it. The area around you transforms into an office."
+                "You follow one of the lines to a circle that, upon investigation, has the letter 'W' on it. "
+                "The area around you transforms into an office."
                 "Desks teeming with paperwork and the faint smell of morning coffees makes you anxious.",
                 #6 - Closet
-                "You are in a broom closet.",
+                "You are in a broom closet. The shelves are littered with various objects. Perhaps there is something of use?",
                 #7 - Hallway
                 "You walk down a hallway and come to a corner.",
                 #8 - OfficeNW
                 "You enter one of the office corners. Papers and supplies litter the floor.", 
                 #9 - OfficeW
-                "You are in a large office. All you see are cubicles, cubicles, cubicles.",
+                "You come to a large room full of cubicles, cubicles, cubicles. The building you're in must be an office, then.",
                 #10 - OfficeSW
                 "You enter one of the office corners, which has a particuliarly large ficus. You study it with intensity.",
                 #11 - OfficeN
-                "You enter a cubicle that is larger than all the rest. It looks like it's supposed to fit 4, maybe 5 people. The thought makes you feel claustrophobic.",
+                "You enter a cubicle that is larger than all the rest. It looks like it's supposed to fit 4, maybe 5 people. "
+                "The thought makes you feel claustrophobic.", 
                 #12 - OfficeC
-                "You enter the center of the office.",
+                "You enter the center of the office, the center of the universe.",
                 #13 - OfficeS
-                "You find a pair of doors, but they appear to be locked. What lies beyond them?",
+                "You find a pair of doors. What lies beyond them?",
                 #14 - OfficeNE
                 "You enter on the office corners. There is a water cooler, but's its empty.",
                 #15 - OfficeE
-                "You are in a large office.",
+                "You are now on the other side of the office. Something feels off, or perhaps you're just sick of this place.", #I wonder why
                 #16 - OfficeSE
                 "You enter one of the office corners. There is a painting of a sad clown. What?",
                 #17 - Hallway
-                "You walk down a hallway, and come to a corner.", #We need all the strings to be different for GetLocation to be precise
+                "You walk down a hallway, and come to a corner.",
                 #18 - Forest
-                "You are in a forest. All you see are trees, but you can hear the sound of running water.",
+                "You come to a door. Upon opening it you suddenly find yourself in a forest. "
+                "You enter, and as you look behind you, you find all traces of the office building to be gone."
+                " All you see are trees, but you can hear the sound of running water.",
                 #19 - River
                 "You come to a river bank. You faintly hear what sounds like constant thunder.",
                 #20 - Lake
-                "You follow the river to a large lake.",
+                "You follow the river to a large lake. It's shores are sandy, interestingly enough.",
                 #21 - Waterfall
-                "You follow the river to a waterfall. It looks like it's about 15 feet height, but what do you know?",
+                "You follow the river to a waterfall. It looks like it's about 15 feet high, but what do you know?",
                 #22 - CaveEntrance
-                "Behind the waterfall you find an entrance to a cavern.",
+                "Behind the waterfall you find an entrance to a cavern. What lies within?",
                 #23 - Cave
-                "You go down into cave. It's pitch black, and you walk slowly and with caution.",
+                "You go down into cave. It's pitch black, and you walk slowly and with caution. ", #+ ((bHasLight and sRavine) or (not False and "")), #I THOUGHT I WAS BEING CLEVER
                 #24 - DeepCave, End
-                "You go deeper into the cave. You come to an empty chamber with a small opening to the surface, allowing you to see."
+                "You go deeper into the cave. You come to an empty chamber with a small opening to the surface, allowing you to see.",
+                #25 - Ravine, End
+                "You take a step forward, not knowing there is nowhere to place your foot. "
+                "Suddenly, you find yourself tumbling down, down, down..."
+                " You hit the bottom of the ravine. Hard. You cannot see how broken you are, but you know it's bad. "
+                "You begin to lose consciousness.",
+                #26 - WaterfallTop
+                "Following the current, you come across the top of a waterfall. It looks like a 15-foot drop, but what do you know?"
                 ]
+
+#Table of short location descriptions. Displayed after the location has been visited by default
+tLocationsShort = [
+                #0 - Void (Intro)
+                None,
+                #1 - VoidM
+                "You are in the center of the void.",
+                #2 - VoidN
+                "You return to the forest.",
+                #3 - VoidS
+                "You return to the cliffside.",
+                #4 - VoidE
+                "You return to the city ruins.",
+                #5 - VoidW
+                "You return to the office.",
+                #6 - Closet
+                "You are in a broom closet.",
+                #7 - Hallway
+                "You are at a hallway corner.",
+                #8 - OfficeNW
+                "You enter the Northwest corner of the office.",
+                #9 - OfficeW
+                "You are in the office.",
+                #10 - OfficeSW
+                "You enter the Southwest corner of the office.",
+                #11 - OfficeN
+                "You are in the large cubicle.",
+                #12 - OfficeC
+                "You are in the center of the office.",
+                #13 - OfficeS
+                "You head towards the double doors.",
+                #14 - OfficeNE
+                "You are in the Northeast corner of the office.",
+                #15 - OfficeE
+                "You are in the office. ", #The space should make it unique...
+                #16 - OfficeSE
+                "You're in the Southeast corner of the office.",
+                #17 - Hallway
+                "You are at a hallway corner. ",
+                #18 - Forest
+                "You are in the forest. ",
+                #19 - River
+                "You are at the river.",
+                #20 - Lake
+                "You return to the lake.",
+                #21 - Waterfall
+                "The waterfall stands before you. Lovely.",
+                #22 - Cave Entrance
+                "You are behind the waterfall, at the maw of a cavern.",
+                #23 - Cave                             
+                "You are within the dark cavern. ",
+                #24 - Deep Cave
+                None, 
+                #25 - Ravine
+                "With your source of light, you see a large drop-off to the south side. You can't see the bottom from here.",
+                #26 - WaterFallTop
+                "It's the top of a waterfall. Again."
+                ]
+#Define examine results
+sNoUse = "You see nothing of use."
+tLocationsExamine = [           #Examine is dual purpose. It prints the index of this list based on location index and it checks if the location has an item
+                #0 - None
+                None,
+                #1 - VoidM, None
+                sNoUse,
+                #2 - VoidN, Doll
+                sNoUse,
+                #3 - VoidS, None
+                sNoUse,
+                #4 - VoidE, None
+                sNoUse,
+                #5 - VoidW, None
+                sNoUse,
+                #6 - Closet, Map
+                "On one of the shelves you find what looks like some sort of map.",
+                #7 - Hallway, None
+                sNoUse,
+                #8 - OfficeNW, None
+                "You rumage through the various papers and see nothing particuliarly interesting. Wait! Oh. Nevermind.",
+                #9 - OfficeW, None
+                sNoUse,
+                #10 - OfficeSW, Flashlight
+                "You look in the plant pot, and see what looks like a flashlight.",
+                #11 - OfficeN, None
+                "You try turning on one of the cubicle computers. It boots instantly to a text document that reads:\n"
+                "\n'The sun sets, the water chasing it\n\nWhere they meet the secret of their journey shall be revealed'",
+                #12 - OfficeC, None
+                sNoUse,
+                #13 - OfficeS, None
+                "The doors simply won't budge. Is there a key somewhere?", #No
+                #14 - OfficeNE, None
+                "Just an empty watercooler. What a shame.",
+                #15 - OfficeE, None
+                sNoUse,
+                #16 - OfficeSE, None
+                "The portrait has an inscription. It reads 'Chairman Bobbo the Clown, may he grace you with his gaze.' Yeah-huh.",
+                #17 - Hallway, None
+                "You don't see anything.", #Very subtle way to tell the difference between hallways
+                #18 - Forest, Rope (In the future, this combined with the flashlight will let you safely explore the ravine
+                "Among the trees you see some sort of rope.",
+                #19 - River, None
+                "Just a river here, nothing to see.",
+                #20 - Lake, Idol
+                "Along the lake shores you find some sort of small wooden figureine.",
+                #21 - Waterfall, None
+                sNoUse,
+                #22 - Cave Entrance, None
+                sNoUse,
+                #23 - Cave, None
+                sNoUse,
+                #24 - Deep Cave, None
+                sNoUse,
+                #25, Ravine
+                None,
+                #26, WaterfallTop
+                sNoUse
+                ]
+#Define items
+pDoll = "Doll"
+pMap = "Map"
+pFlashlight = "Flashlight"
+pRope = "Rope"
+pIdol = "Idol"
+tLocationsItem = [
+                #0 - Void
+                None,
+                #1 - VoidM
+                None,
+                #2 - VoidN
+                None, 
+                #3 - VoidS
+                None,
+                #4 - VoidE
+                None,
+                #5 - VoidW
+                None,
+                #6 - Closet
+                pMap,
+                #7 - Hallway
+                None,
+                #8 - OfficeNW
+                None,
+                #9 - OfficeW
+                None,
+                #10 - OfficeSW
+                pFlashlight,
+                #11 - OfficeN
+                None,
+                #12 - OfficeC
+                None,
+                #13 - OfficeS
+                None,
+                #14 - OfficeNE
+                None,
+                #15 - OfficeE
+                None,
+                #16 - OfficeSE
+                None,
+                #17 - Hallway
+                None,
+                #18 - Forest
+                pRope,
+                #19 - River
+                None,
+                #20 - Lake
+                pIdol,
+                #21 - Waterfall
+                None,
+                #22 - Cave Entrance
+                None,
+                #23 - Cave
+                None,
+                #24 - Deep Cave
+                None,
+                #25 - Ravine
+                None,
+                #26 - WaterfallTop
+                None
+                ]
+
+                
 #Define table that holds booleans for whether or not the player has visited certain locations
 tVisited = []
 #For each location, append a False boolean to start with
-for i in tLocations: 
+for i in tLocationsShort:
     tVisited.append(False)
+#Create a copy of tVisited that will act as a check as for whether or not the player can be pickup any item at a location
+tCanPickup = tVisited
+
+
+
 
 ##=============================================================    
 def Init(): #Initialization function, runs when the code is run
-            #Basically, it's the introduction, and in hinesight it's really, really long, now that I think about it.
-            #Hm, I'll see about cuttting it down, or making it skippable, since the first game loop is only there as a tutorial
-            #I actually had a second run through main planned. That's why its def calls for a boolean called 'bFirstRun'
-            #Thank me
+            #Delete irrelevant comments you mong
 ##=============================================================
-    tLocScore = [] #Let's just define this here
-    iScore = 0
+    #tInventory = []
+    #iScore = 0
+    pPlayer = Player(pVoidDummy)
     sTitle = ( "*********   *********      ***      *           *********   *********   *       *\n" 
                "*       **  *              * *      *               *           *        *     *\n"
                "*        *  *             ** **     *               *           *         *   *\n"
@@ -95,9 +445,12 @@ def Init(): #Initialization function, runs when the code is run
     print(sTitle)
     tVisited[iVoidStart] = True
     tVisited[iVoidM] = True #They're technically the same
-    pLocation, iNumMoves, iScore = SetLocation("None", iVoidStart, 0, 0)
+   # pLocation, iNumMoves, iScore = SetLocation("None", iVoidStart, 0, 0)
+    pLocation = tLocationsLong[0] #The traditional way won't work for initializing locations, since SetLocation now requires the location you're currently at to work
+                                  #That means it more than likely will not work for forcing a location via interpret
     
     #Begin introduction
+   # pPlayer = Player(pLocation)
     print(pLocation)      
     sInput = input("input: ") or "None"  #If sInput is None (player hits enter without typing anything) then fill it in with "None"
 
@@ -116,34 +469,40 @@ def Init(): #Initialization function, runs when the code is run
         sName = input("???: First things first: do you know your name?\nYour name? ")
     
         print("???: " + sName + "? All right. Now let's see about your sense of orientation.\n")
-        print("Suddenly a red circle appears beneath your feet. You notice four lines spreading outward from it in four directions, leading to other circles\n")
-        print("???: Okie-dokie, go ahead and walk towards any of these circles. I know you're confused, but stick with me. If you feel you need help, just say the word.\n")
+        print("Suddenly a red circle appears beneath your feet. You notice four lines spreading outward from it in four directions,"
+              " leading to other circles\n")
+        print("???: Okie-dokie, go ahead and walk towards any of these circles. I know you're confused, but stick with me."
+              " If you feel you need help, just say the word.\n")
         print("<Type 'North', 'South', 'East', or 'West' to head in that direction. To see all commands availible to you, type 'Help'>\n")
     
         #Update pLocation to showcase changes made
-        pLocation, iNumMoves, iScore = SetLocation("None", iVoidM, 0, 0)
+        pLocation = tLocationsLong[1]
         #Enter the gamestate for the first time
-        #SO I REMEMBER: in tLocScore, first index is location, second is score
-        pLocation, iScore = Main(pLocation, sName, iScore, 0, True) #We need to send pLocation back to init(), don't we? I'll have to think about implementing that #SOLVED leaving so you can probe my thought process
-        #Begin second half of in intro
+        pLocation, iScore, tInventory = Main(pLocation, sName, iScore, 0, tInventory)
+        #Begin second half of intro
         print("\n???: Excellent, " + sName + ". You seem to be in optimal shape. Excellent indeed.\n"
-              "You're patience with me has not gone unnoticed. I... do not have not been aquainted. I am Bx106001-c. I am a Generation IV Class C Artificial Intelligence. You may call me Baby.\n"
-              "Baby: I know you are curious as for where you are, but that's a bit more difficult. Could you define what exactly you wish to know about your whereabouts?\n")
+              "You're patience with me has not gone unnoticed. I... do not have not been aquainted."
+              " I am Bx106001-c. I am a Generation IV Class C Artificial Intelligence. You may call me Baby.\n"
+              "Baby: I know you are curious as for where you are, but that's a bit more difficult. "
+              "Could you define what exactly you wish to know about your whereabouts?\n")
     
         input() #Hm, is Baby decieving you?
         print("Baby: ERROR: Acess denied.")
         sleep(1)
     
         for i in range(150):
-            print("x003334" + str(i) + ".FATAL: Bx106001-c Gen IV 'Bravo-Alfa-Bravo-Yankee' has @#4uNt2#d an is$3@ that has co#$Afg0sed *&ad$%3-sufficient operations!") #Baby has ecountered an issue that has compromised self-sufficient operations!
-        #for i in range(20):
-           # print()
+            print("x003334" + str(i) + ".FATAL: Bx106001-c Gen IV 'Bravo-Alfa-Bravo-Yankee'"
+                  " has @#4uNt2#d an is$3@ that has co#$Afg0sed *&ad$%3-sufficient operations!")
+            #Baby has ecountered an issue that has compromised self-sufficient operations!
+
         print("Baby: Oops! Looks I had a little hiccup there.\n"
-              "Baby: I'm sorry, but you don't have permission to access such information without the correct access code. Please input access code now.")
+              "Baby: I'm sorry, but you don't have permission to access such information without the correct access code."
+              " Please input access code now.")
         #Hmmm, maybe I could add a little easter egg here
-        input("Access code: ")
+        sInput = input("Access code: ")
     
-        print("Baby: Nuh-uh. Wrong, as expected. Hm, tell you what, I'll at least tell you what you're here for. This place, whatever it may be to you, is to test your physical and cognitive abilities.\n"
+        print("Baby: Nuh-uh. Wrong, as expected. Hm, tell you what, I'll at least tell you what you're here for."
+              " This place, whatever it may be to you, is to test your physical and cognitive abilities.\n"
               "Baby: I... am to test you. You pass this, and Baby will tell you anything.\n"
               "I may even let you go free!\n"
               "...") #In the future, 'Baby:' should be a var
@@ -151,13 +510,45 @@ def Init(): #Initialization function, runs when the code is run
         input(cont + "question Baby>")
         print("Baby: This test is not optional! You're going to participate and you're going to love it! You'll see...\n"
               "Baby: Let's start!")
-    pLocation = tLocations[iCloset]
-    pLocation, iScore = Main(pLocation, sName, iScore, 0, False)
+    #Block Cave
+    ReplaceLocation(iWaterfall, 2, None)
+    pLocation = tLocationsLong[iCloset]
+    tVisited[iCloset] = True
+    pLocation, iScore, tInventory = Main(pLocation, sName, iScore, 0, tInventory)
     Copyright(iScore, True)
     
+##======================
+#DoesHaveItem    
+#Determines if the player has the defined item
+##======================
+def DoesHaveItem(pItem, tPlayerInventory):
+    #Check the inventory for the defined item
+    for p in tPlayerInventory:
+
+        if p == pItem:
+            return True
+    #Not found in table
+    return False
+
+##============================
+#Pickup
+#Gives the player the item at sLocation
+##============================
+def Pickup(sLocation, tPlayerInventory):
+    i = GetLocation(sLocation)
     
+    pItem = tLocationsItem[i]
     
-    #return sName #Send to global variable. #NEVER GETS USED
+    if  tCanPickup[i] and pItem is not None:
+        tPlayerInventory.append(pItem)
+        print("Picked up the", pItem + ".")
+        #Remove the item from the examine list, but NOT the item list since that will break DoesHaveItem
+        tLocationsExamine[i] = sNoUse 
+        return tPlayerInventory
+    print("Nothing to pickup.")
+    #Set location as visited
+    tVisited[i] = True
+    return tPlayerInventory 
 ##==============================================
 #SetLocation
 #Sets the player's location
@@ -166,21 +557,53 @@ def Init(): #Initialization function, runs when the code is run
     #iTo, the index of the location the player is moving to
     #iMoves, the number of moves
 ##==============================================
-def SetLocation(sLocation, iTo, iNumMoves, iScore):
-    sLocation = tLocations[iTo]
+def SetLocation(sLocation, iDirection, iNumMoves, iScore):
+    iTo = mLocations[GetLocation(sLocation)][iDirection] or GetLocation(sLocation) #if going that direction is None
+
+    if sLocation == tLocationsLong[iTo] or sLocation == tLocationsShort[iTo]:
+        print("You can't go that way")
+        return sLocation, iNumMoves, iScore
+
+    print(iTo)
+    sLocation = tLocationsLong[iTo]
 
     if not tVisited[iTo]:
+        #Use short description table instead
         iScore = iScore + 5
         tVisited[iTo] = True
+
+    else:
+        sLocation = tLocationsShort[iTo]
     iNumMoves = iNumMoves + 1
     return sLocation, iNumMoves, iScore
 
 def GetLocation(sLocation):
-    for i in range(len(tLocations) - 1):
-        if tLocations[i] == sLocation:
+     
+    for i in range(len(tLocationsShort)): #The length should be the same
+        
+        if tLocationsShort[i] == sLocation:
+            return i
+        
+        if tLocationsLong[i] == sLocation:
             return i
     print("Error: pLocation not found")
     return None
+##==================================
+#SwitchLocations
+#Takes two rows(location) and two columns(direction) and switches their place on the navigation matrix
+##==================================
+def SwitchLocations(r1, c1, r2, c2):
+    iLocation = mLocations[r1][c1]
+    mLocations[r1][c1] = mLocations[r2][c2]
+    mLocations[r2][c2] = iLocation
+
+##======================================
+#ReplaceLocation
+#Takes a row and column and replaces it with iLocation
+##======================================
+def ReplaceLocation(r, c, iReplaceWith):
+    mLocations[r][c] = iReplaceWith
+
 ##================================
 #Copyright
 #Prints the copyright/gameover statement
@@ -199,6 +622,7 @@ def Copyright(iScore, bGameover):
 
 #Used for a dev command
 #Lower case since Interpret makes use of .lower()
+#In hinesight I could have done something like "string".lower() and kept everything readable 
 gDevKeys = {
             "voidm"     :0,
             "voidmreal" :1,
@@ -246,8 +670,10 @@ def Interpret(sInput, pLocation, iScore, iNumMoves, FunctionFrom): #Parameters c
     #If sInput was empty, just end
     if sInput == "none":
         return True, sInput
-
+    ##===============
     #Special commands (where they can be used will depend on the command)
+    ##===============
+        #therefore, what they return depends on FunctionFrom
     if bDevMode and sInput[0:4] == "dev:":
         print(s, "Developer mode active. Developer command detected.")
         sInput = sInput[4:len(sInput)] #Go ahead and cut off the first 'dev:' since we already checked that
@@ -257,7 +683,7 @@ def Interpret(sInput, pLocation, iScore, iNumMoves, FunctionFrom): #Parameters c
             sInput, sArg = sInput.split() #Split sInput by white spaces if needed
         except:
             print("sInput does not need to be split")
-
+        ##WILL NOT WORK THIS VERSION
         if sInput == "setlocation" and FunctionFrom == "Main":
 
             try:
@@ -270,11 +696,14 @@ def Interpret(sInput, pLocation, iScore, iNumMoves, FunctionFrom): #Parameters c
             return True, pLocation, None, iNumMoves, iScore, "setlocation"
         
         #TODO: If statements for commands go here
-        
+    ##=====================    
     #Valid commands in Init
+    ##=====================
+        #returns a boolean and a string
     if FunctionFrom == "Init":
         if sInput.lower() == "skip":
-            sInput = input("???: Hey, hey, what do you think you're doing trying to skip my glorius introduction, bub? Do you even know my name? ")
+            sInput = input("???: Hey, hey, what do you think you're doing trying to skip my glorius introduction,"
+                           " bub? Do you even know my name? ")
 
             if sInput.lower() == "baby":
 
@@ -284,9 +713,11 @@ def Interpret(sInput, pLocation, iScore, iNumMoves, FunctionFrom): #Parameters c
             else:
                 print("???: Hmph! Hm hm! HM HM HM HM! Let's reimmerse ourselves, yeah? *Ahem*")
                 return True, "It's Baby"
+        return True, "What?"
     #Consider spliting up a string by spaces and interpreting every word in it
-
+    ##=====================
     #Valid commands in Main
+    ##=====================        
                 #returns a boolean, then two strings, then two ints, then another string
     elif FunctionFrom == "Main":
         if sInput == "north":
@@ -305,7 +736,7 @@ def Interpret(sInput, pLocation, iScore, iNumMoves, FunctionFrom): #Parameters c
 
         elif sInput == "help":
             print(gHelp) #I feel globals are okay IF they are intended to not be changed by the program
-            return True, None, None, None, None, "help" 
+            return True, None, None, None, None, None #Nothing to distribute
         elif sInput == "quit":
             sInput = input("This will end the game and count as a game over. Continue?\n" #Changing sInput shouldn't cause issues
                   "<Enter 'y' for 'yes or 'n' for no'>\n")
@@ -315,10 +746,34 @@ def Interpret(sInput, pLocation, iScore, iNumMoves, FunctionFrom): #Parameters c
                 Copyright(iScore, True)
             return True, pLocation, None, iNumMoves, iScore, "quit exempt"
             
-    return True, pLocation, None, iNumMoves, iScore, None  #Input could not be interpreted
+    return True, pLocation, None, iNumMoves, iScore, "failed"  #Input could not be interpreted
     #Todo: Insert function into main where necessary
+##============================
+#UpdateLocation
+#Simple function that checks if the game should use the short description
+##============================
+def UpdateLocation(pLocation):
+    i = GetLocation(pLocation)
+    if tVisited[i] == True:
+        return tLocationsShort[i]
+    return pLocation
 
-
+def GenerateMap(Map, MapDescription, tMap, bDoRegenerate):
+    if bDoRegenerate:
+        #Get the Nav Matrix Sequence (Map one is r0-5, Map two is r6-25)
+        #Wipe Map Matrix (set everything to NA)
+        #Try to interpret how its currently put together
+        #Redesign Grid to match
+        pass
+    for r in Map:
+        s = ""
+        for c in r:
+            #c = c + c
+            s = s + c
+        print(s)
+    print(Map) #Remove in future
+    print(MapDescription)
+    return Map
 ##===========================================
 #Main
 #Gamestate function, always active while player is in the game
@@ -326,7 +781,7 @@ def Interpret(sInput, pLocation, iScore, iNumMoves, FunctionFrom): #Parameters c
 #   *sLocation, the location to start the game at
 #   *sName, the name the player chose
 #   *iScore, the player's score at this point of the game
-#   *bFirstRun, indicate whether or not this is the first instance of firing the loop (In other words, is the intro still on-going?)
+#   *tPlayerInventory, the player's inventory
 ##============================================
 sNoGo = "You can't go that way."
 gMapTut = ("   N    \n"
@@ -335,7 +790,7 @@ gMapTut = ("   N    \n"
            "   |    \n"
            "   S    \n")
 
-gMap = ("   c1--C   c6            \n"
+gMap = ("   c1--C   c6           \n"
         "   |   |   |             \n"
         "b--c2--c4--c7--d         \n"
         "|  |   |   |   |         \n"
@@ -345,6 +800,59 @@ gMap = ("   c1--C   c6            \n"
         "                     |   \n"
         "                  k--j   \n")
 
+
+
+NA = "  "
+HD = "--"
+VD = "| "
+N_ = "N "
+S_ = "S "
+E_ = "E "
+W_ = "W "
+a_ = "a "
+b_ = "b "
+c1 = "c1"
+c2 = "c2"
+c3 = "c3"
+cC = "C "
+c4 = "c4"
+c5 = "c5"
+c6 = "c6"
+c7 = "c7"
+c8 = "c8"
+d_ = "d "
+e_ = "e "
+f_ = "f "
+g_ = "g "
+h_ = "h "
+i_ = "i "
+j_ = "j "
+k_ = "k "
+l_ = "l "
+m_ = "m "
+n_ = "n "
+o_ = "o "
+        
+#Beginning to experiment with mutable map
+#This is going to be a coordinate grid
+mMap = [
+        [NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA], 
+        [NA, NA, c1, HD, cC, NA, c6, NA, NA, NA, NA, NA, NA, NA],
+        [NA, NA, VD, NA, VD, NA, VD, NA, NA, NA, NA, NA, NA, NA],
+        [b_, HD, c2, HD, c4, HD, c7, HD, d_, NA, NA, NA, NA, NA],
+        [VD, NA, VD, NA, VD, NA, VD, NA, VD, NA, NA, NA, NA, NA],
+        [a_, NA, c3, HD, c5, HD, c8, NA, e_, NA, NA, NA, NA, NA],
+        [NA, NA, NA, NA, NA, NA, NA, NA, VD, NA, NA, NA, NA, NA],
+        [NA, NA, NA, NA, NA, NA, g_, HD, f_, HD, h_, HD, i_, NA],
+        [NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, VD, NA],
+        [NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, k_, HD, j_, NA],
+        [NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA]
+        ]
+
+
+        
+
+
 gMapDesc = ("a = Closet\n"
             "b = Hallway Corner\n"
             "Cc = Office\n"
@@ -353,302 +861,176 @@ gMapDesc = ("a = Closet\n"
             "f = River\n"
             "g = Lake\n"
             "h = Waterfall\n"
-            "i = Cave\n"
-            "j = Deep Cave\n"
+            "i = Cave Entrance\n"
+            "j = Cave\n"
             "k = ???")
-tMap = ["Error: Could not determine location", "M", "N", "S", "E", "W", "a", "b", "c1", "c2", "c3", "C", "c4", "c5", "c6", "c7", "c8", "d", "e", "f", "g", "h", "i", "j", "k"]
+
+#m = GenerateMap(mMap, gMapDesc, None, False)
+tMap = ["Error: Could not determine location", "M", "N", "S", "E", "W", "a", "b", "c1", "c2", "c3",
+        "C", "c4", "c5", "c6", "c7", "c8", "d", "e", "f", "g", "h", "i", "j", "k"]
 #Since the location at 0 is not used in the game loop, it can be used to display an error message
 #But for now we'll stick with the is not None check
-iVoidStart = 0
-iVoidM = 1
-iVoidN = 2
-iVoidS = 3
-iVoidE = 4
-iVoidW = 5
 
-iCloset = 6
-iHallway1 = 7
-iOfficeNW = 8
-iOfficeW = 9
-iOfficeSW = 10
-iOfficeN = 11
-iOfficeC = 12
-iOfficeS = 13
-iOfficeNE = 14
-iOfficeE = 15
-iOfficeSE = 16
-iHallway2 = 17
-iForest = 18
-iRiver = 19
-iLake = 20
-iWaterfall = 21
-iCaveEnt = 22
-iCave = 23
-iCaveDeep = 24
-def Main(sLocation, sName, iScore, iNumMoves, bFirstRun):
+def Main(sLocation, sName, iScore, iNumMoves, tPlayerInventory):
     pLocation = sLocation
     bGameState = True
-
+    bDoShowSequence = True
     
     while bGameState:
+        bHasLight = DoesHaveItem(pFlashlight, tPlayerInventory)
         print(pLocation)
+        #Update pLocation
+        pLocation = UpdateLocation(pLocation)
         sInput = input()
         sInput = sInput.lower()
-        bVar1, sVar1, sVar2, iVar1, iVar2, sResult = Interpret(sInput, pLocation, iScore, iNumMoves, "Main")#This is going to get hideous
+        #bVar1, sVar1, sVar2, iVar1, iVar2, sResult = Interpret(sInput, pLocation, iScore, iNumMoves, "Main")#This is going to get hideous
         #Now we just need to interpret the return values here by looking at sResult
         #if sResult is not none:
         #   if sResult is "setlocation":
         #        pLocation, iNumMoves, iScore = sVar1, iVar1, iVar2
         #That's all we have for now
-        #THIS SHOULD BE ANOTHER FUNCTION. THESE IF STATEMENTS ARE THE RESULT OF AN OVERSIGHT WITH INTERPRET BEING MULTI-PURPOSE, AND THEREFORE RETURNING VARIOUS DIFFERENT VALUES
         
-        if bFirstRun:
-            if sInput == "north":
             
-                if pLocation == tLocations[iVoidM]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iVoidN, iNumMoves, iScore)
+        if sInput == "north":
+            pLocation, iNumMoves, iScore = SetLocation(pLocation, 0, iNumMoves, iScore) #0 = North
 
-                elif pLocation == tLocations[iVoidS]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iVoidM, iNumMoves, iScore)
-            
-                else:
-                    #Can't go that way
-                    print(sNoGo)
+        elif sInput == "south":
+            pLocation, iNumMoves, iScore = SetLocation(pLocation, 1, iNumMoves, iScore) #1 = South
 
-            elif sInput == "south":
+        elif sInput == "east":
+            pLocation, iNumMoves, iScore = SetLocation(pLocation, 2, iNumMoves, iScore) #2 = East
 
-                if pLocation == tLocations[iVoidM]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iVoidS, iNumMoves, iScore)
-
-                elif pLocation == tLocations[iVoidN]:
-                     pLocation, iNumMoves, iScore = SetLocation(pLocation, iVoidM, iNumMoves, iScore)
-
-                else:
-                    print(sNoGo)
-
-            elif sInput == "east":
-
-                if pLocation == tLocations[iVoidM]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iVoidE, iNumMoves, iScore)
-
-                elif pLocation == tLocations[iVoidW]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iVoidM, iNumMoves, iScore)
-
-                else:
-                   print(sNoGo)
-            elif sInput == "west":
-
-                if pLocation == tLocations[iVoidM]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iVoidW, iNumMoves, iScore)
-
-                elif pLocation == tLocations[iVoidE]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iVoidM, iNumMoves, iScore)
-                else:
-                    print(sNoGo)
-        elif not bFirstRun:
-            if sInput == "north":
-
-                if pLocation == tLocations[iCloset]:
-                     pLocation, iNumMoves, iScore = SetLocation(pLocation, iHallway1, iNumMoves, iScore)
-
-                elif pLocation == tLocations[iOfficeSW]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeW, iNumMoves, iScore)
-
-                elif pLocation == tLocations[iOfficeS]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeC, iNumMoves, iScore)
-
-                elif pLocation == tLocations[iOfficeSE]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeE, iNumMoves, iScore)
-
-                elif pLocation == tLocations[iOfficeW]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeNW, iNumMoves, iScore)
-
-                elif pLocation == tLocations[iOfficeC]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeN, iNumMoves, iScore)
-
-                elif pLocation == tLocations[iOfficeE]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeNE, iNumMoves, iScore)
-                #You can't go back to the office from the forest
-                elif pLocation == tLocations[iRiver]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iForest, iNumMoves, iScore)
-
-                elif pLocation == tLocations[iCave]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iCaveEnt, iNumMoves, iScore)
-                
-                else:
-                    print(sNoGo)
-            elif sInput == "south":
-
-                if pLocation == tLocations[iHallway1]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iCloset, iNumMoves, iScore)
-
-                elif pLocation == tLocations[iOfficeNW]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeW, iNumMoves, iScore)
-
-                elif pLocation == tLocations[iOfficeN]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeC, iNumMoves, iScore)
-
-                elif pLocation == tLocations[iOfficeNE]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeE, iNumMoves, iScore)
-
-                elif pLocation == tLocations[iOfficeW]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeSW, iNumMoves, iScore)
-
-                elif pLocation == tLocations[iOfficeC]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeS, iNumMoves, iScore)
-
-                elif pLocation == tLocations[iOfficeE]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeSE, iNumMoves, iScore)
-
-                elif pLocation == tLocations[iHallway2]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iForest, iNumMoves, iScore)
-
-                elif pLocation == tLocations[iForest]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iRiver, iNumMoves, iScore)
-
-                elif pLocation == tLocations[iCaveEnt]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iCave, iNumMoves, iScore)
-
-                else:
-                    print(sNoGo)
-            elif sInput == "east":
-
-                if pLocation == tLocations[iHallway1]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeW, iNumMoves, iScore)
-
-                elif pLocation == tLocations[iOfficeNW]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeN, iNumMoves, iScore)
-
-                #elif pLocation == tLocations[iOfficeN]:
-                #    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeNE, iNumMoves, iScore)
-
-                elif pLocation == tLocations[iOfficeW]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeC, iNumMoves, iScore)
-
-                elif pLocation == tLocations[iOfficeC]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeE, iNumMoves, iScore)
-
-                elif pLocation == tLocations[iOfficeE]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iHallway2, iNumMoves, iScore)
-
-                elif pLocation == tLocations[iOfficeSW]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeS, iNumMoves, iScore)
-
-                elif pLocation == tLocations[iOfficeS]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeSE, iNumMoves, iScore)
-
-                elif pLocation == tLocations[iLake]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iRiver, iNumMoves, iScore)
-
-                elif pLocation == tLocations[iRiver]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iWaterfall, iNumMoves, iScore)
-
-                elif pLocation == tLocations[iWaterfall]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iCaveEnt, iNumMoves, iScore)
-
-                else:
-                    print(sNoGo)
-
-            elif sInput == "west":
-
-                if pLocation == tLocations[iOfficeW]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iHallway1, iNumMoves, iScore)
-
-                elif pLocation == tLocations[iOfficeN]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeNW, iNumMoves, iScore)
-
-                #elif pLocation == tLocations[iOfficeNE]:
-                #    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeN, iNumMoves, iScore)
-
-                elif pLocation == tLocations[iOfficeC]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeW, iNumMoves, iScore)
-
-                elif pLocation == tLocations[iOfficeE]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeC, iNumMoves, iScore)
-
-                elif pLocation == tLocations[iHallway2]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeE, iNumMoves, iScore)
-
-                elif pLocation == tLocations[iOfficeS]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeSW, iNumMoves, iScore)
-
-                elif pLocation == tLocations[iOfficeSE]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iOfficeS, iNumMoves, iScore)
-
-                elif pLocation == tLocations[iRiver]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iLake, iNumMoves, iScore)
-
-                elif pLocation == tLocations[iWaterfall]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iRiver, iNumMoves, iScore)
-
-                elif pLocation == tLocations[iCaveEnt]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iWaterFall, iNumMoves, iScore)
-
-                elif pLocation == tLocations[iCave]:
-                    pLocation, iNumMoves, iScore = SetLocation(pLocation, iCaveDeep, iNumMoves, iScore)
-                    
-                else:
-                    print(sNoGo)
-        if sInput == "north" or sInput == "south" or sInput == "west" or sInput == "east":
-            pass #We already checked for these, now we just need them here to verify if the player entered a valid command or not
+        elif sInput == "west":
+            pLocation, iNumMoves, iScore = SetLocation(pLocation, 3, iNumMoves, iScore) #3 = West
+        
         elif(sInput == "help"):
             print("List of commands:\n"
                   "North: moves player in the 'north' direction.\n"
                   "South: moves player in the 'south' direction.\n"
                   "East: moves player in the 'east' direction.\n"
                   "West: moves player in the 'west' direction.\n"
-                  "Help: displays a list of commands. Hey, a dictionary's gotta have the definition of a dicitionary in it.\n"
+                  "Help: displays a list of commands.\n"
                   "Quit: ends the game. Considered a game over.\n" #AKA run the game over/copyright function on quit
                   "Map: Displays the current map.\n"
                   "Moves: Shows how many moves you've made on this map.\n"
-                  "Score: Displays your score.")
+                  "Score: Displays your score.\n"
+                  "Look: Displays the long description of the current location\n"
+                  "Examine: Searches the location. Will reveal any item, if there is one.\n"
+                  "Take: Take any item found at location with examine.")
 
         elif(sInput == "quit"):
             sInput = input("This will end the game and count as a game over. Continue?\n" #Changing sInput shouldn't cause issues
-                    "<Enter 'y' for 'yes or 'n' for no'>\n")
+                           "<Enter 'y' for 'yes or 'n' for no'>\n")
             sInput = sInput[0].lower()
 
             if(sInput == "y"):
                 Copyright(iScore, True)
 
         elif(sInput == "map"):
-            if bFirstRun:
-                print(gMapTut)
-                index = GetLocation(pLocation)
-                if index is not None:
-                    print("\nYou are at:", tMap[index])
-                          
+            i = GetLocation(pLocation)
+            #Does the player HAVE a map?
+            if DoesHaveItem(pMap, tPlayerInventory) or i < 6:
+            
+                if i > 5 and i < 27: #Always plan for the future... not that I have anything planned
+                    print(gMap)
+                    print(gMapDesc)
+                    print("You are at:", tMap[i])
+                else:
+                    print(gMapTut)
             else:
-                print(gMap)
-                print(gMapDesc)
-                index = GetLocation(pLocation)
-                if index is not None:
-                    print("\nYou are at:", tMap[index])
-
+                print("Map?")
+                
         elif sInput == "moves":
              print("Your moves:", iNumMoves)
+
         elif sInput == "score":
              print("Your score:", iScore)
+             
+        elif sInput == "examine":
+            i = GetLocation(pLocation)
+            print(tLocationsExamine[i])
+            
+            if not DoesHaveItem(tLocationsItem[i], tPlayerInventory): 
+                tCanPickup[i] = True
+                  
+        elif sInput == "look":
+            print(tLocationsLong[GetLocation(pLocation)])
+
+        elif sInput == "take":
+           tPlayerInventory = Pickup(pLocation, tPlayerInventory) 
+            
         else:
             print("Command not valid")
+        ##LOCATION MUTATORS
+        #Did the player enter the center of the office?
+        if pLocation == tLocationsLong[iOfficeC] or pLocation == tLocationsShort[iOfficeC]:
+            SwitchLocations(iOfficeW, 3, iOfficeE, 2)
+        #Did the player go to the lake?
+        elif pLocation == tLocationsLong[iLake] or pLocation == tLocationsShort[iLake]:
+            #Unblock Cave
+            ReplaceLocation(iWaterfall, 2, iCaveEnt)
 
-        if bFirstRun and tVisited[iVoidM] and tVisited[iVoidN] and tVisited[iVoidS] and tVisited[iVoidE] and tVisited[iVoidW]:
+        #Did the player go to the waterfall before going to the lake?
+        elif pLocation == tLocationsLong[iWaterfall] or pLocation == tLocationsShort[iWaterfall]:
+            if tVisited[iLake] == False:
+                #Block the lake
+                ReplaceLocation(iRiver, 3, iWaterfallTop)
+        #Did the player go the Forest?
+        elif pLocation == tLocationsLong[iForest] or pLocation == tLocationsShort[iForest]:
+            #Is the Lake blocked?
+            if mLocations[iRiver][3] == iWaterfallTop:
+                #Unblock the Lake
+                ReplaceLocation(iRiver, 3, iLake)
+            
+        ##ENDINGS
+        #End of tutorial
+        if GetLocation(pLocation) < 6 and tVisited[iVoidM] and tVisited[iVoidN] and tVisited[iVoidS] and tVisited[iVoidE] and tVisited[iVoidW]:
             bGameState = False
             print(pLocation)
-        elif iNumMoves > 30 and not bFirstRun:
+        #Reaching move limit
+        elif iNumMoves > 30 and GetLocation(pLocation) > 5 and bDoShowSequence:
+            print(pLocation)
+            print("\nBaby: Well, you certainly seem to be underperforming. It's quite boring actually. "
+                  "SERIOUSLY, what could be taking you so long?")
+            #If the player is missing this item, end the game
+            if not DoesHaveItem(pIdol, tPlayerInventory):
+                bGameState = False
+                print("Baby: Whatever. Nap time!")
+                
+            else:
+                print("Baby: Mm. You're close, I'll give you that. Don't. Waste. My. Time.")
+                bDoShowSequence = False
+        #Cave Ending
+        elif pLocation == tLocationsLong[iCaveDeep] or pLocation == tLocationsShort[iCaveDeep]:
+           bGameState = False
+           print(pLocation)
+           
+           if DoesHaveItem(pIdol, tPlayerInventory):
+              print("\nBaby: Welcome! Aw, look at that, you brought a gift. How thoughtful.")
+              print("Baby: Anyways, let's stop for now. Got a clue as for where you are? Here's a hint: "
+                    "you're not in the real world! You're a smart being; you already knew that, right? Love love!")
+              print("Final Score:", iScore)
+              Copyright(iScore, False) #It is the end game but not a game over
+              print("Thanks for playing!")
+              sys.exit()
+              
+           else:
+              bGameState = False
+              print("\nBaby: Welcome!")
+              print("Baby: To the great Greek god Zeus, a second is a thousand years. Now give me a second to congratulate you.")
+              #sleep(1000) #I'm not that cruel 
+        #My favorite ending
+        elif pLocation == tLocationsShort[iCloset] and iNumMoves > 0:
             bGameState = False
             print(pLocation)
-            print("\nBaby: Well, you certainly seem to be underperforming. It's quite boring actually. Looks like it's back to stasis for you!")
-            #Activate bad end
-        elif pLocation == tLocations[iCaveDeep]:
+            print("Suddenly the door slams shut behind you. You go to open it, only for the handle to fall off.")
+            print("Baby: Eh, did you get the Broom Closet Ending? The Broom Closet Ending is my favourite!") #I spelt favourite like that intentionally by the by
+        #Fell down the Ravine ending
+        elif pLocation == tLocationsLong[iRavine]:
             bGameState = False
             print(pLocation)
-            print("\nBaby: Good. Hmmm, listen, I've got to deal with something, why don't you take a rest, and then we can talk. Probably. See you in 50 years!")
-            #Activate less bad end
-    tLocScore = []
-    tLocScore.append(pLocation)
-    tLocScore.append(iScore)
-    return pLocation, iScore
+            print("\nBaby: Oops, looks like someone found their mortality!")           
+    return pLocation, iScore, tPlayerInventory
         
 
 Init()
