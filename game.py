@@ -25,10 +25,10 @@ pFlashlight = "Flashlight"
 pBatteries = "Batteries"
 pHammer = "Hammer"
 pRope = "Rope"
-pBlockN = "N-Block"
-pBlockS = "S-Block"
-pBlockE = "E-Block"
-pBlockW = "W-Block"
+pBlockN = "N-block"
+pBlockS = "S-block"
+pBlockE = "E-block"
+pBlockW = "W-block"
 pMatches = "Matches"
 pKey = "Key"
 #Define area specific maps
@@ -433,25 +433,34 @@ def DoesHaveItem(pItem, pPlayer):
             return True
     #Not found in table
     return False
-##
-#CanPickup
-#Checks if the player can pickup the defined item
-##
 
 ##======================================
 #Pickup
 #Gives the player the item at sLocation
 ##======================================
 def Pickup(pPlayer, pItem):
-    
-    index = pPlayer.pLocation.i
     pLocation = pPlayer.pLocation
-    for i in pLocation.tItems:
-        if pLocation.tItems[i] == pItem and pLocation.tCanPickup[i]:
-             pPlayer.tInventory.append(pItem)
-             pLocation.tItems[i] = None
-             tLocationsExamine[i] = None
-                
+    iItem = pLocation.GetItemIndex(pItem)
+
+    if iItem is not None:
+
+        #The item is at this location. Can it be picked up?
+        #Hmm, do we want the boolean that determines if an item can
+        #be picked up to be determined in the Locale class?
+        #The tables indices need to stay in sync with each other
+        if pLocation.tCanPickup[iItem]:
+
+            pPlayer.tInventory.append(pItem)
+            #Quick google search on lists
+            del(pLocation.tItems[iItem])
+            del(pLocation.tCanPickup[iItem])
+            print("Picked up the", pItem + ".")
+        else:
+            if pItem == "Map":
+                if pLocation == pHallway1:
+                    print("The map is behind the glass. You can't get to it.")
+    else:
+        print("Could not find any", iItem, "here.")      
     #i = GetLocation(sLocation)
     
     #pItem = tLocationsItem[i]
@@ -488,23 +497,6 @@ def SetLocation(pPlayer, iDirection):
     pPlayer.iMoves += 1
     return pPlayer.pLocation
         
-    #if sLocation == tLocationsLong[iTo] or sLocation == tLocationsShort[iTo]:
-        #print("You can't go that way")
-        #return sLocation, iNumMoves, iScore
-
-    #print(iTo)
-    #sLocation = tLocationsLong[iTo]
-
-    #if not tVisited[iTo]:
-        #Use short description table instead
-        #iScore = iScore + 5
-        #tVisited[iTo] = True
-
-    #else:
-        #sLocation = tLocationsShort[iTo]
-    #iNumMoves = iNumMoves + 1
-    #return sLocation, iNumMoves, iScore
-
 #def GetLocation(sLocation):
     # pass
     #for i in range(len(tLocationsShort)): #The length should be the same
@@ -883,7 +875,7 @@ def Main(pPlayer):
                 pPlayer.pLocation.bHasSearched = True
                 for i in pPlayer.pLocation.tCanPickup:
                     #Special circumstance items that need more than just examining the location to pick anything up
-                    if not i == pMapOffice or pKey:
+                    if not i == pMapOffice or i == pKey:
                         pPlayer.pLocation.tCanPickup[i] = True
                 
                         
@@ -894,8 +886,18 @@ def Main(pPlayer):
             elif sInput == "look":
                 print(pPlayer.pLocation.sDescLong)
 
-            elif sInput == "take":
-               tPlayerInventory = Pickup(pPlayer) 
+            elif sInput == "take" and pPlayer.pLocation.bHasSearched == True:
+                print("Take what?")
+                pLocation = pPlayer.pLocation
+                for index in pLocation.tItems:
+                    print(index)
+                if len(pLocation.tItems) > 0:
+                    sInput = input().capitalize().strip()
+                    Pickup(pPlayer, sInput)
+                    
+                    
+                    
+                
             
         else:
             print("Command not valid")
