@@ -7,10 +7,98 @@
 
 from time import sleep # :) Only once
 import sys #Learned about this from https://stackoverflow.com/questions/949504/terminating-a-python-program
-
+from Locale import *
+from Player import *
           
 cont = "<Press enter to "
 bDevMode = True
+pVoidDummy = Locale("You find yourself in an empty white space, a 'nothing'.", None, [])
+pVoid = Locale("You are in an empty white space. A red circle with four lines leading in four directions"
+               "to four other circles appears under your feet.",
+               "You are in the center of the void", ["BlockN, BlockS, BlockE, Blockw"]) #For now, I just want to define every location, so I'll just list the name of the item.
+
+pVoidN = Locale("You follow one of the lines to a circle that, upon investigation, has the letter 'N' on it."
+                "The area around you transforms into a forest filled teeming monstrous redwood trees."
+                "You hear the songs of various birds, and feel welcome.",
+                "You return to the forest", [])
+
+pVoidS = Locale("You follow one of the lines to a circle that, upon investigation, has the letter 'S' on it."
+                "The area around you transforms. Suddenly you are at the edge of a cliff overlooking the open sea."
+                "You hear the waves crashing against the crags below you, smell the mist of saltwater, and feel a sense of somberness.",
+                "You return to the cliffside", [])
+
+pVoidE = Locale("You follow one of the lines to a circle that, upon investigation, has the letter"
+                "'E' on it. The area around you transforms and you are on the streets of a city that seems to be long abandoned. "
+                "Cars rusted, buildings crumbling, overgrown with moss and vines. You can't help but feel curious about the fate of this place.",
+                "You return to the city ruins", [])
+
+pVoidW = Locale("You follow one of the lines to a circle that, upon investigation, has the letter 'W' on it. "
+                "The area around you transforms into an office."
+                "Desks teeming with paperwork and the faint smell of morning coffees makes you anxious.",
+                "You return to the office", [])
+
+pCloset = Locale("You are in a broom closet. The shelves are littered with various objects. Perhaps there is something of use?",
+                 "You're in a broom closet.", ["Flashlight", "Matches", "Hammer"]) 
+pHallway1 = Locale("You walk down a hallway and come to a corner.",
+                   "You are at a hallway corner. ", ["Map"])
+
+pOfficeNW = Locale("You enter one of the office corners. Papers and supplies litter the floor.",
+                   "You enter the Northwest corner of the office.", [])
+
+pOfficeW = Locale("You come to a large room full of cubicles, cubicles, cubicles. The building you're in must be an office, then.",
+                  "You are in the office.", [])
+
+pOfficeSW = Locale("You enter one of the office corners, which has a particuliarly large ficus. You study it with intensity.",
+                   "You enter the Southwest corner of the office.", ["Batteries"])
+                   
+pOfficeN = Locale("You enter a cubicle that is larger than all the rest. It looks like it's supposed to fit 4, maybe 5 people. "
+                  "The thought makes you feel claustrophobic.", "You are in the large cubicle.", [])
+pOfficeC = Locale("You enter the center of the office, the center of the universe.", "You are in the center of the office.", [])
+
+pOfficeS = Locale("You find a pair of doors. What lies beyond them?", "You head towards the double doors.", [])
+
+pOfficeNE = Locale("You enter on the office corners. There is a water cooler, but's its empty.", "You are in the Northeast corner of the office.", [])
+                   
+pOfficeE = Locale("You are now on the other side of the office. Something feels off, or perhaps you're just sick of this place.",
+                   "You are in the the office. ", [])
+
+pOfficeSE = Locale("You enter one of the office corners. There is a painting of a sad clown. What?",
+                   "You're in the Southeast corner of the office.", [])
+
+pHallway2 = Locale("You walk down a hallway, and come to a corner.", "You are at a hallway corner. ", [])
+
+pForest = Locale("You come to a door. Upon opening it you suddenly find yourself in a forest. "
+                "You enter, and as you look behind you, you find all traces of the office building to be gone."
+                " All you see are trees, but you can hear the sound of running water.",
+                 "You are in the forest. ", ["Rope"])
+
+pLake = Locale("You follow the river to a large lake. It's shores are sandy, interestingly enough.", "You return to the lake.", ["Idol"])
+
+pRiver = Locale("You come to a river bank. You faintly hear what sounds like constant thunder.", "You are at the river.", [])
+
+pWaterfall = Locale("You follow the river to a waterfall. It looks like it's about 15 feet high, but what do you know?", 
+                "The waterfall stands before you. Lovely.", [])
+
+pCaveEnt = Locale("Behind the waterfall you find an entrance to a cavern. What lies within?",
+                  "You are behind the waterfall, at the maw of a cavern.", [])
+
+pCave = Locale("You go down into cave. It's pitch black, and you walk slowly and with caution. ",
+               "You are within the dark cavern. ", [])
+pDeepCave = Locale("You go deeper into the cave. You come to an empty chamber with a small opening to the surface, allowing you to see.",
+                   "You are deep within the cave", ["Key"])
+
+pRavine = Locale( "You take a step forward, not knowing there is nowhere to place your foot. "
+                "Suddenly, you find yourself tumbling down, down, down..."
+                " You hit the bottom of the ravine. Hard. You cannot see how broken you are, but you know it's bad. "
+                "You begin to lose consciousness.", "You are at the bottom of a ravine", [])
+                 
+pWaterfallTop = Locale("Following the current, you come across the top of a waterfall. It looks like a 15-foot drop, but what do you know?",
+                       "It's the top of a waterfall. Again.", ["I might put something here"])
+
+
+
+
+
 #These have to defined before the nav matrix now
 iVoidStart = 0
 iVoidM = 1
@@ -41,8 +129,6 @@ iCaveDeep = 24
 iRavine = 25
 iWaterfallTop = 26
 #Navigation Matrix
-#This SHOULD be mutable'
-#I just need to devise a way to mutate it
 mLocations = [
         #c0-3 = N, S, E, W
         ##===FIRST MAP=========##
@@ -112,7 +198,7 @@ tLocationsLong = [
                 "You enter one of the office corners, which has a particuliarly large ficus. You study it with intensity.",
                 #11 - OfficeN
                 "You enter a cubicle that is larger than all the rest. It looks like it's supposed to fit 4, maybe 5 people. "
-                "The thought makes you feel claustrophobic.",
+                "The thought makes you feel claustrophobic.", 
                 #12 - OfficeC
                 "You enter the center of the office, the center of the universe.",
                 #13 - OfficeS
@@ -337,12 +423,17 @@ for i in tLocationsShort:
     tVisited.append(False)
 #Create a copy of tVisited that will act as a check as for whether or not the player can be pickup any item at a location
 tCanPickup = tVisited
+
+
+
+
 ##=============================================================    
 def Init(): #Initialization function, runs when the code is run
             #Delete irrelevant comments you mong
 ##=============================================================
-    tInventory = []
-    iScore = 0
+    #tInventory = []
+    #iScore = 0
+    pPlayer = Player(pVoidDummy)
     sTitle = ( "*********   *********      ***      *           *********   *********   *       *\n" 
                "*       **  *              * *      *               *           *        *     *\n"
                "*        *  *             ** **     *               *           *         *   *\n"
@@ -359,6 +450,7 @@ def Init(): #Initialization function, runs when the code is run
                                   #That means it more than likely will not work for forcing a location via interpret
     
     #Begin introduction
+   # pPlayer = Player(pLocation)
     print(pLocation)      
     sInput = input("input: ") or "None"  #If sInput is None (player hits enter without typing anything) then fill it in with "None"
 
