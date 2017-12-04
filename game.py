@@ -14,6 +14,7 @@ from Player import *
 
 
 cont = "<Press enter to "
+#Here. Now.
 bDevMode = True
 
 
@@ -163,7 +164,7 @@ pCave = Locale("You go down into cave. It's pitch black, and you walk slowly and
 pCaveDeep = Locale("You go deeper into the cave. You come to an empty chamber with a small opening to the surface, allowing you to see."
                    " You take notice of the the many symbols drawn on the chamber floor in what could be chalk. Whatever it is, it looks"
                    " like it was for ritualistic purposes.",
-                   "You are deep within the cave", 24, [pKey])
+                   "You are deep within the cave", 24, [])
 
 pRavine = Locale( "You take a step forward, not knowing there is nowhere to place your foot. "
                 "Suddenly, you find yourself tumbling down, down, down..."
@@ -212,8 +213,8 @@ mLocations = [
         [None, None, pCaveEnt, pRiver], #--------------r21 - Waterfall
         [None, pCave, None,pWaterfall], #-------------r22 - CaveEnt
         [pCaveEnt, pRavine, None, pCaveDeep], #--------r23 - Cave
-        [None, None, None, None], #---------------------r24 - CaveDeep
-        [None, None, pElevator, None], #--------------------r25 - Ravine(Hidden location, does not appear on map. Eventually the entire cave system won't appear on the map)
+        [None, None, pCave, None], #---------------------r24 - CaveDeep
+        [pCave, None, pElevator, None], #--------------------r25 - Ravine(Hidden location, does not appear on map. Eventually the entire cave system won't appear on the map)
         [None, None, pRiver, pWaterfall], #-------------r26 - WaterfallTop(replaces lake)
         [pElevatorUp, None, None, None], #-------------r27 - Elevator
         [None, None, None, None], #---------------------r28 - ElevatorUp(Replace c1 with pOfficeSE)
@@ -267,9 +268,9 @@ tLocationsExamine = [           #Examine is dual purpose. It prints the index of
                 "Nearby is a wooden bulletin board enscribed as 'New Pena National Forest'."
                 " On it you see what looks like a map of the area:\n\n" + gMapForest +"\n\n"
                 "On the board there is also a notice:\n\n"
-                "Explore one New Pena's many cave systems! See the ancient incantation circles where"
+                "'Explore one New Pena's many cave systems! See the ancient incantation circles where"
                 " many a-locals performed rituals to please their deities! Book your guided tour now!\n"
-                "WARNING: Cave spelunking can be a rigorous! DO NOT EXPLORE UNAUTHORIZED AREAS ALONE OR WITHOUT A GUIDE!", #Ditto as before
+                "WARNING: Cave spelunking can be a rigorous, high-demanding activity! DO NOT EXPLORE UNAUTHORIZED AREAS ALONE OR WITHOUT A GUIDE!'",
                 #19 - River, None
                 "Just a river here.",
                 #20 - Lake, Idol
@@ -289,8 +290,9 @@ tLocationsExamine = [           #Examine is dual purpose. It prints the index of
                 #27 - Elevator
                 sNone,
                 #28 - ElevatorTop
-                sNone,
+                "Hold on... what's this in the center of the wall? It feels softer, like a canvas...",
                 #29 - Chair Office
+                sNone
                 ]
 
 
@@ -776,6 +778,7 @@ tMap = ["Error: Could not determine location", "M", "N", "S", "E", "W", "a", "b"
 
 def Main(pPlayer):
     bGameState = True
+    bDoesRavineKill = True 
     bDoShowSequence = True
     
     while bGameState:
@@ -832,8 +835,8 @@ def Main(pPlayer):
                                   "that is. Now only if you had a way down...")
                             tCanUse[2] = False #Turn it on once 
                             tCanUse[5] = True #Can use the rope
-                            #Pass variable that won't kill you if go down the ravine
-                            #Update ravine descriptionlong
+                            bDoesRavineKill = True
+                            pRavine.sDescLong = "You climb down the rope down into the ravine. Eventually you reach the bottom."
                         else:
                             print("It works, but there's no reason to use it here.")
                     else:
@@ -846,17 +849,20 @@ def Main(pPlayer):
                         tCanUse[4] = False
                         #A listener for when the player reaches pElevator will reset tCanUse for pElevatorUp is needed
                     #Use two: is the player in the elevator, did they go up, use examine, and not use the hammer?
-                    elif pLocation == pElevatorUp and pLocation.tCanUse[4] and pLocation.bHasSearched and pHammer in pPlayer.tInventory:
+                    elif pLocation == pElevatorUp and tCanUse[4] and pLocation.bHasSearched and pHammer in pPlayer.tInventory:
                         print("Taking the hammer, you smash through the canvas. You peer through and... "
                               " It's... an office. It's THE office. This canvas, upon a closer look, is the"
                               " back of chairman Bobbo!")
                         #USE ReplaceLocation(WHERE r = pElevator SET c0 = pOfficeSE)
+                        
+                        ReplaceLocation(pElevatorUp.i, 3, pOfficeSE)
                         tCanUse[4] = False
                 elif sParam == "Rope" and tCanUse[5]:
                     #Can it be used here?
                     if pLocation.i in mCanUseAt[2] and pRope in pPlayer.tInventory: #Shhhh 
                         print("You tie the rope to the ledge and throw it down the ravine. Did it reach any bottom?")
                         tCanUse[5] = False
+                        bDoesRavineKill = False
 
                 elif sParam == "Matches":
                     #Is the player in the deep cave and does the cave have the doll
@@ -867,7 +873,8 @@ def Main(pPlayer):
                             iDoll = pLocation.GetItemIndex(pDoll)
                             pLocation.tItems.pop(iDoll)
                             pLocation.tCanPickup.pop(iDoll)
-                            pLocation.tCanPickup[pLocation.GetItemIndex(pKey)] = True
+                            pLocation.tItems.append(pKey)
+                            pLocation.tCanPickup.append(True)
                             tCanUse[10] = False
                         else: print("No reason to use that here.")
                 elif sParam == "Batteries":
@@ -881,7 +888,8 @@ def Main(pPlayer):
                     if pLocation == pOfficeS and pKey in pPlayer.tInventory:
                         print("Using the key, you unlock the double doors.")
                         tCanUse[11] = False
-                        #USE ReplaceLocation(Where r = pOfficeS SET c1 = pBossOffice
+                        #USE ReplaceLocation(WHERE r = pOfficeS SET c1 = pBossOffice
+                        ReplaceLocation(pOfficeS.i, 1, pChairOffice)
                         
                         
                         
@@ -1001,7 +1009,7 @@ def Main(pPlayer):
 
             elif sInput == "inventory":
                 print("Inventory:\n===========")
-                for i in pPlayer.tInventory
+                for i in pPlayer.tInventory:
                     print(i)
 
             else:
@@ -1028,7 +1036,7 @@ def Main(pPlayer):
             if mLocations[pRiver.i][3] == pWaterfallTop:
                 #Unblock the Lake
                 ReplaceLocation(pRiver.i, 3, pLake)
-            
+        
         ##ENDINGS
         #End of tutorial
         if pPlayer.pLocation.i < 6:
@@ -1039,18 +1047,18 @@ def Main(pPlayer):
                print(pPlayer.pLocation.GetLocationDescription())
 
         #Reaching move limit
-        #elif iNumMoves > 30 and GetLocation(pLocation) > 5 and bDoShowSequence:
-        #    print(pLocation)
-        #    print("\nBaby: Well, you certainly seem to be underperforming. It's quite boring actually. "
-        #          "SERIOUSLY, what could be taking you so long?")
-        #    #If the player is missing this item, end the game
-        #    if not DoesHaveItem(pIdol, tPlayerInventory):
-        #        bGameState = False
-        #        print("Baby: Whatever. Nap time!")
+        elif pPlayer.iMoves > 30 and pPlayer.Location.i > 5 and bDoShowSequence:
+            print(pPlayer.pLocation.GetLocationDescription())
+            print("\nBaby: Well, you certainly seem to be underperforming. It's quite boring actually. "
+                  "SERIOUSLY, what could be taking you so long?")
+            #If the player is missing this item, end the game
+            if not DoesHaveItem(pKey, pPlayer):
+                bGameState = False
+                print("Baby: Whatever. Nap time!")
                 
-        #    else:
-        #        print("Baby: Mm. You're close, I'll give you that. Don't. Waste. My. Time.")
-        #        bDoShowSequence = False
+            else:
+                print("Baby: Mm. You're close, I'll give you that. Don't. Waste. My. Time.")
+                bDoShowSequence = False
         #Cave Ending
         #elif pLocation == tLocationsLong[iCaveDeep] or pLocation == tLocationsShort[iCaveDeep]:
         #   bGameState = False
@@ -1069,18 +1077,35 @@ def Main(pPlayer):
         #      bGameState = False
         #      print("\nBaby: Welcome!")
         #      print("Baby: To the great Greek god Zeus, a second is a thousand years. Now give me a second to congratulate you.")
-              #sleep(1000) #I'm not that cruel 
+              #sleep(1000) #I'm not that cruel
+
+        #New Ending
+        elif pPlayer.pLocation == pChairOffice:
+            if pKey in pPlayer.pLocation.tItems:
+                print("Baby: Thank you. Have a seat.")
+                print("Baby: you see,", pPlayer.sName, "You've done a lovely job getting here.")
+                print("Baby: I get most people with the Broom Closet! Anyways, thanks for playing!")
+                print("\nYou scored", pPlayer.iScore, "in", pPlayer.iMoves, "moves.")
+                input("Nice? ")
+                print("Baby: What's that? Where are you? Why are you? What am I?")
+                print("Baby: Pffft, I dunno!") #I dunno
+                print("Gameover!")
+                sys.exit()
+            else:
+                print("Baby: Welcome, Welcome! Ah, so you brought Bobbo his key! Leave it on the desk, will ya?")
+                #Drop the key
+            
         #My favorite ending
-        #elif pLocation == tLocationsShort[iCloset] and iNumMoves > 0:
-        #    bGameState = False
-        #    print(pLocation)
-        #    print("Suddenly the door slams shut behind you. You go to open it, only for the handle to fall off.")
-        #    print("Baby: Eh, did you get the Broom Closet Ending? The Broom Closet Ending is my favourite!") #I spelt favourite like that intentionally by the by
+        elif pPlayer.pLocation == pCloset and pPlayer.iMoves > 5:
+            bGameState = False
+            print(pPlayer.pLocation.GetLocationDescription())
+            print("Suddenly the door slams shut behind you. You go to open it, only for the handle to fall off.")
+            print("Baby: Eh, did you get the Broom Closet Ending? The Broom Closet Ending is my favourite!") #I spelt favourite like that intentionally by the by
         #Fell down the Ravine ending
-        #elif pLocation == tLocationsLong[iRavine]:
-        #    bGameState = False
-        #    print(pLocation)
-        #    print("\nBaby: Oops, looks like someone found their mortality!")           
+        elif pPlayer.pLocation == pRavine and bDoesRavineKill:
+            bGameState = False
+            print(pLocation)
+            print("\nBaby: Oops, looks like someone found their mortality!")           
         
 
 Init()
