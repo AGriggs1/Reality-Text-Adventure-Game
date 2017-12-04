@@ -41,9 +41,13 @@ gMapOffice = ("   c1--C   c6     \n"
               "       z            ")
  
 
-gMapForest = ("   e    \n"
-              "   |    \n"
-              "g--f--h--i")
+gMapForest = ("   e          \n"
+              "   |          \n"
+              "g--f--h--i    \n"
+              "         |    \n"
+              "      j--k    \n"
+              "         |    \n"
+              "         l--m   ")
 #This matrix defines the indexes of the locations each item can be used at
 #It will be used like this:
 # for i in mCanUseAt[row]:
@@ -156,7 +160,9 @@ pCaveEnt = Locale("Behind the waterfall you find an entrance to a cavern. What l
 pCave = Locale("You go down into cave. It's pitch black, and you walk slowly and with caution. ",
                "You are within the dark cavern. ", 23, [])
 
-pCaveDeep = Locale("You go deeper into the cave. You come to an empty chamber with a small opening to the surface, allowing you to see.",
+pCaveDeep = Locale("You go deeper into the cave. You come to an empty chamber with a small opening to the surface, allowing you to see."
+                   " You take notice of the the many symbols drawn on the chamber floor in what could be chalk. Whatever it is, it looks"
+                   " like it was for ritualistic purposes.",
                    "You are deep within the cave", 24, [pKey])
 
 pRavine = Locale( "You take a step forward, not knowing there is nowhere to place your foot. "
@@ -165,13 +171,16 @@ pRavine = Locale( "You take a step forward, not knowing there is nowhere to plac
                 "You begin to lose consciousness.", "You are at the bottom of a ravine", 25, [])
                  
 pWaterfallTop = Locale("Following the current, you come across the top of a waterfall. It looks like a 15-foot drop, but what do you know?",
-                       "It's the top of a waterfall. Again.", 26, ["I might put something here"])
+                       "It's the top of a waterfall. Again.", 26, [])
 
-pElevator = Locale("It's... it's an elevator. Question is, up or down?", "You are in the elevator", 27, [])
+pElevator = Locale("You make your way through the ravine, comming to... an elevator. Question is, up or down?",
+                   "You are in the elevator", 27, [])
 
 pElevatorUp = Locale("You push the 'up' button. You feel your weight shift as the box pushes you upward. The elevator stops at a 'ding!'"
                      ", the doors slide open to reveal... A wall. This doesn't seem right...", "You are in the elevator", 28, [])
 
+pChairOffice = Locale("You walk down a large corrider to come to a large, furnished room. On the other side is a much is a large desk "
+                      "and behind that desk is much, much larger portrait of Bobbo. Well then.", None, 29, [])
 
 
 #Navigation Matrix
@@ -204,146 +213,85 @@ mLocations = [
         [None, pCave, None,pWaterfall], #-------------r22 - CaveEnt
         [pCaveEnt, pRavine, None, pCaveDeep], #--------r23 - Cave
         [None, None, None, None], #---------------------r24 - CaveDeep
-        [None, None, None, None], #--------------------r25 - Ravine(Hidden location, does not appear on map. Eventually the entire cave system won't appear on the map)
-        [None, None, pRiver, pWaterfall] #-------------r26 - WaterfallTop(replaces lake)
+        [None, None, pElevator, None], #--------------------r25 - Ravine(Hidden location, does not appear on map. Eventually the entire cave system won't appear on the map)
+        [None, None, pRiver, pWaterfall], #-------------r26 - WaterfallTop(replaces lake)
+        [pElevatorUp, None, None, None], #-------------r27 - Elevator
+        [None, None, None, None], #---------------------r28 - ElevatorUp(Replace c1 with pOfficeSE)
+        [None, None, None, None] #---------------------r29 - Bobbo's Office (New end game)
             ]
 sRavine = "With your source of light, you see a large drop-off to the south side. You can't see the bottom from here." #I'm not sure you can use other parts of a list when defining a list.
 
 #Define examine results
-sNoUse = "You see nothing of use."
+#Now, with DoExamine, this table will just be an in-depth description of findings
+sNone = ""
 tLocationsExamine = [           #Examine is dual purpose. It prints the index of this list based on location index and it checks if the location has an item
                 #0 - None
-                None,
+                sNone,
                 #1 - VoidM, None
-                "There are two blocks with letters on them. An 'S-Block' and a 'W-Block',",
+                sNone,
                 #2 - VoidN, None
-                "It's an 'E-Block'.",
+                sNone,
                 #3 - VoidS, None
-                "It's an 'S-Block'.",
+                sNone,
                 #4 - VoidE, None
-                sNoUse,
+                sNone,
                 #5 - VoidW, None
-                sNoUse,
+                sNone,
                 #6 - Closet, Map
-                "Rifling through the shelves, you see a 'Flashlight', some 'Matches', and a 'Hammer'.",
+                "You rifle through the shelves.",
                 #7 - Hallway, None
                 "There's a panel on the wall. Inside you see what could be a 'Map' of this place\n\n" + gMapOffice,
                 #8 - OfficeNW, None
                 "You rumage through the various papers and see nothing particuliarly interesting. Wait! Oh. Nevermind.",
                 #9 - OfficeW, None
-                sNoUse,
+                sNone,
                 #10 - OfficeSW, Flashlight
-                "You look in the plant pot, and see what looks like some 'Batteries'.",
+                "You look in the plant pot.",
                 #11 - OfficeN, None
                 "You try turning on one of the cubicle computers. It boots instantly to a text document that reads:\n"
                 "\n'When the sun sets, the water shall chase it\n\nWhere they meet, among the sands, lies the key to"
                 " the secret of their origin.'",
                 #12 - OfficeC, None
-                sNoUse,
+                sNone,
                 #13 - OfficeS, None
-                "The doors simply won't budge. Is there a key somewhere?", #No
+                "The doors simply won't budge. Is there a key somewhere?", #Maybe
                 #14 - OfficeNE, None
                 "Just an empty watercooler. What a shame.",
                 #15 - OfficeE, None
-                sNoUse,
+                sNone,
                 #16 - OfficeSE, None
                 "The portrait has an inscription. It reads 'Chairman Bobbo the Clown, may he grace you with his gaze.' Yeah-huh.",
                 #17 - Hallway, None
                 "You don't see anything.", #Very subtle way to tell the difference between hallways
                 #18 - Forest, Rope, ForestMap (In the future, this combined with the flashlight will let you safely explore the ravine
-                "Among the trees you see some sort of 'Rope'. Nearby is a wooden bulletin board enscribed as 'New Pena National Forest'."
-                " On it you see what looks like a map of the area:\n\n" + gMapForest, #Ditto as before
+                "Nearby is a wooden bulletin board enscribed as 'New Pena National Forest'."
+                " On it you see what looks like a map of the area:\n\n" + gMapForest +"\n\n"
+                "On the board there is also a notice:\n\n"
+                "Explore one New Pena's many cave systems! See the ancient incantation circles where"
+                " many a-locals performed rituals to please their deities! Book your guided tour now!\n"
+                "WARNING: Cave spelunking can be a rigorous! DO NOT EXPLORE UNAUTHORIZED AREAS ALONE OR WITHOUT A GUIDE!", #Ditto as before
                 #19 - River, None
-                "Just a river here, nothing to see.",
+                "Just a river here.",
                 #20 - Lake, Idol
                 "Along the lake shores you find a small wooden figureine, look some sort of 'Doll'.",
                 #21 - Waterfall, None
-                sNoUse,
+                sNone,
                 #22 - Cave Entrance, None
-                sNoUse,
+                sNone,
                 #23 - Cave, None
-                sNoUse,
+                sNone,
                 #24 - Deep Cave, None
-                sNoUse,
-                #25, Ravine
-                sNoUse,
-                #26, WaterfallTop
-                sNoUse
-                ]
-#Define items
-pDoll = "Doll"
-pMap = "Map"
-pFlashlight = "Flashlight"
-pBatteries = "Batteries"
-pHammer = "Hammer"
-pRope = "Rope"
-pIdol = "Idol"
-tLocationsItem = [
-                #0 - Void
-                None,
-                #1 - VoidM
-                None,
-                #2 - VoidN
-                None, 
-                #3 - VoidS
-                None,
-                #4 - VoidE
-                None,
-                #5 - VoidW
-                None,
-                #6 - Closet
-                pMap,
-                #7 - Hallway
-                None,
-                #8 - OfficeNW
-                None,
-                #9 - OfficeW
-                None,
-                #10 - OfficeSW
-                pFlashlight,
-                #11 - OfficeN
-                None,
-                #12 - OfficeC
-                None,
-                #13 - OfficeS
-                None,
-                #14 - OfficeNE
-                None,
-                #15 - OfficeE
-                None,
-                #16 - OfficeSE
-                None,
-                #17 - Hallway
-                None,
-                #18 - Forest
-                pRope,
-                #19 - River
-                None,
-                #20 - Lake
-                pIdol,
-                #21 - Waterfall
-                None,
-                #22 - Cave Entrance
-                None,
-                #23 - Cave
-                None,
-                #24 - Deep Cave
-                None,
+                sNone,
                 #25 - Ravine
-                None,
+                sNone,
                 #26 - WaterfallTop
-                None
+                sNone,
+                #27 - Elevator
+                sNone,
+                #28 - ElevatorTop
+                sNone,
+                #29 - Chair Office
                 ]
-
-                
-#Define table that holds booleans for whether or not the player has visited certain locations
-#tVisited = []
-#For each location, append a False boolean to start with
-#for i in tLocationsShort:
-#    tVisited.append(False)
-#Create a copy of tVisited that will act as a check as for whether or not the player can be pickup any item at a location
-#tCanPickup = tVisited
-
 
 
 
@@ -388,9 +336,11 @@ def Init(): #Initialization function, runs when the code is run
         print("???: " + pPlayer.sName + "? All right. Now let's see about your sense of orientation.\n")
         print("Suddenly a red circle appears beneath your feet. You notice four lines spreading outward from it in four directions,"
               " leading to other circles\n")
-        print("???: Okie-dokie, go ahead and walk towards any of these circles. I know you're confused, but stick with me."
-              " If you feel you need help, just say the word.\n")
-        print("<Type 'North', 'South', 'East', or 'West' to head in that direction. To see all commands availible to you, type 'Help'>\n")
+        print("???: Now, There are 4 other circles in the 4 cardinal directions. What I want you to do is to 'examine' each area, 'take'"
+              " any block with a letter enscribed on it you find and 'drop' them off where you think they belong. Got it?")
+        
+        print("<Type 'North', 'South', 'East', or 'West' to head in that direction, 'Examine' to look around the area for items, "
+              "'Take' to take any found item and 'Drop' to put down that item. To see all commands availible to you, type 'Help'>\n")
     
         #Update pLocation to showcase changes made
         pPlayer.pLocation = pVoid
@@ -428,7 +378,7 @@ def Init(): #Initialization function, runs when the code is run
         print("Baby: This test is not optional! You're going to participate and you're going to love it! You'll see...\n"
               "Baby: Let's start!")
     #Block Cave
-    #ReplaceLocation(pWaterfall.i, 2, None) #Works but let's turn off for now
+    ReplaceLocation(pWaterfall.i, 2, None)
     pPlayer.pLocation = pCloset
     #tVisited[iCloset] = True
     Main(pPlayer)
@@ -554,6 +504,18 @@ def ReplaceLocation(r, c, iReplaceWith):
     #iScore, the player's score
     #bGameover, used to determine if the gameover statement should be printed
 ##================================
+
+##=======================
+#DoExamine
+#Prints the examine results and all items at the location
+##=======================
+def DoExamine(pLocation):
+    print(tLocationsExamine[pLocation.i])
+    print("You see a/an:")
+    for i in pLocation.tItems:
+        print("'" + i + "'")
+        
+    
 def Copyright(pPlayer, bGameover):
     sMessage = "Copyright Anthony Griggs. Email inquiries to Anthony.Griggs1@marist.edu"
 
@@ -952,7 +914,10 @@ def Main(pPlayer):
                       "Score: Displays your score.\n"
                       "Look: Displays the long description of the current location\n"
                       "Examine: Searches the location. Will reveal any item, if there is one.\n"
-                      "Take: Take any item found at location with examine.")
+                      "Take: Take the specified item found at location with examine.\n"
+                      "Drop: Drops the specified item in your inventory\n"
+                      "Use: Uses the specified item in your inventory\n"
+                      "Inventory: Shows your inventory.")
 
             elif(sInput == "quit"):
                 sInput = input("This will end the game and count as a game over. Continue?\n" #Changing sInput shouldn't cause issues
@@ -983,7 +948,7 @@ def Main(pPlayer):
                  print("Your score:", pPlayer.iScore)
              
             elif sInput == "examine":
-                print(tLocationsExamine[pPlayer.pLocation.i])
+                print(DoExamine(pPlayer.pLocation))
                 pPlayer.pLocation.bHasSearched = True
                 for i in range(len(pPlayer.pLocation.tItems)):
                     #Special circumstance items that need more than just examining the location to pick anything up
@@ -1018,8 +983,10 @@ def Main(pPlayer):
                             print(pLocation.tItems[i])
                     if iPickup > 0:
                         sInput = input().capitalize().strip()
-                        if pLocation.tCanPickup[pLocation.GetItemIndex(sInput)]:
-                            Pickup(pPlayer, sInput)
+                        i = pLocation.GetItemIndex(sInput)
+                        if i:
+                            if pLocation.tCanPickup[i]:
+                                Pickup(pPlayer, sInput)
                             
             elif sInput == "drop":
                 if len(pPlayer.tInventory) > 0:
@@ -1031,35 +998,46 @@ def Main(pPlayer):
                     Drop(pPlayer, sInput)
                 else:
                     print("You have nothing to drop!")
-                
+
+            elif sInput == "inventory":
+                print("Inventory:\n===========")
+                for i in pPlayer.tInventory
+                    print(i)
+
             else:
                 print("Command not valid")
         ##LOCATION MUTATORS
         #Did the player enter the center of the office?
-        #if pPlayer.pLocation.sDescShort == pOfficeC.sDescShort:
-        #    SwitchLocations(iOfficeW, 3, iOfficeE, 2)
+        if pPlayer.pLocation == pOfficeC:
+            SwitchLocations(pOfficeW.i, 3, pOfficeE.i, 2)
         #Did the player go to the lake?
-        #elif pLocation == tLocationsLong[iLake] or pLocation == tLocationsShort[iLake]:
-        #    #Unblock Cave
-        #    ReplaceLocation(iWaterfall, 2, iCaveEnt)
+        elif pPlayer.pLocation == pLake:
+            
+            #Unblock Cave
+            ReplaceLocation(pWaterfall.i, 2, pCaveEnt)
 
         #Did the player go to the waterfall before going to the lake?
-        #elif pLocation == tLocationsLong[iWaterfall] or pLocation == tLocationsShort[iWaterfall]:
-        #    if tVisited[iLake] == False:
+        elif pPlayer.pLocation == pWaterfall:
+            if pLake.bHasVisited == False:
+                
                 #Block the lake
-        #        ReplaceLocation(iRiver, 3, iWaterfallTop)
-        #Did the player go the Forest?
-        #elif pLocation == tLocationsLong[iForest] or pLocation == tLocationsShort[iForest]:
+                ReplaceLocation(pRiver.i, 3, pWaterfallTop)
+        #Did the player go to the Forest?
+        elif pLocation == pForest:
             #Is the Lake blocked?
-        #    if mLocations[iRiver][3] == iWaterfallTop:
+            if mLocations[pRiver.i][3] == pWaterfallTop:
                 #Unblock the Lake
-        #        ReplaceLocation(iRiver, 3, iLake)
+                ReplaceLocation(pRiver.i, 3, pLake)
             
         ##ENDINGS
         #End of tutorial
-        #if GetLocation(pLocation) < 6 and tVisited[iVoidM] and tVisited[iVoidN] and tVisited[iVoidS] and tVisited[iVoidE] and tVisited[iVoidW]:
-        #    bGameState = False
-        #    print(pLocation)
+        if pPlayer.pLocation.i < 6:
+              if pBlockN in pVoidN.tItems and pBlockS in pVoidS.tItems and pBlockE in pVoidE.tItems and pBlockW in pVoidW.tItems:
+              
+            
+               bGameState = False
+               print(pPlayer.pLocation.GetLocationDescription())
+
         #Reaching move limit
         #elif iNumMoves > 30 and GetLocation(pLocation) > 5 and bDoShowSequence:
         #    print(pLocation)
