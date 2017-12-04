@@ -50,7 +50,7 @@ gMapForest = ("   e    \n"
 mCanUseAt = [
     [], #r0 - Doll
     [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27], #r1 - Map Office, Map Other, Map
-    [23, 25], #r2 - Flashlight
+    [23], #r2 - Flashlight
     [], #r3 - Batteries
     [7, 28], #r4 - Hammer
     [23], #r5 - Rope
@@ -61,6 +61,23 @@ mCanUseAt = [
     [24], #r10 - Matches
     [13], #r11 - Key
     ]
+#Defines if items can be used
+#Useful for items that need other items first
+#or one use items
+tCanUse = [True, #r0 - Doll
+           True, #r1 - Maps
+           False, #r2 - Flashlight
+           True, #r3 - Batteries
+           True, #r4 - Hammer
+           False, #r5 - Rope
+           False, #r6 - N-Block
+           False, #r7 - S-Block
+           False, #r8 - E-Block
+           False, #r9 - W-Block
+           True, #r10 - Matches
+           True, #r11 - Key
+           ]
+           
 pVoidDummy = Locale("You find yourself in an empty white space, a 'nothing'.", None, 0, [])
 pVoid = Locale("You are in an empty white space. A red circle with four lines leading in four directions"
                " to four other circles appears under your feet.",
@@ -452,6 +469,8 @@ def Pickup(pPlayer, pItem):
 
             pPlayer.tInventory.append(pItem)
             #Quick google search on lists
+            #I didn't know pop can remove by index
+            #I guess del is for general purpose deleting
             del(pLocation.tItems[iItem])
             del(pLocation.tCanPickup[iItem])
             print("Picked up the", pItem + ".")
@@ -807,26 +826,96 @@ def Main(pPlayer):
         #That's all we have for now
         
         try:
+            pLocation = pPlayer.pLocation
             sCommand, sParam = sInput.split()
-            
+            sParam = sParam.capitalize()
             if sCommand == "take":
-                sParam = sParam.capitalize()
-                if pPlayer.pLocation.bHasSearched == True:
+                
+                if pLocation.bHasSearched == True:
                     
                     Pickup(pPlayer, sParam)
                 else:
                     iPickup = 0
-                    for i in range(len(pPlayer.pLocation.tItems)):
-                        if pPlayer.pLocation.tCanPickup[i]:
+                    for i in range(len(pLocation.tItems)):
+                        if pLocation.tCanPickup[i]:
                             iPickup += 1
                     if iPickup > 0:
-                        if pPlayer.pLocation.tCanPickup[pPlayer.pLocation.GetItemIndex(sParam)]:
+                        if pLocation.tCanPickup[pLocation.GetItemIndex(sParam)]:
                             Pickup(pPlayer, sParam)
             
             elif sCommand == "drop":
-                sParam = sParam.capitalize()
                 Drop(pPlayer, sParam)
-            
+
+            elif sCommand == "use":
+
+                #This could've been a function. Oh well.
+                #We're going to have to go old school here
+                if sParam == "Map":
+                    pass #Implement if there's time
+
+                elif sParam == "Flashlight":
+                    #Did the player use the batteries?
+                    
+                    if not tCanUse[3] and pFlashlight in pPlayer.tInventory:
+                    #Are they at the ravine?
+                        if pLocation.i in mCanUseAt[2]:
+                    
+                            print("You turn on the flashlight, allowing you to see."
+                                  " See the huge drop before your feet, that is. Now only if you had a way down...")
+                            tCanUse[2] = False #Turn it on once 
+                            tCanUse[5] = True #Can use the rope
+                        else:
+                            print("It works, but there's no reason to use it here.")
+                    else:
+                        print("It needs batteries, it would seem.")
+                elif sParam == "Hammer":
+                    #Use one: is the player in the hallway and did not yet use the hammer?
+                    if pLocation == pHallway1 and tCanUse[4] and pHammer in pPlayer.tInventory:
+                        print("Using the hammer, you smash the glass casing, allowing you to access the map.")
+                        pLocation.tCanPickup[pLocation.GetItemIndex(pMapOffice)] = True
+                        tCanUse[4] = False
+                        #A listener for when the player reaches pElevator will reset tCanUse for pElevatorUp is needed
+                    #Use two: is the player in the elevator, did they go up, use examine, and not use the hammer?
+                    elif pLocation == pElevatorUp and pLocation.tCanUse[4] and pLocation.bHasSearched and pHammer in pPlayer.tInventory:
+                        print("Taking the hammer, you smash through the canvas. You peer through and... "
+                              " It's... an office. It's THE office. This canvas, upon a closer look, is the"
+                              " back of chairman Bobbo!")
+                        #USE ReplaceLocation(WHERE r = pElevator SET c0 = pOfficeSE)
+                        tCanUse[4] = False
+                elif sParam == "Rope" and tCanUse[5]:
+                    #Can it be used here?
+                    if pLocation.i in mCanUseAt[2] and pRope in pPlayer.tInventory: #Shhhh 
+                        print("You tie the rope to the ledge and throw it down the ravine. Did it reach any bottom?")
+                        tCanUse[5] = False
+
+                elif sParam == "Matches":
+                    #Is the player in the deep cave and does the cave have the doll
+                    if pLocation == pCaveDeep and pDoll in pCaveDeep.tItems and pMatches in pPlayer.tInventory:
+                        if tCanUse[10]:
+                            print("With the doll in the incantation circle, you light a match set it ablaze.",
+                                  "Eventually, once the flames die down, you find among the ashen remains a key.")
+                            iDoll = pLocation.GetItemIndex(pDoll)
+                            pLocation.tItems.pop(iDoll)
+                            pLocation.tCanPickup.pop(iDoll)
+                            pLocation.tItems.append(pKey)
+                            pLocation.tCanPickup.append(True)
+                            tCanUse[10] = False
+                        else: print("No reason to use that here.")
+                elif sParam == "Batteries":
+                    #Just learned how to do DoesHaveItem in one line
+                    if pFlashlight in pPlayer.tInventory:
+                        print("You put the batteries in the flashlight.")
+                        pPlayer.tItems.remove(pBatteries)
+                        tCanUse[3] = False #For use in flashlight check
+
+                elif sParam == "Key":
+                    if pLocation == pOfficeS and pKey in pPlayer.tInventory:
+                        print("Using the key, you unlock the double doors.")
+                        tCanUse[11] = False
+                        #USE ReplaceLocation(Where r = pOfficeS SET c1 = pBossOffice
+                        
+                        
+                        
 
         #The command is one word or more than two words
         except:
@@ -893,7 +982,7 @@ def Main(pPlayer):
                     #Special circumstance items that need more than just examining the location to pick anything up
                     if not (pPlayer.pLocation.tItems[i] == pMapOffice or pPlayer.pLocation.tItems[i] == pKey):
                         pPlayer.pLocation.tCanPickup[i] = True
-                
+                        
                         
             
             #if not DoesHaveItem(tLocationsItem[i], tPlayerInventory): 
