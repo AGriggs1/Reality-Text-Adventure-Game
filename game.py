@@ -18,8 +18,8 @@ bDevMode = True
 
 
 pDoll = "Doll"
-pMapOffice = "Map of the Office"
-pMapOther = "Map of the Forest"
+pMapOffice = "Map"
+pMapOther = "Map"
 pMap = "Map" #You can combine items to create a new one
 pFlashlight = "Flashlight"
 pBatteries = "Batteries"
@@ -32,12 +32,14 @@ pBlockW = "W-block"
 pMatches = "Matches"
 pKey = "Key"
 #Define area specific maps
-gMapOffice = ("   c1--C   c6   \n"
-             "   |   |   |     \n"
-             "b--c2--c4--c7--d \n"
-             "|  |   |   |   | \n"
-             "a  c3--c5--c8 ")
-
+gMapOffice = ("   c1--C   c6     \n"
+              "   |   |   |      \n"
+              "b--c2--c4--c7--d  \n"
+              "|  |   |   |   |  \n"
+              "a  c3--c5--c8  e  \n"
+              "       |          \n"
+              "       z            ")
+ 
 
 gMapForest = ("   e    \n"
               "   |    \n"
@@ -139,9 +141,11 @@ pForest = Locale("You come to a door. Upon opening it you suddenly find yourself
                 " All you see are trees, but you can hear the sound of running water.",
                  "You are in the forest. ", 18, [pRope, pMapOther])
 
-pLake = Locale("You follow the river to a large lake. It's shores are sandy, interestingly enough.", "You return to the lake.", 19, [pDoll])
+pRiver = Locale("You come to a river bank. You faintly hear what sounds like constant thunder.", "You are at the river.", 19, [])
 
-pRiver = Locale("You come to a river bank. You faintly hear what sounds like constant thunder.", "You are at the river.", 20, [])
+pLake = Locale("You follow the river to a large lake. It's shores are sandy, interestingly enough.", "You return to the lake.", 20, [pDoll])
+
+
 
 pWaterfall = Locale("You follow the river to a waterfall. It looks like it's about 15 feet high, but what do you know?", 
                 "The waterfall stands before you. Lovely.", 21, [])
@@ -223,7 +227,7 @@ tLocationsExamine = [           #Examine is dual purpose. It prints the index of
                 #6 - Closet, Map
                 "Rifling through the shelves, you see a 'Flashlight', some 'Matches', and a 'Hammer'.",
                 #7 - Hallway, None
-                "There's a panel on the wall. Inside you see what could be a 'Map' of this place\n\n" + gMapOffice, #Put map after +
+                "There's a panel on the wall. Inside you see what could be a 'Map' of this place\n\n" + gMapOffice,
                 #8 - OfficeNW, None
                 "You rumage through the various papers and see nothing particuliarly interesting. Wait! Oh. Nevermind.",
                 #9 - OfficeW, None
@@ -232,7 +236,8 @@ tLocationsExamine = [           #Examine is dual purpose. It prints the index of
                 "You look in the plant pot, and see what looks like some 'Batteries'.",
                 #11 - OfficeN, None
                 "You try turning on one of the cubicle computers. It boots instantly to a text document that reads:\n"
-                "\n'When the sun sets, the water shall chase it\n\nWhere they meet the secret of the origin of their journey shall be revealed'",
+                "\n'When the sun sets, the water shall chase it\n\nWhere they meet, among the sands, lies the key to"
+                " the secret of their origin.'",
                 #12 - OfficeC, None
                 sNoUse,
                 #13 - OfficeS, None
@@ -247,7 +252,7 @@ tLocationsExamine = [           #Examine is dual purpose. It prints the index of
                 "You don't see anything.", #Very subtle way to tell the difference between hallways
                 #18 - Forest, Rope, ForestMap (In the future, this combined with the flashlight will let you safely explore the ravine
                 "Among the trees you see some sort of 'Rope'. Nearby is a wooden bulletin board enscribed as 'New Pena National Forest'."
-                " On it you see what looks like a map of the area.\n\n" + gMapForest, #Ditto as before
+                " On it you see what looks like a map of the area:\n\n" + gMapForest, #Ditto as before
                 #19 - River, None
                 "Just a river here, nothing to see.",
                 #20 - Lake, Idol
@@ -367,7 +372,7 @@ def Init(): #Initialization function, runs when the code is run
     sInput = input("input: ") or "None"  #If sInput is None (player hits enter without typing anything) then fill it in with "None"
 
     
-    sInput, sName = Interpret(sInput, None, 0, 0, "Init") #Hmmmm
+    sInput, Player.sName = Interpret(sInput, None, 0, 0, "Init") #Hmmmm
     if sInput:
         print("???: Hey! Can you hear me?")
         input(cont + "continue>") #Must use concatenation for input
@@ -378,9 +383,9 @@ def Init(): #Initialization function, runs when the code is run
     
         input(cont + "understand>")
         #Get player name
-        sName = input("???: First things first: do you know your name?\nYour name? ")
+        pPlayer.sName = input("???: First things first: do you know your name?\nYour name? ")
     
-        print("???: " + sName + "? All right. Now let's see about your sense of orientation.\n")
+        print("???: " + pPlayer.sName + "? All right. Now let's see about your sense of orientation.\n")
         print("Suddenly a red circle appears beneath your feet. You notice four lines spreading outward from it in four directions,"
               " leading to other circles\n")
         print("???: Okie-dokie, go ahead and walk towards any of these circles. I know you're confused, but stick with me."
@@ -392,7 +397,7 @@ def Init(): #Initialization function, runs when the code is run
         #Enter the gamestate for the first time
         Main(pPlayer)
         #Begin second half of intro
-        print("\n???: Excellent, " + sName + ". You seem to be in optimal shape. Excellent indeed.\n"
+        print("\n???: Excellent, " + pPlayer.sName + ". You seem to be in optimal shape. Excellent indeed.\n"
               "You're patience with me has not gone unnoticed. I... do not have not been aquainted."
               " I am Bx106001-c. I am a Generation IV Class C Artificial Intelligence. You may call me Baby.\n"
               "Baby: I know you are curious as for where you are, but that's a bit more difficult. "
@@ -423,11 +428,11 @@ def Init(): #Initialization function, runs when the code is run
         print("Baby: This test is not optional! You're going to participate and you're going to love it! You'll see...\n"
               "Baby: Let's start!")
     #Block Cave
-    ReplaceLocation(iWaterfall, 2, None)
-    pLocation = tLocationsLong[iCloset]
-    tVisited[iCloset] = True
-    pLocation, iScore, tInventory = Main(pLocation, sName, iScore, 0, tInventory)
-    Copyright(iScore, True)
+    #ReplaceLocation(pWaterfall.i, 2, None) #Works but let's turn off for now
+    pPlayer.pLocation = pCloset
+    #tVisited[iCloset] = True
+    Main(pPlayer)
+    Copyright(pPlayer, True)
 ##
 ##====================================
 #GetLocationDescription
@@ -861,9 +866,12 @@ def Main(pPlayer):
                         if pLocation.i in mCanUseAt[2]:
                     
                             print("You turn on the flashlight, allowing you to see."
-                                  " See the huge drop before your feet, that is. Now only if you had a way down...")
+                                  " See the huge drop before your feet, facing south, "
+                                  "that is. Now only if you had a way down...")
                             tCanUse[2] = False #Turn it on once 
                             tCanUse[5] = True #Can use the rope
+                            #Pass variable that won't kill you if go down the ravine
+                            #Update ravine descriptionlong
                         else:
                             print("It works, but there's no reason to use it here.")
                     else:
@@ -897,15 +905,14 @@ def Main(pPlayer):
                             iDoll = pLocation.GetItemIndex(pDoll)
                             pLocation.tItems.pop(iDoll)
                             pLocation.tCanPickup.pop(iDoll)
-                            pLocation.tItems.append(pKey)
-                            pLocation.tCanPickup.append(True)
+                            pLocation.tCanPickup[pLocation.GetItemIndex(pKey)] = True
                             tCanUse[10] = False
                         else: print("No reason to use that here.")
                 elif sParam == "Batteries":
                     #Just learned how to do DoesHaveItem in one line
                     if pFlashlight in pPlayer.tInventory:
                         print("You put the batteries in the flashlight.")
-                        pPlayer.tItems.remove(pBatteries)
+                        pPlayer.tInventory.remove(pBatteries)
                         tCanUse[3] = False #For use in flashlight check
 
                 elif sParam == "Key":
@@ -918,7 +925,7 @@ def Main(pPlayer):
                         
 
         #The command is one word or more than two words
-        except:
+        except ValueError:
             
             if sInput == "north":
                 pPlayer.pLocation = SetLocation(pPlayer, 0) #0 = North
