@@ -460,21 +460,20 @@ def Pickup(pPlayer, pItem):
                 if pLocation == pHallway1:
                     print("The map is behind the glass. You can't get to it.")
     else:
-        print("Could not find any", iItem, "here.")      
-    #i = GetLocation(sLocation)
-    
-    #pItem = tLocationsItem[i]
-    
-    #if  tCanPickup[i] and pItem is not None:
-        #tPlayerInventory.append(pItem)
-        #print("Picked up the", pItem + ".")
-        #Remove the item from the examine list, but NOT the item list since that will break DoesHaveItem
-        #tLocationsExamine[i] = sNoUse 
-        #return tPlayerInventory
-    #print("Nothing to pickup.")
-    #Set location as visited
-    #tVisited[i] = True
-    #return tPlayerInventory 
+        print("Could not find any", pItem, "here.")
+##
+#Drop
+#Drops the defined item the current location
+##
+def Drop(pPlayer, pItem):
+    pLocation = pPlayer.pLocation
+    if DoesHaveItem(pItem, pPlayer):
+        pLocation.tItems.append(pItem)
+        pLocation.tCanPickup.append(True)
+        pPlayer.tInventory.remove(pItem)
+        print("Dropped the", pItem + ".")
+    else:
+        print("You don't have any", pItem + ".")
 ##==============================================
 #SetLocation
 #Sets the player's location
@@ -809,10 +808,27 @@ def Main(pPlayer):
         
         try:
             sCommand, sParam = sInput.split()
-            if sCommand == "pickup":
-                pass
-                
-                #Can the player pickup any item?
+            
+            if sCommand == "take":
+                sParam = sParam.capitalize()
+                if pPlayer.pLocation.bHasSearched == True:
+                    
+                    Pickup(pPlayer, sParam)
+                else:
+                    iPickup = 0
+                    for i in range(len(pPlayer.pLocation.tItems)):
+                        if pPlayer.pLocation.tCanPickup[i]:
+                            iPickup += 1
+                    if iPickup > 0:
+                        if pPlayer.pLocation.tCanPickup[pPlayer.pLocation.GetItemIndex(sParam)]:
+                            Pickup(pPlayer, sParam)
+            
+            elif sCommand == "drop":
+                sParam = sParam.capitalize()
+                Drop(pPlayer, sParam)
+            
+
+        #The command is one word or more than two words
         except:
             
             if sInput == "north":
@@ -873,9 +889,9 @@ def Main(pPlayer):
             elif sInput == "examine":
                 print(tLocationsExamine[pPlayer.pLocation.i])
                 pPlayer.pLocation.bHasSearched = True
-                for i in pPlayer.pLocation.tCanPickup:
+                for i in range(len(pPlayer.pLocation.tItems)):
                     #Special circumstance items that need more than just examining the location to pick anything up
-                    if not i == pMapOffice or i == pKey:
+                    if not (pPlayer.pLocation.tItems[i] == pMapOffice or pPlayer.pLocation.tItems[i] == pKey):
                         pPlayer.pLocation.tCanPickup[i] = True
                 
                         
@@ -886,21 +902,42 @@ def Main(pPlayer):
             elif sInput == "look":
                 print(pPlayer.pLocation.sDescLong)
 
-            elif sInput == "take" and pPlayer.pLocation.bHasSearched == True:
+            elif sInput == "take":
                 print("Take what?")
                 pLocation = pPlayer.pLocation
-                for index in pLocation.tItems:
-                    print(index)
-                if len(pLocation.tItems) > 0:
+                if pPlayer.pLocation.bHasSearched == True:
+                    
+                    for i in pLocation.tItems:
+                        print(i)
+                    if len(pLocation.tItems) > 0:
+                        sInput = input().capitalize().strip()
+                        Pickup(pPlayer, sInput)
+                else:
+                    #There may situations where a player has dropped an item somewhere but not searched that area
+                    #Do the above, but only show items that can already be picked up AKA they were dropped there
+                    iPickup = 0
+                    for i in range(len(pLocation.tItems)):
+                        if pLocation.tCanPickup[i]:
+                            iPickup += 1
+                            print(pLocation.tItems[i])
+                    if iPickup > 0:
+                        sInput = input().capitalize().strip()
+                        if pLocation.tCanPickup[pLocation.GetItemIndex(sInput)]:
+                            Pickup(pPlayer, sInput)
+                            
+            elif sInput == "drop":
+                if len(pPlayer.tInventory) > 0:
+                    print("Drop what?\nInventory:\n===========")
+                    for i in pPlayer.tInventory:
+                        print(i)
+                    print()
                     sInput = input().capitalize().strip()
-                    Pickup(pPlayer, sInput)
-                    
-                    
-                    
+                    Drop(pPlayer, sInput)
+                else:
+                    print("You have nothing to drop!")
                 
-            
-        else:
-            print("Command not valid")
+            else:
+                print("Command not valid")
         ##LOCATION MUTATORS
         #Did the player enter the center of the office?
         #if pPlayer.pLocation.sDescShort == pOfficeC.sDescShort:
