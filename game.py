@@ -214,13 +214,16 @@ mLocations = [
         [None, pCave, None,pWaterfall, None, None], #--------------r22 - CaveEnt
         [pCaveEnt, pRavine, None, pCaveDeep, None, None], #--------r23 - Cave
         [None, None, pCave, None, None, None], #-------------------r24 - CaveDeep
-        [pCave, None, pElevator, None, None, None, None, None], #--r25 - Ravine(Hidden location, does not appear on map. Eventually the entire cave system won't appear on the map)
+        [pCave, None, None, None, None, None, None, None], #--r25 - Ravine(Hidden location, does not appear on map. Eventually the entire cave system won't appear on the map)
         [None, None, pRiver, pWaterfall, None, None], #------------r26 - WaterfallTop(replaces lake)
         [None, None, None, None, pElevatorUp, None], #-------------r27 - Elevator
         [None, None, None, None, None, pElevator], #---------------r28 - ElevatorUp(Replace c1 with pOfficeSE)
         [None, None, None, None] #---------------------------------r29 - Bobbo's Office (New end game)
             ]
-sRavine = "With your source of light, you see a large drop-off to the south side. You can't see the bottom from here." #I'm not sure you can use other parts of a list when defining a list.
+sRavine = ("You take a step forward, not knowing there is nowhere to place your foot. "
+                "Suddenly, you find yourself tumbling down, down, down..."
+                " You hit the bottom of the ravine. Hard. You cannot see how broken you are, but you know it's bad. "
+                "You begin to lose consciousness.")
 
 #Define examine results
 #Now, with DoExamine, this table will just be an in-depth description of findings
@@ -616,7 +619,32 @@ def Interpret(sInput, pLocation, iScore, iNumMoves, FunctionFrom): #Parameters c
             if sInput.lower() == "baby":
 
                 print("Baby: ...")
-                sInput = input("Baby: Fine! What's you're name, dum-dum?")
+                sInput = input("Baby: Fine! What's you're name, dum-dum? ")
+
+                if sInput == "Cornelius Marius Antonius, Pontifex Maximus... Roma":
+                    print("Baby: What may I do for you?")
+                    while not sInput == "end":
+                        sInput = input ("Baby: Awaiting input...").lower()
+                        if sInput == "give all items":
+                            print("Baby: Everything, eh? Sure thing, Pontifex Maximus.")
+                            pass
+                        
+                        elif sInput == "disable mutators":
+                            print("Baby: Of course, great lord!")
+                            #TODO: PASS BOOLEAN THAT IS NEEDED FOR MUTATORS TO BE ACTIVE
+                            pass
+                        elif sInput == "set start":
+                            sInput = input("Baby: ")
+                            try:
+                                sInput = int(sInput)
+                                print("It is done. How about you? I'm bored.")
+                                pass
+                            except:
+                                print("Idiot. Choose a row index on the navigation matrix.")
+                                continue
+                            print
+                                
+                        
                 return False, sInput  #May change the return values in the future
             else:
                 print("???: Hmph! Hm hm! HM HM HM HM! Let's reimmerse ourselves, yeah? *Ahem*")
@@ -680,6 +708,90 @@ def GenerateMap(Map, MapDescription, tMap, bDoRegenerate):
     print(Map) #Remove in future
     print(MapDescription)
     return Map
+##================================
+#DetermineUse
+#Figures out what to do based on input
+##================================
+def DetermineUse(sParam, pPlayer): #I'M LAZY CAN'T BE BOTHERED TO CHANGE THE PARAMETER TO MAKE SENSE
+
+    pLocation = pPlayer.pLocation
+    #We're going to have to go old school here
+    if sParam == "Map":
+        pass #Implement if there's time
+
+    elif sParam == "Flashlight":
+        #Did the player use the batteries?
+                    
+        if not tCanUse[3] and pFlashlight in pPlayer.tInventory:
+        #Are they at the ravine?
+            if pLocation.i in mCanUseAt[2]:
+                    
+                print("You turn on the flashlight, allowing you to see."
+                        " See the huge drop before your feet, facing south, "
+                        "that is. Now only if you had a way down...")
+                tCanUse[2] = False #Turn it on once 
+                tCanUse[5] = True #Can use the rope
+                bDoesRavineKill = True
+                pRavine.sDescLong = "You climb down the rope down into the ravine. Eventually you reach the bottom."
+            else:
+                    print("It works, but there's no reason to use it here.")
+        elif pFlashlight in pPlayer.tInventory and tCanUse[3]:
+            print("It needs batteries, it would seem.")
+                        
+    elif sParam == "Hammer":
+            #Use one: is the player in the hallway and did not yet use the hammer?
+            if pLocation == pHallway1 and tCanUse[4] and pHammer in pPlayer.tInventory:
+                print("Using the hammer, you smash the glass casing, allowing you to access the map.")
+                pLocation.tCanPickup[pLocation.GetItemIndex(pMapOffice)] = True
+                tCanUse[4] = False
+                #A listener for when the player reaches pElevator will reset tCanUse for pElevatorUp is needed
+            #Use two: is the player in the elevator, did they go up, use examine, and not use the hammer?
+            elif pLocation == pElevatorUp and tCanUse[4] and pLocation.bHasSearched and pHammer in pPlayer.tInventory:
+                print("Taking the hammer, you smash through the canvas. You peer through and... "
+                        " It's... an office. It's THE office. This canvas, upon a closer look, is the"
+                        " back of chairman Bobbo!")
+                #USE ReplaceLocation(WHERE r = pElevator SET c0 = pOfficeSE)
+                        
+                ReplaceLocation(pElevatorUp.i, 3, pOfficeSE)
+                tCanUse[4] = False
+    elif sParam == "Rope" and tCanUse[5]:
+        #Can it be used here?
+        if pLocation.i in mCanUseAt[2] and pRope in pPlayer.tInventory: #Shhhh 
+            print("You tie the rope to the ledge and throw it down the ravine. Did it reach any bottom?")
+            tCanUse[5] = False
+            #bDoesRavineKill = False
+            #Will no longer work since this is a function now
+            #Instead I'm going to set the path to the elevator to be initially None
+            #And then update it here once the player uses the rope
+            #We simply have to check if the path to the elevator from the ravine is None
+            #To see if it should kill the player of not
+            ReplaceLocation(pRavine.i, 2, pElevator)
+    elif sParam == "Matches":
+        #Is the player in the deep cave and does the cave have the doll
+        if pLocation == pCaveDeep and pDoll in pCaveDeep.tItems and pMatches in pPlayer.tInventory:
+            if tCanUse[10]:
+                print("With the doll in the incantation circle, you light a match set it ablaze.",
+                        "Eventually, once the flames die down, you find among the ashen remains a key.")
+                iDoll = pLocation.GetItemIndex(pDoll)
+                pLocation.tItems.pop(iDoll)
+                pLocation.tCanPickup.pop(iDoll)
+                pLocation.tItems.append(pKey)
+                pLocation.tCanPickup.append(True)
+                tCanUse[10] = False
+            else: print("No reason to use that here.")
+    elif sParam == "Batteries":
+        #Just learned how to do DoesHaveItem in one line
+        if pFlashlight in pPlayer.tInventory:
+            print("You put the batteries in the flashlight.")
+            pPlayer.tInventory.remove(pBatteries)
+            tCanUse[3] = False #For use in flashlight check
+
+    elif sParam == "Key":
+        if pLocation == pOfficeS and pKey in pPlayer.tInventory:
+            print("Using the key, you unlock the double doors.")
+            tCanUse[11] = False
+            #USE ReplaceLocation(WHERE r = pOfficeS SET c1 = pBossOffice
+            ReplaceLocation(pOfficeS.i, 1, pChairOffice)
 ##===========================================
 #Main
 #Gamestate function, always active while player is in the game
@@ -820,78 +932,8 @@ def Main(pPlayer):
             elif sCommand == "use":
 
                 #This could've been a function. Oh well.
-                #We're going to have to go old school here
-                if sParam == "Map":
-                    pass #Implement if there's time
-
-                elif sParam == "Flashlight":
-                    #Did the player use the batteries?
-                    
-                    if not tCanUse[3] and pFlashlight in pPlayer.tInventory:
-                    #Are they at the ravine?
-                        if pLocation.i in mCanUseAt[2]:
-                    
-                            print("You turn on the flashlight, allowing you to see."
-                                  " See the huge drop before your feet, facing south, "
-                                  "that is. Now only if you had a way down...")
-                            tCanUse[2] = False #Turn it on once 
-                            tCanUse[5] = True #Can use the rope
-                            bDoesRavineKill = True
-                            pRavine.sDescLong = "You climb down the rope down into the ravine. Eventually you reach the bottom."
-                        else:
-                            print("It works, but there's no reason to use it here.")
-                    elif pFlashlight in pPlayer.tInventory and tCanUse[3]:
-                        print("It needs batteries, it would seem.")
-                        
-                elif sParam == "Hammer":
-                    #Use one: is the player in the hallway and did not yet use the hammer?
-                    if pLocation == pHallway1 and tCanUse[4] and pHammer in pPlayer.tInventory:
-                        print("Using the hammer, you smash the glass casing, allowing you to access the map.")
-                        pLocation.tCanPickup[pLocation.GetItemIndex(pMapOffice)] = True
-                        tCanUse[4] = False
-                        #A listener for when the player reaches pElevator will reset tCanUse for pElevatorUp is needed
-                    #Use two: is the player in the elevator, did they go up, use examine, and not use the hammer?
-                    elif pLocation == pElevatorUp and tCanUse[4] and pLocation.bHasSearched and pHammer in pPlayer.tInventory:
-                        print("Taking the hammer, you smash through the canvas. You peer through and... "
-                              " It's... an office. It's THE office. This canvas, upon a closer look, is the"
-                              " back of chairman Bobbo!")
-                        #USE ReplaceLocation(WHERE r = pElevator SET c0 = pOfficeSE)
-                        
-                        ReplaceLocation(pElevatorUp.i, 3, pOfficeSE)
-                        tCanUse[4] = False
-                elif sParam == "Rope" and tCanUse[5]:
-                    #Can it be used here?
-                    if pLocation.i in mCanUseAt[2] and pRope in pPlayer.tInventory: #Shhhh 
-                        print("You tie the rope to the ledge and throw it down the ravine. Did it reach any bottom?")
-                        tCanUse[5] = False
-                        bDoesRavineKill = False
-
-                elif sParam == "Matches":
-                    #Is the player in the deep cave and does the cave have the doll
-                    if pLocation == pCaveDeep and pDoll in pCaveDeep.tItems and pMatches in pPlayer.tInventory:
-                        if tCanUse[10]:
-                            print("With the doll in the incantation circle, you light a match set it ablaze.",
-                                  "Eventually, once the flames die down, you find among the ashen remains a key.")
-                            iDoll = pLocation.GetItemIndex(pDoll)
-                            pLocation.tItems.pop(iDoll)
-                            pLocation.tCanPickup.pop(iDoll)
-                            pLocation.tItems.append(pKey)
-                            pLocation.tCanPickup.append(True)
-                            tCanUse[10] = False
-                        else: print("No reason to use that here.")
-                elif sParam == "Batteries":
-                    #Just learned how to do DoesHaveItem in one line
-                    if pFlashlight in pPlayer.tInventory:
-                        print("You put the batteries in the flashlight.")
-                        pPlayer.tInventory.remove(pBatteries)
-                        tCanUse[3] = False #For use in flashlight check
-
-                elif sParam == "Key":
-                    if pLocation == pOfficeS and pKey in pPlayer.tInventory:
-                        print("Using the key, you unlock the double doors.")
-                        tCanUse[11] = False
-                        #USE ReplaceLocation(WHERE r = pOfficeS SET c1 = pBossOffice
-                        ReplaceLocation(pOfficeS.i, 1, pChairOffice)
+                #IT IS NOW, LOOK AT ALL THE WHITE SPACE!
+                DetermineUse(sParam, pPlayer)
                         
                         
                         
@@ -1108,9 +1150,9 @@ def Main(pPlayer):
             print("Suddenly the door slams shut behind you. You go to open it, only for the handle to fall off.")
             print("Baby: Eh, did you get the Broom Closet Ending? The Broom Closet Ending is my favourite!") #I spelt favourite like that intentionally by the by
         #Fell down the Ravine ending
-        elif pPlayer.pLocation == pRavine and bDoesRavineKill:
+        elif pPlayer.pLocation == pRavine and mLocations[pRavine.i][2] == None:
             bGameState = False
-            print(pLocation.GetLocationDescription)
+            print(pLocation.GetLocationDescription())
             print("\nBaby: Oops, looks like someone found their mortality!")           
         
 
