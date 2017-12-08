@@ -186,39 +186,39 @@ pChairOffice = Locale("You walk down a large corrider to come to a large, furnis
 
 #Navigation Matrix
 mLocations = [
-        #c0-3 = N, S, E, W
+        #c0-5 = N, S, E, W, UP, DN
         ##===FIRST MAP=========##
-        [None, None, None, None],   #-------------r0 - VoidM (Intro)
-        [pVoidN, pVoidS, pVoidE, pVoidW], #-----------r1 - VoidM
-        [None, pVoid, None, None], #--------------r2 - VoidN
-        [pVoid, None, None, None], #--------------r3 - VoidS
-        [None, None, None, pVoid], #--------------r4 - VoidE
-        [None, None, pVoid, None], #--------------r5 - VoidW
+        [None, None, None, None, None, None],   #-------------r0 - VoidM (Intro)
+        [pVoidN, pVoidS, pVoidE, pVoidW, None, None], #-------r1 - VoidM
+        [None, pVoid, None, None, None, None], #--------------r2 - VoidN
+        [pVoid, None, None, None, None, None], #--------------r3 - VoidS
+        [None, None, None, pVoid, None, None], #--------------r4 - VoidE
+        [None, None, pVoid, None, None, None], #--------------r5 - VoidW
         ##===SECOND MAP========##
-        [pHallway1, None, None, None], #---------------r6 -- Closet
-        [None, pCloset, pOfficeW, None], #-------------r7 -- Hallway1
-        [None, pOfficeW, pOfficeN, None], #------------r8 -- OfficeNW
-        [pOfficeNW, pOfficeSW, pOfficeC, pHallway1], #-r9 -- OfficeW
-        [pOfficeW, None, pOfficeS, None], #------------r10 - OfficeSW
-        [None, pOfficeC, None, pOfficeNW], #-----------r11 - OfficeN
-        [pOfficeN, pOfficeS, pOfficeE, pOfficeW], #----r12 - OfficeC
-        [pOfficeC, None, pOfficeSE, pOfficeSW], #------r13 - OfficeS
-        [None, pOfficeE, None, None], #----------------r14 - OfficeNE
-        [pOfficeNE, pOfficeSE, pHallway2, pOfficeC], #-r15 - OfficeE
-        [pOfficeE, None, None, pOfficeS], #------------r16 - OfficeSE
-        [None, pForest, None, pOfficeE], #-------------r17 - Hallway2
-        [None, pRiver, None, None], #------------------r18 - Forest
-        [pForest, None, pWaterfall, pLake], #----------r19 - River
-        [None, None, pRiver, None], #------------------r20 - Lake
-        [None, None, pCaveEnt, pRiver], #--------------r21 - Waterfall
-        [None, pCave, None,pWaterfall], #-------------r22 - CaveEnt
-        [pCaveEnt, pRavine, None, pCaveDeep], #--------r23 - Cave
-        [None, None, pCave, None], #---------------------r24 - CaveDeep
-        [pCave, None, pElevator, None], #--------------------r25 - Ravine(Hidden location, does not appear on map. Eventually the entire cave system won't appear on the map)
-        [None, None, pRiver, pWaterfall], #-------------r26 - WaterfallTop(replaces lake)
-        [pElevatorUp, None, None, None], #-------------r27 - Elevator
-        [None, None, None, None], #---------------------r28 - ElevatorUp(Replace c1 with pOfficeSE)
-        [None, None, None, None] #---------------------r29 - Bobbo's Office (New end game)
+        [pHallway1, None, None, None, None, None], #---------------r6 -- Closet
+        [None, pCloset, pOfficeW, None, None, None], #-------------r7 -- Hallway1
+        [None, pOfficeW, pOfficeN, None, None, None], #------------r8 -- OfficeNW
+        [pOfficeNW, pOfficeSW, pOfficeC, pHallway1, None, None], #-r9 -- OfficeW
+        [pOfficeW, None, pOfficeS, None, None, None], #------------r10 - OfficeSW
+        [None, pOfficeC, None, pOfficeNW, None, None], #-----------r11 - OfficeN
+        [pOfficeN, pOfficeS, pOfficeE, pOfficeW, None, None], #----r12 - OfficeC
+        [pOfficeC, None, pOfficeSE, pOfficeSW, None, None], #------r13 - OfficeS
+        [None, pOfficeE, None, None, None, None], #----------------r14 - OfficeNE
+        [pOfficeNE, pOfficeSE, pHallway2, pOfficeC, None, None], #-r15 - OfficeE
+        [pOfficeE, None, None, pOfficeS, None, None], #------------r16 - OfficeSE
+        [None, pForest, None, pOfficeE, None, None], #-------------r17 - Hallway2
+        [None, pRiver, None, None, None, None], #------------------r18 - Forest
+        [pForest, None, pWaterfall, pLake, None, None], #----------r19 - River
+        [None, None, pRiver, None, None, None], #------------------r20 - Lake
+        [None, None, pCaveEnt, pRiver, None, None], #--------------r21 - Waterfall
+        [None, pCave, None,pWaterfall, None, None], #--------------r22 - CaveEnt
+        [pCaveEnt, pRavine, None, pCaveDeep, None, None], #--------r23 - Cave
+        [None, None, pCave, None, None, None], #-------------------r24 - CaveDeep
+        [pCave, None, pElevator, None, None, None, None, None], #--r25 - Ravine(Hidden location, does not appear on map. Eventually the entire cave system won't appear on the map)
+        [None, None, pRiver, pWaterfall, None, None], #------------r26 - WaterfallTop(replaces lake)
+        [None, None, None, None, pElevatorUp, None], #-------------r27 - Elevator
+        [None, None, None, None, None, pElevator], #---------------r28 - ElevatorUp(Replace c1 with pOfficeSE)
+        [None, None, None, None] #---------------------------------r29 - Bobbo's Office (New end game)
             ]
 sRavine = "With your source of light, you see a large drop-off to the south side. You can't see the bottom from here." #I'm not sure you can use other parts of a list when defining a list.
 
@@ -241,7 +241,7 @@ tLocationsExamine = [           #Examine is dual purpose. It prints the index of
                 #6 - Closet, Map
                 "You rifle through the shelves.",
                 #7 - Hallway, None
-                "There's a panel on the wall. Inside you see what could be a 'Map' of this place\n\n" + gMapOffice,
+                "There's a glass panel on the wall. Inside you see what could be a 'Map' of this place\n\n" + gMapOffice,
                 #8 - OfficeNW, None
                 "You rumage through the various papers and see nothing particuliarly interesting. Wait! Oh. Nevermind.",
                 #9 - OfficeW, None
@@ -499,24 +499,25 @@ def SwitchLocations(r1, c1, r2, c2):
 def ReplaceLocation(r, c, iReplaceWith):
     mLocations[r][c] = iReplaceWith
 
-##================================
-#Copyright
-#Prints the copyright/gameover statement
-#Parameters:
-    #iScore, the player's score
-    #bGameover, used to determine if the gameover statement should be printed
-##================================
+
 
 ##=======================
 #DoExamine
-#Prints the examine results and all items at the location
+#Prints the examine description and all items at the location
 ##=======================
 def DoExamine(pLocation):
     print(tLocationsExamine[pLocation.i])
     print("You see a/an:")
     for i in pLocation.tItems:
         print("'" + i + "'")
-        
+
+##================================
+#Copyright
+#Prints the copyright/gameover statement
+#Parameters:
+    #iScore, the player's score
+    #bGameover, used to determine if the gameover statement should be printed
+##================================ 
     
 def Copyright(pPlayer, bGameover):
     sMessage = "Copyright Anthony Griggs. Email inquiries to Anthony.Griggs1@marist.edu"
@@ -839,8 +840,9 @@ def Main(pPlayer):
                             pRavine.sDescLong = "You climb down the rope down into the ravine. Eventually you reach the bottom."
                         else:
                             print("It works, but there's no reason to use it here.")
-                    else:
+                    elif pFlashlight in pPlayer.tInventory and tCanUse[3]:
                         print("It needs batteries, it would seem.")
+                        
                 elif sParam == "Hammer":
                     #Use one: is the player in the hallway and did not yet use the hammer?
                     if pLocation == pHallway1 and tCanUse[4] and pHammer in pPlayer.tInventory:
@@ -908,7 +910,11 @@ def Main(pPlayer):
 
             elif sInput == "west":
                 pPlayer.pLocation = SetLocation(pPlayer, 3) #3 = West
-        
+
+            elif sInput == "up":
+                pPlayer.pLocation = SetLocation(pPlayer, 4) #4 = Up
+            elif sInput == "down":
+                pPlayer.pLocation = SetLocation(pPlayer, 5) #5 = Down
             elif(sInput == "help"):
                 print("List of commands:\n"
                       "North: moves player in the 'north' direction.\n"
@@ -956,7 +962,7 @@ def Main(pPlayer):
                  print("Your score:", pPlayer.iScore)
              
             elif sInput == "examine":
-                print(DoExamine(pPlayer.pLocation))
+                DoExamine(pPlayer.pLocation)
                 pPlayer.pLocation.bHasSearched = True
                 for i in range(len(pPlayer.pLocation.tItems)):
                     #Special circumstance items that need more than just examining the location to pick anything up
@@ -1104,7 +1110,7 @@ def Main(pPlayer):
         #Fell down the Ravine ending
         elif pPlayer.pLocation == pRavine and bDoesRavineKill:
             bGameState = False
-            print(pLocation)
+            print(pLocation.GetLocationDescription)
             print("\nBaby: Oops, looks like someone found their mortality!")           
         
 
