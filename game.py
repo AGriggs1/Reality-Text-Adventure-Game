@@ -1113,6 +1113,12 @@ def Main(pPlayer):
                 for i in pPlayer.tInventory:
                     print(i)
 
+            elif sInput == "use":
+                print("Use what?\nInventory:\n===========")
+                for v in pPlayer.tInventory:
+                    print(v)
+                sInput = input().capitalize().strip()
+                DetermineUse(sInput, pPlayer)
             else:
                 print("Command not valid")
         ##LOCATION MUTATORS
