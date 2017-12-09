@@ -183,6 +183,12 @@ pElevatorUp = Locale("You push the 'up' button. You feel your weight shift as th
 pChairOffice = Locale("You walk down a large corrider to come to a large, furnished room. On the other side is a much is a large desk "
                       "and behind that desk is much, much larger portrait of Bobbo. Well then.", None, 29, [])
 
+tLocations = [pVoidDummy, pVoid, pVoidN, pVoidS, pVoidE, pVoidW,
+                  pCloset, pHallway1, pOfficeNW, pOfficeW, pOfficeSW,
+                  pOfficeN, pOfficeC, pOfficeS, pOfficeNE, pOfficeE,
+                  pOfficeSW, pHallway2, pForest, pLake, pRiver,
+                  pWaterfall, pCaveEnt, pCave, pCaveDeep, pRavine,
+                  pWaterfallTop, pElevator, pElevatorUp, pChairOffice] #CAN'T BOTHERED TO MOVE THIS OVER
 #Navigation Matrix
 mLocations = [
         #c0-5 = N, S, E, W, UP, DN
@@ -315,11 +321,18 @@ def Init(): #Initialization function, runs when the code is run
                "*        *  *           **     **   *               *           *           *\n"           
                "*        *  *********   *       *   *********   *********       *           *\n")           #Dios ayudame si yo decido hacer un titulo nuevo.
     print(sTitle)
-   # pLocation, iNumMoves, iScore = SetLocation("None", iVoidStart, 0, 0)
-    #pLocation = tLocationsLong[0] #The traditional way won't work for initializing locations, since SetLocation now requires the location you're currently at to work
-                                 #That means it more than likely will not work for forcing a location via interpret
+    #Reset locations
+
+    for p in tLocations:
+        p.ResetValues()
+        #Based on the absolute bollocks of NOT being allowed to copy one variable to another without tieing the two together, we hafta do THIS
+        #IF I want to something so trivially simple as reseting a data value to what it was when it was initialized
+        #Allegedly. I have better things to test less tedious way
+        s = p.DESC_LONG
+        p.sDescLong = s
+        s = p.DESC_SHORT
+        p.sDescShort = s
     #Begin introduction
-   # pPlayer = Player(pLocation)
     print(pPlayer.pLocation.sDescLong) #Needs to be cleaned up, naturally    
     sInput = input("input: ") or "None"  #If sInput is None (player hits enter without typing anything) then fill it in with "None"
 
@@ -432,8 +445,15 @@ def Pickup(pPlayer, pItem):
             #Quick google search on lists
             #I didn't know pop can remove by index
             #I guess del is for general purpose deleting
-            del(pLocation.tItems[iItem])
-            del(pLocation.tCanPickup[iItem])
+            print(pLocation.ITEMS)
+            print(pLocation.tCanPickup)
+            #del(pLocation.tItems[iItem])
+            #del(pLocation.tCanPickup[iItem])
+            pLocation.tItems.pop(iItem)
+            print(pLocation.tCanPickup)
+            pLocation.tCanPickup.pop(iItem)
+            print(pLocation.ITEMS)
+            
             print("Picked up the", pItem + ".")
         else:
             if pItem == "Map":
@@ -683,20 +703,14 @@ def Interpret(sInput, pPlayer, FunctionFrom): #Parameters can be reduced once th
                             sInput = input("Baby: ")
                             try:
                                 sInput = int(sInput)
-                                tLocations = [pVoidDummy, pVoid, pVoidN, pVoidS, pVoidE, pVoidW,
-                                              pCloset, pHallway1, pOfficeNW, pOfficeW, pOfficeSW,
-                                              pOfficeN, pOfficeC, pOfficeS, pOfficeNE, pOfficeE,
-                                              pOfficeSW, pHallway2, pForest, pLake, pRiver,
-                                              pWaterfall, pCaveEnt, pCave, pCaveDeep, pRavine,
-                                              pWaterfallTop, pElevator, pElevatorUp, pChairOffice]
                                 pPlayer.pLocation = tLocations[sInput]
-                                print(pPlayer.pLocation.sDescShort)
+                                print(pPlayer.pLocation.sDescLong)
                                 print("It is done. How about you? I'm bored.")
                             except:
                                 print("Idiot. Choose a row index on the navigation matrix.")
                                 continue
-                                
-                pPlayer.pLocation = pCloset
+                else:
+                    pPlayer.pLocation = pCloset
                 return False, sInput  #May change the return values in the future
                 
             else:
