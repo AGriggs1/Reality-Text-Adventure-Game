@@ -183,7 +183,6 @@ pElevatorUp = Locale("You push the 'up' button. You feel your weight shift as th
 pChairOffice = Locale("You walk down a large corrider to come to a large, furnished room. On the other side is a much is a large desk "
                       "and behind that desk is much, much larger portrait of Bobbo. Well then.", None, 29, [])
 
-
 #Navigation Matrix
 mLocations = [
         #c0-5 = N, S, E, W, UP, DN
@@ -325,7 +324,7 @@ def Init(): #Initialization function, runs when the code is run
     sInput = input("input: ") or "None"  #If sInput is None (player hits enter without typing anything) then fill it in with "None"
 
     
-    sInput, Player.sName = Interpret(sInput, None, 0, 0, "Init") #Hmmmm
+    sInput, pPlayer.sName = Interpret(sInput, pPlayer, "Init") #Hmmmm
     if sInput:
         print("???: Hey! Can you hear me?")
         input(cont + "continue>") #Must use concatenation for input
@@ -382,9 +381,11 @@ def Init(): #Initialization function, runs when the code is run
         input(cont + "question Baby>")
         print("Baby: This test is not optional! You're going to participate and you're going to love it! You'll see...\n"
               "Baby: Let's start!")
+        #This is changed here too for the boolean test below
+        pPlayer.pLocation = pCloset
     #Block Cave
     ReplaceLocation(pWaterfall.i, 2, None)
-    pPlayer.pLocation = pCloset
+   # pPlayer.pLocation = pCloset 
     #tVisited[iCloset] = True
     Main(pPlayer)
     Copyright(pPlayer, True)
@@ -440,10 +441,10 @@ def Pickup(pPlayer, pItem):
                     print("The map is behind the glass. You can't get to it.")
     else:
         print("Could not find any", pItem, "here.")
-##
+##=======================
 #Drop
 #Drops the defined item the current location
-##
+##=======================
 def Drop(pPlayer, pItem):
     pLocation = pPlayer.pLocation
     if DoesHaveItem(pItem, pPlayer):
@@ -561,6 +562,7 @@ gDevKeys = {
             "cave"      :23,
             "deepcave"  :24
             }
+
 ##==========================================
 #Interpret
 #Takes user input and decides what to do
@@ -574,7 +576,7 @@ gDevKeys = {
 #The parameters required will be a lot less once objects are used
 #   
 ##==========================================
-def Interpret(sInput, pLocation, iScore, iNumMoves, FunctionFrom): #Parameters can be reduced once the player becomes an object with methods that can get these for us
+def Interpret(sInput, pPlayer, FunctionFrom): #Parameters can be reduced once the player becomes an object with methods that can get these for us
     sInput = sInput.lower()
     sNone = "None"
     s = "Interpret:"
@@ -620,32 +622,83 @@ def Interpret(sInput, pLocation, iScore, iNumMoves, FunctionFrom): #Parameters c
 
                 print("Baby: ...")
                 sInput = input("Baby: Fine! What's you're name, dum-dum? ")
-
+            
                 if sInput == "Cornelius Marius Antonius, Pontifex Maximus... Roma":
                     print("Baby: What may I do for you?")
                     while not sInput == "end":
                         sInput = input ("Baby: Awaiting input...").lower()
                         if sInput == "give all items":
                             print("Baby: Everything, eh? Sure thing, Pontifex Maximus.")
-                            pass
+                            pPlayer.tInventory.append(pBlockS)
+                            pPlayer.tInventory.append(pBlockW)
+                            pVoid.tItems.remove(pBlockS)
+                            pVoid.tItems.remove(pBlockW)
+                            pVoid.tCanPickup.pop()
+                            pVoid.tCanPickup.pop()
+
+                            pPlayer.tInventory.append(pBlockE)
+                            pVoidN.tItems.remove(pBlockE)
+                            pVoidN.tCanPickup.pop()
+
+                            pPlayer.tInventory.append(pBlockN)
+                            pVoidS.tItems.remove(pBlockN)
+                            pVoidS.tCanPickup.pop()
+
+                            pPlayer.tInventory.append(pHammer)
+                            pPlayer.tInventory.append(pFlashlight)
+                            pPlayer.tInventory.append(pMatches)
+                            pCloset.tItems.remove(pHammer)
+                            pCloset.tItems.remove(pFlashlight)
+                            pCloset.tItems.remove(pMatches)
+                            pCloset.tCanPickup.pop()
+                            pCloset.tCanPickup.pop()
+                            pCloset.tCanPickup.pop()
+
+                            pPlayer.tInventory.append(pBatteries)
+                            pOfficeSW.tItems.remove(pBatteries)
+                            pOfficeSW.tCanPickup.pop()
+
+                            pPlayer.tInventory.append(pRope)
+                            pPlayer.tInventory.append(pMapOther)
+                            pForest.tItems.remove(pRope)
+                            pForest.tItems.remove(pMapOther)
+                            pForest.tCanPickup.pop()
+                            pForest.tCanPickup.pop()
+
+                            pPlayer.tInventory.append(pDoll)
+                            pLake.tItems.remove(pDoll)
+                            pLake.tCanPickup.pop()
+
+                            pPlayer.tInventory.append(pKey)
+                            pPlayer.tInventory.append(pMap)
+
+                                                    
                         
                         elif sInput == "disable mutators":
                             print("Baby: Of course, great lord!")
                             #TODO: PASS BOOLEAN THAT IS NEEDED FOR MUTATORS TO BE ACTIVE
+                            #We can skip this since for now
                             pass
                         elif sInput == "set start":
                             sInput = input("Baby: ")
                             try:
                                 sInput = int(sInput)
+                                tLocations = [pVoidDummy, pVoid, pVoidN, pVoidS, pVoidE, pVoidW,
+                                              pCloset, pHallway1, pOfficeNW, pOfficeW, pOfficeSW,
+                                              pOfficeN, pOfficeC, pOfficeS, pOfficeNE, pOfficeE,
+                                              pOfficeSW, pHallway2, pForest, pLake, pRiver,
+                                              pWaterfall, pCaveEnt, pCave, pCaveDeep, pRavine,
+                                              pWaterfallTop, pElevator, pElevatorUp, pChairOffice]
+                                pPlayer.pLocation = tLocations[sInput]
+                                print(pPlayer.pLocation.sDescShort)
                                 print("It is done. How about you? I'm bored.")
-                                pass
                             except:
                                 print("Idiot. Choose a row index on the navigation matrix.")
                                 continue
-                            print
                                 
-                        
+                pPlayer.pLocation = pCloset
                 return False, sInput  #May change the return values in the future
+                
             else:
                 print("???: Hmph! Hm hm! HM HM HM HM! Let's reimmerse ourselves, yeah? *Ahem*")
                 return True, "It's Baby"
