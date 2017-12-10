@@ -39,8 +39,15 @@ gMapOffice = ("   c1--C   c6     \n"
               "|  |   |   |   |  \n"
               "a  c3--c5--c8  e  \n"
               "       |          \n"
-              "       z            ")
- 
+              "       |          \n"
+              "   51--n1--40     \n"
+              "     - |  +      \n"
+              "   50--n2--48     \n"
+              "     + |  -      \n"
+              "   45--n3--42     \n"
+              "     = |  =      \n"
+              "     = 46 =        ")
+              #This is how the corridor is supposed to be. It's not, of course, but this is how you tell
 
 gMapForest = ("   e          \n"
               "   |          \n"
@@ -180,15 +187,49 @@ pElevator = Locale("You make your way through the ravine, comming to... an eleva
 pElevatorUp = Locale("You push the 'up' button. You feel your weight shift as the box pushes you upward. The elevator stops at a 'ding!'"
                      ", the doors slide open to reveal... A wall. This doesn't seem right...", "You are in the elevator", 28, [])
 
-pChairOffice = Locale("You walk down a large corrider to come to a large, furnished room. On the other side is a much is a large desk "
-                      "and behind that desk is much, much larger portrait of Bobbo. Well then.", None, 29, [])
+pChairOffice = Locale("You walk down a large corridor to come to a large, furnished room. On the other side is a much is a large desk "
+                      "and behind that desk is much, much larger portrait of Bobbo. Well then.", "You are in Bobbo's office", 29, [])
+
+pCorridor1 = Locale("You open the double doors to reveal a long corrider. You are now standing at an intersection.",
+                    "You are at one of the ends of the corridor, at an intersection.", 30, [])
+
+pCorridor1E = Locale("You head east in the intersection. There is a door with a number on it.", "You are in the east end of the intersection.",
+                    31, [])
+
+pCorridor1W = Locale("You walk west in the intersection. There is a door with a number on it.", "You are in the west end of the intersection.",
+                     32, [])
+pCorridor2 = Locale("You head south down the corridor, stopping before the next intersection.", "You are in the long corridor.", 33, [])
+
+pCorridor3 = Locale("You come to the next intersection.", "You are at an intersection.", 34, [])
+
+pCorridor3E = Locale("You head east in the intersection. There is a door with a number on it.", "You are in the east end of the intersection.",
+                     35, [])
+
+pCorridor3W = Locale("You walk west in the intersection. There is a door with a number on it.", "You are in the west end of the intersection.",
+                     36, [])
+
+pCorridor4 = Locale("You continue south down the corridor, stopping before the next intersection.", "You are in the long corridor.", 37, [])
+
+pCorridor5 = Locale("You enter the last intersection of the corridor.", "You are at the center of an intersection", 38, [])
+
+pCorridor5E = Locale("You head east in the intersection. There is a door with a number on it.", "You are in the east end of the intersection",
+                     39, [])
+
+pCorridor5W = Locale("You walk west in the intersection. There is a door with a number on it.", "You are in the west end of the intersection",
+                     40, [])
+
+pCorridor6 = Locale("You walk south to the end of the corridor, There are a pair of doors, with the number '46' on them.", "You are before the 46 door.",
+                    41, [])
+
 
 tLocations = [pVoidDummy, pVoid, pVoidN, pVoidS, pVoidE, pVoidW,
                   pCloset, pHallway1, pOfficeNW, pOfficeW, pOfficeSW,
                   pOfficeN, pOfficeC, pOfficeS, pOfficeNE, pOfficeE,
                   pOfficeSW, pHallway2, pForest, pLake, pRiver,
                   pWaterfall, pCaveEnt, pCave, pCaveDeep, pRavine,
-                  pWaterfallTop, pElevator, pElevatorUp, pChairOffice] #CAN'T BOTHERED TO MOVE THIS OVER
+                  pWaterfallTop, pElevator, pElevatorUp, pChairOffice,
+              pCorridor1, pCorridor1E, pCorridor1W, pCorridor2, pCorridor3, pCorridor3E,
+              pCorridor3W, pCorridor4, pCorridor5, pCorridor5E, pCorridor5W, pCorridor6] #CAN'T BBOTHERED TO MOVE THIS OVER
 #Navigation Matrix
 mLocations = [
         #c0-5 = N, S, E, W, UP, DN
@@ -200,30 +241,43 @@ mLocations = [
         [None, None, None, pVoid, None, None], #--------------r4 - VoidE
         [None, None, pVoid, None, None, None], #--------------r5 - VoidW
         ##===SECOND MAP========##
-        [pHallway1, None, None, None, None, None], #---------------r6 -- Closet
-        [None, pCloset, pOfficeW, None, None, None], #-------------r7 -- Hallway1
-        [None, pOfficeW, pOfficeN, None, None, None], #------------r8 -- OfficeNW
-        [pOfficeNW, pOfficeSW, pOfficeC, pHallway1, None, None], #-r9 -- OfficeW
-        [pOfficeW, None, pOfficeS, None, None, None], #------------r10 - OfficeSW
-        [None, pOfficeC, None, pOfficeNW, None, None], #-----------r11 - OfficeN
-        [pOfficeN, pOfficeS, pOfficeE, pOfficeW, None, None], #----r12 - OfficeC
-        [pOfficeC, None, pOfficeSE, pOfficeSW, None, None], #------r13 - OfficeS
-        [None, pOfficeE, None, None, None, None], #----------------r14 - OfficeNE
-        [pOfficeNE, pOfficeSE, pHallway2, pOfficeC, None, None], #-r15 - OfficeE
-        [pOfficeE, None, None, pOfficeS, None, None], #------------r16 - OfficeSE
-        [None, pForest, None, pOfficeE, None, None], #-------------r17 - Hallway2
-        [None, pRiver, None, None, None, None], #------------------r18 - Forest
-        [pForest, None, pWaterfall, pLake, None, None], #----------r19 - River
-        [None, None, pRiver, None, None, None], #------------------r20 - Lake
-        [None, None, pCaveEnt, pRiver, None, None], #--------------r21 - Waterfall
-        [None, pCave, None,pWaterfall, None, None], #--------------r22 - CaveEnt
-        [pCaveEnt, pRavine, None, pCaveDeep, None, None], #--------r23 - Cave
-        [None, None, pCave, None, None, None], #-------------------r24 - CaveDeep
-        [pCave, None, None, None, None, None, None, None], #--r25 - Ravine(Hidden location, does not appear on map. Eventually the entire cave system won't appear on the map)
-        [None, None, pRiver, pWaterfall, None, None], #------------r26 - WaterfallTop(replaces lake)
-        [None, None, None, None, pElevatorUp, None], #-------------r27 - Elevator
-        [None, None, None, None, None, pElevator], #---------------r28 - ElevatorUp(Replace c1 with pOfficeSE)
-        [None, None, None, None] #---------------------------------r29 - Bobbo's Office (New end game)
+        [pHallway1, None, None, None, None, None], #---------------------r6 -- Closet
+        [None, pCloset, pOfficeW, None, None, None], #-------------------r7 -- Hallway1
+        [None, pOfficeW, pOfficeN, None, None, None], #------------------r8 -- OfficeNW
+        [pOfficeNW, pOfficeSW, pOfficeC, pHallway1, None, None], #-------r9 -- OfficeW
+        [pOfficeW, None, pOfficeS, None, None, None], #------------------r10 - OfficeSW
+        [None, pOfficeC, None, pOfficeNW, None, None], #-----------------r11 - OfficeN
+        [pOfficeN, pOfficeS, pOfficeE, pOfficeW, None, None], #----------r12 - OfficeC
+        [pOfficeC, None, pOfficeSE, pOfficeSW, None, None], #------------r13 - OfficeS
+        [None, pOfficeE, None, None, None, None], #----------------------r14 - OfficeNE
+        [pOfficeNE, pOfficeSE, pHallway2, pOfficeC, None, None], #-------r15 - OfficeE
+        [pOfficeE, None, None, pOfficeS, None, None], #------------------r16 - OfficeSE
+        [None, pForest, None, pOfficeE, None, None], #-------------------r17 - Hallway2
+        [None, pRiver, None, None, None, None], #------------------------r18 - Forest
+        [pForest, None, pWaterfall, pLake, None, None], #----------------r19 - River
+        [None, None, pRiver, None, None, None], #------------------------r20 - Lake
+        [None, None, pCaveEnt, pRiver, None, None], #--------------------r21 - Waterfall
+        [None, pCave, None,pWaterfall, None, None], #--------------------r22 - CaveEnt
+        [pCaveEnt, pRavine, None, pCaveDeep, None, None], #--------------r23 - Cave
+        [None, None, pCave, None, None, None], #-------------------------r24 - CaveDeep
+        [pCave, None, None, None, None, None, None, None], #-------------r25 - Ravine
+        [None, None, pRiver, pWaterfall, None, None], #------------------r26 - WaterfallTop(replaces lake)
+        [None, None, None, None, pElevatorUp, None], #-------------------r27 - Elevator
+        [None, None, None, None, None, pElevator], #---------------------r28 - ElevatorUp(Replace c1 with pOfficeSE)
+        [None, None, None, None, None, None], #--------------------------r29 - Bobbo's Office (New end game)
+        [pOfficeS, pCorridor2, pCorridor1E, pCorridor1W, None, None], #--r30 - Corridor1
+        [None, None, None, pCorridor1, None, None], #--------------------r31 - Corridor1E
+        [None, None, pCorridor1, None, None, None], #--------------------r32 - Corridor1W
+        [pCorridor1, pCorridor3, None, None, None, None], #--------------r33 - Corridor2
+        [pCorridor2, pCorridor4, pCorridor3E, pCorridor3W, None, None], #r34 - Corridor3
+        [None, None, None, pCorridor3, None, None], #--------------------r35 - Corridor3E
+        [None, None, pCorridor3, None, None, None], #--------------------r36 - Corridor3W
+        [pCorridor3, pCorridor5, None, None, None, None], #--------------r37 - Corridor4
+        [pCorridor4, pCorridor6, pCorridor5E, pCorridor5W, None, None], #r38 - Corridor5
+        [None, None, None, pCorridor5, None, None], #--------------------r39 - Corridor5E
+        [None, None, pCorridor5, None, None, None], #--------------------r40 - Corridor5W
+        [pCorridor5, pForest, None, None, None] #------------------------r41 - Corridor6
+        
             ]
 sRavine = ("You take a step forward, not knowing there is nowhere to place your foot. "
                 "Suddenly, you find yourself tumbling down, down, down..."
@@ -301,6 +355,7 @@ tLocationsExamine = [           #Examine is dual purpose. It prints the index of
                 "Hold on... what's this in the center of the wall? It feels softer, like a canvas...",
                 #29 - Chair Office
                 sNone
+                #
                 ]
 
 
@@ -362,7 +417,8 @@ def Init(): #Initialization function, runs when the code is run
         #Update pLocation to showcase changes made
         pPlayer.pLocation = pVoid
         #Enter the gamestate for the first time
-        Main(pPlayer)
+        b = Main(pPlayer)
+        if b: return b
         #Begin second half of intro
         print("\n???: Excellent, " + pPlayer.sName + ". You seem to be in optimal shape. Excellent indeed.\n"
               "You're patience with me has not gone unnoticed. I... do not have not been aquainted."
@@ -400,8 +456,10 @@ def Init(): #Initialization function, runs when the code is run
     ReplaceLocation(pWaterfall.i, 2, None)
    # pPlayer.pLocation = pCloset 
     #tVisited[iCloset] = True
-    Main(pPlayer)
-    Copyright(pPlayer, True)
+    b = Main(pPlayer)
+    if b: return b #The player quit
+    b = Copyright(pPlayer, True)
+    return b
 ##
 ##====================================
 #GetLocationDescription
@@ -548,7 +606,10 @@ def Copyright(pPlayer, bGameover):
 
     if bGameover:
         print("Final score:", pPlayer.iScore)
-        print("Gameover!\nThanks for playing!\n " + sMessage)
+        print("Gameover!\nThanks for playing!\n" + sMessage)
+        sInput = input("Play Again? Y:N").lower()
+        if "y" in sInput:
+            return True
         sys.exit()
     print(sMessage)
 
@@ -644,6 +705,7 @@ def Interpret(sInput, pPlayer, FunctionFrom): #Parameters can be reduced once th
                 sInput = input("Baby: Fine! What's you're name, dum-dum? ")
             
                 if sInput == "Cornelius Marius Antonius, Pontifex Maximus... Roma":
+                    pPlayer.pLocation = pCloset
                     print("Baby: What may I do for you?")
                     while not sInput == "end":
                         sInput = input ("Baby: Awaiting input...").lower()
@@ -858,7 +920,7 @@ def DetermineUse(sParam, pPlayer): #I'M LAZY CAN'T BE BOTHERED TO CHANGE THE PAR
             print("Using the key, you unlock the double doors.")
             tCanUse[11] = False
             #USE ReplaceLocation(WHERE r = pOfficeS SET c1 = pBossOffice
-            ReplaceLocation(pOfficeS.i, 1, pChairOffice)
+            ReplaceLocation(pOfficeS.i, 1, pCorridor1)
 ##===========================================
 #Main
 #Gamestate function, always active while player is in the game
@@ -1049,6 +1111,7 @@ def Main(pPlayer):
 
                 if(sInput == "y"):
                     Copyright(pPlayer, True)
+                    return True #The player chose to play again
 
             elif(sInput == "map"):
                 
@@ -1166,9 +1229,10 @@ def Main(pPlayer):
             
                bGameState = False
                print(pPlayer.pLocation.GetLocationDescription())
+               return bGameState
 
         #Reaching move limit
-        elif pPlayer.iMoves > 30 and pPlayer.Location.i > 5 and bDoShowSequence:
+        elif pPlayer.iMoves > 60 and pPlayer.Location.i > 5 and bDoShowSequence:
             print(pPlayer.pLocation.GetLocationDescription())
             print("\nBaby: Well, you certainly seem to be underperforming. It's quite boring actually. "
                   "SERIOUSLY, what could be taking you so long?")
@@ -1176,6 +1240,7 @@ def Main(pPlayer):
             if not DoesHaveItem(pKey, pPlayer):
                 bGameState = False
                 print("Baby: Whatever. Nap time!")
+                return bGameState
                 
             else:
                 print("Baby: Mm. You're close, I'll give you that. Don't. Waste. My. Time.")
@@ -1210,8 +1275,8 @@ def Main(pPlayer):
                 input("Nice? ")
                 print("Baby: What's that? Where are you? Why are you? What am I?")
                 print("Baby: Pffft, I dunno!") #I dunno
-                print("Gameover!")
-                sys.exit()
+                bGameState = False
+                return bGameState
             else:
                 print("Baby: Welcome, Welcome! Ah, so you brought Bobbo his key! Leave it on the desk, will ya?")
                 #Drop the key
@@ -1222,13 +1287,16 @@ def Main(pPlayer):
             print(pPlayer.pLocation.GetLocationDescription())
             print("Suddenly the door slams shut behind you. You go to open it, only for the handle to fall off.")
             print("Baby: Eh, did you get the Broom Closet Ending? The Broom Closet Ending is my favourite!") #I spelt favourite like that intentionally by the by
+            return bGameState
         #Fell down the Ravine ending
         elif pPlayer.pLocation == pRavine and mLocations[pRavine.i][2] == None:
             bGameState = False
             print(pLocation.GetLocationDescription())
-            print("\nBaby: Oops, looks like someone found their mortality!")           
+            print("\nBaby: Oops, looks like someone found their mortality!")
+            return bGameState
         
 
-Init()
-    
-
+b = Init()
+while b:
+    print(b)
+    b = Init()
