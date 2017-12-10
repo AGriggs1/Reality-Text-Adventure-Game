@@ -303,7 +303,7 @@ tLocationsExamine = [           #Examine is dual purpose. It prints the index of
                 #6 - Closet, Map
                 "You rifle through the shelves.",
                 #7 - Hallway, None
-                "There's a glass panel on the wall. Inside you see what could be a 'Map' of this place\n\n" + gMapOffice,
+                "There's a glass panel on the wall. Inside you see what could be a 'Map' of this place\n\n" + gMapOffice + "\nYou are at: a",
                 #8 - OfficeNW, None
                 "You rumage through the various papers and see nothing particuliarly interesting. Wait! Oh. Nevermind.",
                 #9 - OfficeW, None
@@ -317,7 +317,8 @@ tLocationsExamine = [           #Examine is dual purpose. It prints the index of
                 #12 - OfficeC, None
                 sNone,
                 #13 - OfficeS, None
-                "The doors simply won't budge. Is there a key somewhere?", #Maybe
+                "The doors simply won't budge. Is there a key somewhere? \n\nYou notice a panel next to the door: \n\n"
+                "'Beyond this pair lies another... beyond it lies the office of the clown, but only when 46 and 46 is 46'", #Yes
                 #14 - OfficeNE, None
                 "Just an empty watercooler. What a shame.",
                 #15 - OfficeE, None
@@ -328,7 +329,7 @@ tLocationsExamine = [           #Examine is dual purpose. It prints the index of
                 "You don't see anything.", #Very subtle way to tell the difference between hallways
                 #18 - Forest, Rope, ForestMap (In the future, this combined with the flashlight will let you safely explore the ravine
                 "Nearby is a wooden bulletin board enscribed as 'New Pena National Forest'."
-                " On it you see what looks like a map of the area:\n\n" + gMapForest +"\n\n"
+                " On it you see what looks like a map of the area:\n\n" + gMapForest + "\nYou are at: e\n"
                 "On the board there is also a notice:\n\n"
                 "'Explore one New Pena's many cave systems! See the ancient incantation circles where"
                 " many a-locals performed rituals to please their deities! Book your guided tour now!\n"
@@ -354,8 +355,31 @@ tLocationsExamine = [           #Examine is dual purpose. It prints the index of
                 #28 - ElevatorTop
                 "Hold on... what's this in the center of the wall? It feels softer, like a canvas...",
                 #29 - Chair Office
-                sNone
-                #
+                sNone,
+                #30 - Corridor1
+                "The door at the end of this corridor... what might it lead to?",
+                #31 - Corridor1E
+                "The number on the door is 50. There is a red button by the door...",
+                #32 - Corridor1W
+                "The number on the door is 51. There is a green button by the door...",
+                #33 - Corridor2
+                "On the east side, there is a '+' painted on the wall. On the west side, there is a '-'.",
+                #34 - Corridor3
+                sNone,
+                #35 - Corridor3E
+                "The number on the door is 45. There is a blue button by the door...",
+                #36 - Corridor3W
+                "The number on the door is 42. There is a blue button by the door...",
+                #37 - Corridor4
+                "On the east side, there is a '-' painted on the wall. On the west side, there is a '+'.",
+                #38 - Corridor5
+                sNone,
+                #39 - Corridor5E
+                "The number on the door is 48. There is a red button by the door...",
+                #40 - Corridor5W
+                "The number on the door is  40. There is a green button by the door...",
+                #41 - Corridor6
+                "The double door has the number 46. On each side of the wall, there is an '=' sign with a number below that."
                 ]
 
 
@@ -581,8 +605,15 @@ def SwitchLocations(r1, c1, r2, c2):
 def ReplaceLocation(r, c, iReplaceWith):
     mLocations[r][c] = iReplaceWith
 
-
-
+tCorridorNums = {pCorridor1W:51, pCorridor1E:50, pCorridor3W:45, pCorridor3E:42, pCorridor5W:48, pCorridor5E:40}
+##
+#GetWallsTotal
+##
+def GetWallsTotal():
+    #We need to get the locations for the nav matrix since they move around... yeah that's what the buttons dooooo
+    sumE = tCorridorNums[mLocations[30][2]] + tCorridorNums[mLocations[34][2]] - tCorridorNums[mLocations[38][2]]
+    sumW = tCorridorNums[mLocations[30][3]] - tCorridorNums[mLocations[34][3]] + tCorridorNums[mLocations[38][3]]
+    return sumE, sumW
 ##=======================
 #DoExamine
 #Prints the examine description and all items at the location
@@ -592,6 +623,10 @@ def DoExamine(pLocation):
     print("You see a/an:")
     for i in pLocation.tItems:
         print("'" + i + "'")
+    print()
+    if pLocation == pCorridor6:
+        iSumE, iSumW = GetWallsTotal()
+        print("The east side has the number:", iSumE, "\nThe west side has the number:", iSumW)
 
 ##================================
 #Copyright
@@ -897,7 +932,7 @@ def DetermineUse(sParam, pPlayer): #I'M LAZY CAN'T BE BOTHERED TO CHANGE THE PAR
             ReplaceLocation(pRavine.i, 2, pElevator)
     elif sParam == "Matches":
         #Is the player in the deep cave and does the cave have the doll
-        if pLocation == pCaveDeep and pDoll in pCaveDeep.tItems and pMatches in pPlayer.tInventory:
+        if pLocation == pCaveDeep and pDoll in pCaveDeep.tItems and pMatches in pPlayer.tInventory: # and iUses > 0:
             if tCanUse[10]:
                 print("With the doll in the incantation circle, you light a match set it ablaze.",
                         "Eventually, once the flames die down, you find among the ashen remains a key.")
