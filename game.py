@@ -157,11 +157,8 @@ pRiver = Locale("You come to a river bank. You faintly hear what sounds like con
 
 pLake = Locale("You follow the river to a large lake. It's shores are sandy, interestingly enough.", "You return to the lake.", 20, [pDoll])
 
-
-
 pWaterfall = Locale("You follow the river to a waterfall. It looks like it's about 15 feet high, but what do you know?", 
                 "The waterfall stands before you. Lovely.", 21, [])
-<<<<<<< HEAD
 
 pCaveEnt = Locale("Behind the waterfall you find an entrance to a cavern. What lies within?",
                   "You are behind the waterfall, at the maw of a cavern.", 22, [])
@@ -213,8 +210,6 @@ pCorridor4 = Locale("You continue south down the corridor, stopping before the n
 
 pCorridor5 = Locale("You enter the last intersection of the corridor.", "You are at the center of an intersection", 38, [])
 
-=======
-
 pCaveEnt = Locale("Behind the waterfall you find an entrance to a cavern. What lies within?",
                   "You are behind the waterfall, at the maw of a cavern.", 22, [])
 
@@ -265,7 +260,6 @@ pCorridor4 = Locale("You continue south down the corridor, stopping before the n
 
 pCorridor5 = Locale("You enter the last intersection of the corridor.", "You are at the center of an intersection", 38, [])
 
->>>>>>> 696a6f74d2784404c765218b9f3427ed3dc0753b
 pCorridor5E = Locale("You head east in the intersection. There is a door with a number on it.", "You are in the east end of the intersection",
                      39, [])
 
@@ -333,6 +327,7 @@ mLocations = [
         [pCorridor5, pForest, None, None, None] #------------------------r41 - Corridor6
         
             ]
+NAV_MAT_LOCATIONS = mLocations #To reset the nav matrix when restarting
 sRavine = ("You take a step forward, not knowing there is nowhere to place your foot. "
                 "Suddenly, you find yourself tumbling down, down, down..."
                 " You hit the bottom of the ravine. Hard. You cannot see how broken you are, but you know it's bad. "
@@ -415,39 +410,25 @@ tLocationsExamine = [           #Examine is dual purpose. It prints the index of
                 #31 - Corridor1E
                 "The number on the door is 50. There is a red button by the door...",
                 #32 - Corridor1W
-<<<<<<< HEAD
                 "The number on the door is 45. There is a green button by the door...",
-=======
-                "The number on the door is 51. There is a green button by the door...",
->>>>>>> 696a6f74d2784404c765218b9f3427ed3dc0753b
                 #33 - Corridor2
                 "On the east side, there is a '+' painted on the wall. On the west side, there is a '-'.",
                 #34 - Corridor3
                 sNone,
                 #35 - Corridor3E
-<<<<<<< HEAD
                 "The number on the door is 42. There is a blue button by the door...",
                 #36 - Corridor3W
                 "The number on the door is 51. There is a blue button by the door...",
-=======
-                "The number on the door is 45. There is a blue button by the door...",
                 #36 - Corridor3W
                 "The number on the door is 42. There is a blue button by the door...",
->>>>>>> 696a6f74d2784404c765218b9f3427ed3dc0753b
                 #37 - Corridor4
                 "On the east side, there is a '-' painted on the wall. On the west side, there is a '+'.",
                 #38 - Corridor5
                 sNone,
                 #39 - Corridor5E
-<<<<<<< HEAD
                 "The number on the door is 40. There is a red button by the door...",
                 #40 - Corridor5W
                 "The number on the door is  48. There is a green button by the door...",
-=======
-                "The number on the door is 48. There is a red button by the door...",
-                #40 - Corridor5W
-                "The number on the door is  40. There is a green button by the door...",
->>>>>>> 696a6f74d2784404c765218b9f3427ed3dc0753b
                 #41 - Corridor6
                 "The double door has the number 46. On each side of the wall, there is an '=' sign with a number below that."
                 ]
@@ -460,6 +441,7 @@ def Init(): #Initialization function, runs when the code is run
 ##=============================================================
     #tInventory = []
     #iScore = 0
+    mLocations = NAV_MAT_LOCATIONS
     pPlayer = Player(pVoidDummy)
     sTitle = ( "*********   *********      ***      *           *********   *********   *       *\n" 
                "*       **  *              * *      *               *           *        *     *\n"
@@ -675,14 +657,10 @@ def SwitchLocations(r1, c1, r2, c2):
 def ReplaceLocation(r, c, iReplaceWith):
     mLocations[r][c] = iReplaceWith
 
-<<<<<<< HEAD
 tCorridorNums = {pCorridor1W:45, pCorridor1E:50, pCorridor3W:51, pCorridor3E:42, pCorridor5W:48, pCorridor5E:40}
-=======
-tCorridorNums = {pCorridor1W:51, pCorridor1E:50, pCorridor3W:45, pCorridor3E:42, pCorridor5W:48, pCorridor5E:40}
->>>>>>> 696a6f74d2784404c765218b9f3427ed3dc0753b
-##
+##==================
 #GetWallsTotal
-##
+##==================
 def GetWallsTotal():
     #We need to get the locations for the nav matrix since they move around... yeah that's what the buttons dooooo
     sumE = tCorridorNums[mLocations[30][2]] + tCorridorNums[mLocations[34][2]] - tCorridorNums[mLocations[38][2]]
@@ -807,7 +785,6 @@ def Interpret(sInput, pPlayer, FunctionFrom): #Parameters can be reduced once th
         if sInput.lower() == "skip":
             sInput = input("???: Hey, hey, what do you think you're doing trying to skip my glorius introduction,"
                            " bub? Do you even know my name? ")
-<<<<<<< HEAD
 
             if sInput.lower() == "baby":
 
@@ -845,47 +822,7 @@ def Interpret(sInput, pPlayer, FunctionFrom): #Parameters can be reduced once th
                             pCloset.tCanPickup.pop()
                             pCloset.tCanPickup.pop()
                             pCloset.tCanPickup.pop()
-
-=======
-
-            if sInput.lower() == "baby":
-
-                print("Baby: ...")
-                sInput = input("Baby: Fine! What's you're name, dum-dum? ")
-            
-                if sInput == "Cornelius Marius Antonius, Pontifex Maximus... Roma":
-                    pPlayer.pLocation = pCloset
-                    print("Baby: What may I do for you?")
-                    while not sInput == "end":
-                        sInput = input ("Baby: Awaiting input...").lower()
-                        if sInput == "give all items":
-                            print("Baby: Everything, eh? Sure thing, Pontifex Maximus.")
-                            pPlayer.tInventory.append(pBlockS)
-                            pPlayer.tInventory.append(pBlockW)
-                            pVoid.tItems.remove(pBlockS)
-                            pVoid.tItems.remove(pBlockW)
-                            pVoid.tCanPickup.pop()
-                            pVoid.tCanPickup.pop()
-
-                            pPlayer.tInventory.append(pBlockE)
-                            pVoidN.tItems.remove(pBlockE)
-                            pVoidN.tCanPickup.pop()
-
-                            pPlayer.tInventory.append(pBlockN)
-                            pVoidS.tItems.remove(pBlockN)
-                            pVoidS.tCanPickup.pop()
-
-                            pPlayer.tInventory.append(pHammer)
-                            pPlayer.tInventory.append(pFlashlight)
-                            pPlayer.tInventory.append(pMatches)
-                            pCloset.tItems.remove(pHammer)
-                            pCloset.tItems.remove(pFlashlight)
-                            pCloset.tItems.remove(pMatches)
-                            pCloset.tCanPickup.pop()
-                            pCloset.tCanPickup.pop()
-                            pCloset.tCanPickup.pop()
-
->>>>>>> 696a6f74d2784404c765218b9f3427ed3dc0753b
+                            
                             pPlayer.tInventory.append(pBatteries)
                             pOfficeSW.tItems.remove(pBatteries)
                             pOfficeSW.tCanPickup.pop()
@@ -1071,8 +1008,7 @@ def DetermineUse(sParam, pPlayer): #I'M LAZY CAN'T BE BOTHERED TO CHANGE THE PAR
             tCanUse[11] = False
             #USE ReplaceLocation(WHERE r = pOfficeS SET c1 = pBossOffice
             ReplaceLocation(pOfficeS.i, 1, pCorridor1)
-<<<<<<< HEAD
-
+            
     elif sParam == "Button":
         #Move East Sides Up
         if pLocation == pCorridor1E:
@@ -1088,11 +1024,6 @@ def DetermineUse(sParam, pPlayer): #I'M LAZY CAN'T BE BOTHERED TO CHANGE THE PAR
             ReplaceLocation(pCorridor3.i, 2, pLocationSave)
             ReplaceLocation(mLocations[pCorridor3.i][2].i, 3, pCorridor3)
             
-            
-            
-            
-=======
->>>>>>> 696a6f74d2784404c765218b9f3427ed3dc0753b
 ##===========================================
 #Main
 #Gamestate function, always active while player is in the game
@@ -1229,16 +1160,11 @@ def Main(pPlayer):
             
             elif sCommand == "drop":
                 Drop(pPlayer, sParam)
-<<<<<<< HEAD
-
             elif sCommand == "use":
 
                 #This could've been a function. Oh well.
                 #IT IS NOW, LOOK AT ALL THE WHITE SPACE!
-                DetermineUse(sParam, pPlayer)
-                        
-                        
-                        
+                DetermineUse(sParam, pPlayer)                       
 
         #The command is one word or more than two words
         except ValueError:
@@ -1285,65 +1211,6 @@ def Main(pPlayer):
                 if(sInput == "y"):
                     Copyright(pPlayer, True)
                     return True #The player chose to play again
-
-=======
-
-            elif sCommand == "use":
-
-                #This could've been a function. Oh well.
-                #IT IS NOW, LOOK AT ALL THE WHITE SPACE!
-                DetermineUse(sParam, pPlayer)
-                        
-                        
-                        
-
-        #The command is one word or more than two words
-        except ValueError:
-            
-            if sInput == "north":
-                pPlayer.pLocation = SetLocation(pPlayer, 0) #0 = North
-
-            elif sInput == "south":
-               pPlayer.pLocation = SetLocation(pPlayer, 1) #1 = South
-    
-            elif sInput == "east":
-                pPlayer.pLocation = SetLocation(pPlayer, 2) #2 = East
-
-            elif sInput == "west":
-                pPlayer.pLocation = SetLocation(pPlayer, 3) #3 = West
-
-            elif sInput == "up":
-                pPlayer.pLocation = SetLocation(pPlayer, 4) #4 = Up
-            elif sInput == "down":
-                pPlayer.pLocation = SetLocation(pPlayer, 5) #5 = Down
-            elif(sInput == "help"):
-                print("List of commands:\n"
-                      "North: moves player in the 'north' direction.\n"
-                      "South: moves player in the 'south' direction.\n"
-                      "East: moves player in the 'east' direction.\n"
-                      "West: moves player in the 'west' direction.\n"
-                      "Help: displays a list of commands.\n"
-                      "Quit: ends the game. Considered a game over.\n" #AKA run the game over/copyright function on quit
-                      "Map: Displays the current map.\n"
-                      "Moves: Shows how many moves you've made on this map.\n"
-                      "Score: Displays your score.\n"
-                      "Look: Displays the long description of the current location\n"
-                      "Examine: Searches the location. Will reveal any item, if there is one.\n"
-                      "Take: Take the specified item found at location with examine.\n"
-                      "Drop: Drops the specified item in your inventory\n"
-                      "Use: Uses the specified item in your inventory\n"
-                      "Inventory: Shows your inventory.")
-
-            elif(sInput == "quit"):
-                sInput = input("This will end the game and count as a game over. Continue?\n" #Changing sInput shouldn't cause issues
-                           "<Enter 'y' for 'yes or 'n' for no'>\n")
-                sInput = sInput[0].lower()
-
-                if(sInput == "y"):
-                    Copyright(pPlayer, True)
-                    return True #The player chose to play again
-
->>>>>>> 696a6f74d2784404c765218b9f3427ed3dc0753b
             elif(sInput == "map"):
                 
                 #Does the player HAVE a map?
@@ -1424,13 +1291,11 @@ def Main(pPlayer):
             elif sInput == "use":
                 print("Use what?\nInventory:\n===========")
                 for v in pPlayer.tInventory:
-                    print(v)
-<<<<<<< HEAD
+                    print("'" + v + "'")
                 if pPlayer.pLocation == pCorridor1E or pPlayer.pLocation == pCorridor1W or pPlayer.pLocation == pCorridor3E or pPlayer.pLocation == pCorridor3W or pPlayer.pLocation == pCorridor5E or pPlayer.pLocation == pCorridor5W:
                     #Just check if there's a button to push, DetermineUse will handle everything elses
+                    print("Environment:\n=============")
                     print("'Button'")
-=======
->>>>>>> 696a6f74d2784404c765218b9f3427ed3dc0753b
                 sInput = input().capitalize().strip()
                 DetermineUse(sInput, pPlayer)
             else:
@@ -1458,15 +1323,13 @@ def Main(pPlayer):
                 #Unblock the Lake
                 ReplaceLocation(pRiver.i, 3, pLake)
         
-<<<<<<< HEAD
         #Do the walls both equal 46?
         iSumE, iSumW = GetWallsTotal()
         if iSumE == 46 and iSumW == 46:
             #Set the location to the ending
             ReplaceLocation(pCorridor6.i, 1, pChairOffice)
+            print("You win by the by.")
         
-=======
->>>>>>> 696a6f74d2784404c765218b9f3427ed3dc0753b
         ##ENDINGS
         #End of tutorial
         if pPlayer.pLocation.i < 6:
