@@ -57,6 +57,33 @@ gMapForest = ("   e          \n"
               "      j--k    \n"
               "         |    \n"
               "         l--m   ")
+#Ain't she a beauty?
+
+gMapMage = ("   c1--C   c6             \n"
+            "   |   |   |              \n"
+            "b--c2--c4--c7--d          \n"
+            "|  |   |   |   |          \n"
+            "a  c3--c5--c8  e          \n"
+            "       |       |          \n"
+            "       |    g--f--h--i    \n"
+            "       |             |    \n"
+            "   51--n1--40     j--k    \n"
+            "       |             |    \n"
+            "       n2            l--m \n"
+            "       |                  \n"  
+            "   50--n3--48             \n"
+            "       |                  \n"
+            "       n4                 \n"
+            "       |                  \n"
+            "   45--n5--42             \n"
+            "       |                  \n"
+            "       46                   ")
+
+#I liked the name
+MagicDictionary = {6:"a", 7:"b", 8:"c1", 9:"c2", 10:"c3", 11:"C", 12:"c4", 13:"c5", 14:"c6", 15:"c7",
+                   16:"c8", 17:"d", 18:"e", 19:"g", 20:"f", 21:"h", 22:"i", 23:"k", 24:"j", 25:"l",
+                   26:"g", 27:"m", 28:"m", 29:"46", 30:"n1", 31:"51", 32:"40", 33:"n2", 34:"n3",
+                   35:"50", 36:"48", 37:"n4", 38:"n5", 39:"45", 40:"43", 41:"46"} 
 #This matrix defines the indexes of the locations each item can be used at
 #It will be used like this:
 # for i in mCanUseAt[row]:
@@ -96,7 +123,7 @@ tCanUse = [True, #r0 - Doll
 pVoidDummy = Locale("You find yourself in an empty white space, a 'nothing'.", None, 0, [])
 pVoid = Locale("You are in an empty white space. A red circle with four lines leading in four directions"
                " to four other circles appears under your feet.",
-               "You are in the center of the void.", 1, [pBlockS, pBlockW]) #For now, I just want to define every location, so I'll just list the name of the item.
+               "You are in the center of the void.", 1, [pBlockS, pBlockW]) 
 
 pVoidN = Locale("You follow one of the lines to a circle that, upon investigation, has the letter 'N' on it."
                 "The area around you transforms into a forest filled teeming monstrous redwood trees."
@@ -247,7 +274,7 @@ pCorridor1E = Locale("You head east in the intersection. There is a door with a 
 
 pCorridor1W = Locale("You walk west in the intersection. There is a door with a number on it.", "You are in the west end of the intersection.",
                      32, [])
-pCorridor2 = Locale("You head south down the corridor, stopping before the next intersection.", "You are in the long corridor.", 33, [])
+pCorridor2 = Locale("You head down the corridor, stopping before the next intersection.", "You are in the long corridor.", 33, [])
 
 pCorridor3 = Locale("You come to the next intersection.", "You are at an intersection.", 34, [])
 
@@ -257,7 +284,7 @@ pCorridor3E = Locale("You head east in the intersection. There is a door with a 
 pCorridor3W = Locale("You walk west in the intersection. There is a door with a number on it.", "You are in the west end of the intersection.",
                      36, [])
 
-pCorridor4 = Locale("You continue south down the corridor, stopping before the next intersection.", "You are in the long corridor.", 37, [])
+pCorridor4 = Locale("You continue down the corridor, stopping before the next intersection.", "You are in the long corridor.", 37, [])
 
 pCorridor5 = Locale("You enter the last intersection of the corridor.", "You are at the center of an intersection", 38, [])
 
@@ -267,7 +294,7 @@ pCorridor5E = Locale("You head east in the intersection. There is a door with a 
 pCorridor5W = Locale("You walk west in the intersection. There is a door with a number on it.", "You are in the west end of the intersection",
                      40, [])
 
-pCorridor6 = Locale("You walk south to the end of the corridor, There are a pair of doors, with the number '46' on them.", "You are before the 46 door.",
+pCorridor6 = Locale("You walk to the end of the corridor, There are a pair of doors, with the number '46' on them.", "You are before the 46 door.",
                     41, [])
 
 
@@ -410,7 +437,7 @@ tLocationsExamine = [           #Examine is dual purpose. It prints the index of
                 #29 - Chair Office
                 sNone,
                 #30 - Corridor1
-                "The floor beneath you is red. You see a pair of double doors on the other side. Where might they lead?
+                "The floor beneath you is red. You see a pair of double doors on the other side. Where might they lead?"
                 "You take notice of a map of the corridor:\n\n"
                 "   51--n1--40     \n"
                 "     - |  +      \n"
@@ -1289,10 +1316,10 @@ def Main(pPlayer):
                 #Does the player HAVE a map?
                 if DoesHaveItem(pMap, pPlayer) or pPlayer.pLocation.i < 6:
             
-                    if pPlayer.pLocation.i > 5 and pPlayer.pLocation.i < 27: #Always plan for the future... not that I have anything planned
-                        print(gMap)
-                        print(gMapDesc)
-                        print("You are at:", tMap[i])
+                    if pPlayer.pLocation.i > 5 and pPlayer.pLocation.i < 42: #Always plan for the future... not that I have anything planned
+                        print(gMapMage)
+                        #print(gMapDesc)
+                        print("You are at:", MagicDictionary[pPlayer.pLocation.i])
                     else:
                         print(gMapTut)
                 else:
