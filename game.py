@@ -423,8 +423,6 @@ tLocationsExamine = [           #Examine is dual purpose. It prints the index of
                 "The number on the door is 42. There is a blue button by the door...",
                 #36 - Corridor3W
                 "The number on the door is 51. There is a blue button by the door...",
-                #36 - Corridor3W
-                "The number on the door is 42. There is a blue button by the door...",
                 #37 - Corridor4
                 "On the east side, there is a '-' painted on the wall. On the west side, there is a '+'.",
                 #38 - Corridor5
@@ -1022,8 +1020,8 @@ def DetermineUse(sParam, pPlayer): #I'M LAZY CAN'T BE BOTHERED TO CHANGE THE PAR
             ReplaceLocation(pOfficeS.i, 1, pCorridor1)
             
     elif sParam == "Button":
-        #Move East Sides Up
-        if pLocation == pCorridor1E:
+        #Move East Sides up
+        if CompareLocations(pLocation, mLocations[30][2]):
             #Location at Corridor1E to Corridor5E
             pLocationSave = mLocations[pCorridor5.i][2]
             ReplaceLocation(pCorridor5.i, 2, mLocations[pCorridor1.i][2])
@@ -1035,6 +1033,61 @@ def DetermineUse(sParam, pPlayer): #I'M LAZY CAN'T BE BOTHERED TO CHANGE THE PAR
             #Location at Corridor5E to Corridor3E (Use Saved)
             ReplaceLocation(pCorridor3.i, 2, pLocationSave)
             ReplaceLocation(mLocations[pCorridor3.i][2].i, 3, pCorridor3)
+            print("*Ding!*")
+        #Move West Sides up  
+        elif CompareLocations(pLocation, mLocations[30][3]):
+            #Location at Corridor1W to Corridor5W
+            pLocationSave = mLocations[pCorridor5.i][3]
+            ReplaceLocation(pCorridor5.i, 3, mLocations[pCorridor1.i][3])
+            #Do vice-versa for location
+            ReplaceLocation(mLocations[pCorridor5.i][3].i, 2, pCorridor5)
+            #Location at Corridor3W to Corridor1W
+            ReplaceLocation(pCorridor1.i, 3, mLocations[pCorridor3.i][3])
+            ReplaceLocation(mLocations[pCorridor1.i][3].i, 2, pCorridor1)
+            #Location at Corridor5W to Corridor3W (Use Saved)
+            ReplaceLocation(pCorridor3.i, 3, pLocationSave)
+            ReplaceLocation(mLocations[pCorridor3.i][3].i, 2, pCorridor3)
+            print("*Ding!*")
+        #Move East Sides down
+        elif CompareLocations(pLocation, mLocations[38][2]):
+            #Location at Corridor5E to 1E
+            pLocationSave = mLocations[pCorridor1.i][2]
+            ReplaceLocation(pCorridor1.i, 2, mLocations[pCorridor5.i][2])
+            ReplaceLocation(mLocations[pCorridor1.i][2].i, 3, pCorridor1)
+            #3E to 5E
+            ReplaceLocation(pCorridor5.i, 2, mLocations[pCorridor3.i][2])
+            ReplaceLocation(mLocations[pCorridor5.i][2].i, 3, pCorridor5)
+            #1E to 3E
+            ReplaceLocation(pCorridor3.i, 2, pLocationSave)
+            ReplaceLocation(mLocations[pCorridor3.i][2].i, 3, pCorridor3)
+            print("*Dong!*")
+        #Move West Sides down
+        elif CompareLocations(pLocation, mLocations[38][3]):
+            #Location at Corridor5E to 1E
+            pLocationSave = mLocations[pCorridor1.i][3]
+            ReplaceLocation(pCorridor1.i, 3, mLocations[pCorridor5.i][3])
+            ReplaceLocation(mLocations[pCorridor1.i][3].i, 2, pCorridor1)
+            #3E to 5E
+            ReplaceLocation(pCorridor5.i, 3, mLocations[pCorridor3.i][3])
+            ReplaceLocation(mLocations[pCorridor5.i][3].i, 2, pCorridor5)
+            #1E to 3E
+            ReplaceLocation(pCorridor3.i, 3, pLocationSave)
+            ReplaceLocation(mLocations[pCorridor3.i][2].i, 2, pCorridor3)
+            print("*Dong!*")
+        #Switch Middles
+        elif CompareLocations(pLocation, mLocations[34][2]) or CompareLocations(pLocation, mLocations[34][3]):
+            pLocationSave = mLocations[pCorridor3.i][2]
+            #West end to East
+            ReplaceLocation(pCorridor3.i, 2, mLocations[pCorridor3.i][3])
+            ReplaceLocation(mLocations[pCorridor3.i][2].i, 2, None)
+            ReplaceLocation(mLocations[pCorridor3.i][2].i, 3, pCorridor3)
+            
+            #East end to West
+            ReplaceLocation(pCorridor3.i, 3, pLocationSave)
+            ReplaceLocation(mLocations[pCorridor3.i][3].i, 3, pCorridor3)
+            ReplaceLocation(mLocations[pCorridor3.i][3].i, 2, None)
+            print("*Ding-Dong*!")
+            
             
 ##===========================================
 #Main
