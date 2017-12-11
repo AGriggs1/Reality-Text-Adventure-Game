@@ -541,7 +541,17 @@ def Init(): #Initialization function, runs when the code is run
     if b: return b #The player quit
     b = Copyright(pPlayer, True)
     return b
-##
+##============================
+#CompareLocations
+#Compares locations by their i values
+#Necessary because deepcopy creates new locale instances, and they therefore are not the same object anymore
+#I'm using a function instead of just writing p1.i == p2.i because I can make this more precise if I need to
+#Like, I can also compare the location descriptions too with this if I feel I need to
+##==========================
+def CompareLocations(p1, p2):
+    if p1.i == p2.i:
+        return True
+    return False
 ##====================================
 #GetLocationDescription
 #Returns the long or short description of defined location
@@ -584,15 +594,11 @@ def Pickup(pPlayer, pItem):
             #Quick google search on lists
             #I didn't know pop can remove by index
             #I guess del is for general purpose deleting
-            print(pLocation.ITEMS)
-            print(pLocation.tCanPickup)
+ 
             #del(pLocation.tItems[iItem])
             #del(pLocation.tCanPickup[iItem])
             pLocation.tItems.pop(iItem)
-            print(pLocation.tCanPickup)
             pLocation.tCanPickup.pop(iItem)
-            print(pLocation.ITEMS)
-            
             print("Picked up the", pItem + ".")
         else:
             if pItem == "Map":
@@ -651,7 +657,6 @@ def SetLocation(pPlayer, iDirection):
 #Takes two rows(location) and two columns(direction) and switches their place on the navigation matrix
 ##==================================
 def SwitchLocations(r1, c1, r2, c2):
-    print('w')
     iLocation = mLocations[r1][c1]
     mLocations[r1][c1] = mLocations[r2][c2]
     mLocations[r2][c2] = iLocation
@@ -682,7 +687,8 @@ def DoExamine(pLocation):
     for i in pLocation.tItems:
         print("'" + i + "'")
     print()
-    if pLocation == pCorridor6:
+    #if pLocation == pCorridor6:
+    if CompareLocations(pLocation, pCorridor6):
         iSumE, iSumW = GetWallsTotal()
         print("The east side has the number:", iSumE, "\nThe west side has the number:", iSumW)
 
@@ -962,13 +968,13 @@ def DetermineUse(sParam, pPlayer): #I'M LAZY CAN'T BE BOTHERED TO CHANGE THE PAR
                         
     elif sParam == "Hammer":
             #Use one: is the player in the hallway and did not yet use the hammer?
-            if pLocation == pHallway1 and tCanUse[4] and pHammer in pPlayer.tInventory:
+            if CompareLocations(pLocation, pHallway1) and tCanUse[4] and pHammer in pPlayer.tInventory:
                 print("Using the hammer, you smash the glass casing, allowing you to access the map.")
                 pLocation.tCanPickup[pLocation.GetItemIndex(pMapOffice)] = True
                 tCanUse[4] = False
                 #A listener for when the player reaches pElevator will reset tCanUse for pElevatorUp is needed
             #Use two: is the player in the elevator, did they go up, use examine, and not use the hammer?
-            elif pLocation == pElevatorUp and tCanUse[4] and pLocation.bHasSearched and pHammer in pPlayer.tInventory:
+            elif CompareLocations(pLocation, pElevatorUp) and tCanUse[4] and pLocation.bHasSearched and pHammer in pPlayer.tInventory:
                 print("Taking the hammer, you smash through the canvas. You peer through and... "
                         " It's... an office. It's THE office. This canvas, upon a closer look, is the"
                         " back of chairman Bobbo!")
@@ -990,7 +996,7 @@ def DetermineUse(sParam, pPlayer): #I'M LAZY CAN'T BE BOTHERED TO CHANGE THE PAR
             ReplaceLocation(pRavine.i, 2, pElevator)
     elif sParam == "Matches":
         #Is the player in the deep cave and does the cave have the doll
-        if pLocation == pCaveDeep and pDoll in pCaveDeep.tItems and pMatches in pPlayer.tInventory: # and iUses > 0:
+        if CompareLocations(pLocation, pCaveDeep) and pDoll in pCaveDeep.tItems and pMatches in pPlayer.tInventory: # and iUses > 0:
             if tCanUse[10]:
                 print("With the doll in the incantation circle, you light a match set it ablaze.",
                         "Eventually, once the flames die down, you find among the ashen remains a key.")
@@ -1009,7 +1015,7 @@ def DetermineUse(sParam, pPlayer): #I'M LAZY CAN'T BE BOTHERED TO CHANGE THE PAR
             tCanUse[3] = False #For use in flashlight check
 
     elif sParam == "Key":
-        if pLocation == pOfficeS and pKey in pPlayer.tInventory:
+        if CompareLocations(pLocation, pOfficeS) and pKey in pPlayer.tInventory:
             print("Using the key, you unlock the double doors.")
             tCanUse[11] = False
             #USE ReplaceLocation(WHERE r = pOfficeS SET c1 = pBossOffice
@@ -1298,7 +1304,7 @@ def Main(pPlayer):
                 print("Use what?\nInventory:\n===========")
                 for v in pPlayer.tInventory:
                     print("'" + v + "'")
-                if pPlayer.pLocation == pCorridor1E or pPlayer.pLocation == pCorridor1W or pPlayer.pLocation == pCorridor3E or pPlayer.pLocation == pCorridor3W or pPlayer.pLocation == pCorridor5E or pPlayer.pLocation == pCorridor5W:
+                if CompareLocations(pPlayer.pLocation, pCorridor1E) or CompareLocations(pPlayer.pLocation, pCorridor1W) or CompareLocations(pPlayer.pLocation, pCorridor3E) or CompareLocations(pPlayer.pLocation, pCorridor3W) or CompareLocations(pPlayer.pLocation, pCorridor5E) or CompareLocations(pPlayer.pLocation, pCorridor5W):
                     #Just check if there's a button to push, DetermineUse will handle everything elses
                     print("Environment:\n=============")
                     print("'Button'")
@@ -1308,26 +1314,26 @@ def Main(pPlayer):
                 print("Command not valid")
         ##LOCATION MUTATORS
         #Did the player enter the center of the office?
-        if pPlayer.pLocation == pOfficeC:
+        if CompareLocations(pPlayer.pLocation, pOfficeC):
             SwitchLocations(pOfficeW.i, 3, pOfficeE.i, 2)
             ReplaceLocation(mLocations[pOfficeW.i][3].i, 3, None)
             ReplaceLocation(mLocations[pOfficeW.i][3].i, 2, pOfficeW)
             ReplaceLocation(mLocations[pOfficeE.i][2].i, 2, None)
             ReplaceLocation(mLocations[pOfficeE.i][2].i, 3, pOfficeE)
         #Did the player go to the lake?
-        elif pPlayer.pLocation == pLake:
+        elif CompareLocations(pPlayer.pLocation, pLake):
             
             #Unblock Cave
             ReplaceLocation(pWaterfall.i, 2, pCaveEnt)
 
         #Did the player go to the waterfall before going to the lake?
-        elif pPlayer.pLocation == pWaterfall:
+        elif CompareLocations(pPlayer.pLocation, pWaterfall):
             if pLake.bHasVisited == False:
                 
                 #Block the lake
                 ReplaceLocation(pRiver.i, 3, pWaterfallTop)
         #Did the player go to the Forest?
-        elif pLocation == pForest:
+        elif CompareLocations(pLocation, pForest):
             #Is the Lake blocked?
             if mLocations[pRiver.i][3] == pWaterfallTop:
                 #Unblock the Lake
@@ -1385,7 +1391,7 @@ def Main(pPlayer):
               #sleep(1000) #I'm not that cruel
 
         #New Ending
-        elif pPlayer.pLocation == pChairOffice:
+        elif CompareLocations(pPlayer.pLocation, pChairOffice):
             if pKey in pPlayer.pLocation.tItems:
                 print("Baby: Thank you. Have a seat.")
                 print("Baby: you see,", pPlayer.sName, "You've done a lovely job getting here.")
@@ -1401,23 +1407,46 @@ def Main(pPlayer):
                 #Drop the key
             
         #My favorite ending
-        elif pPlayer.pLocation == pCloset and pPlayer.iMoves > 5:
+        elif CompareLocations(pPlayer.pLocation, pCloset) and pPlayer.iMoves > 5:
             bGameState = False
             print(pPlayer.pLocation.GetLocationDescription())
             print("Suddenly the door slams shut behind you. You go to open it, only for the handle to fall off.")
             print("Baby: Eh, did you get the Broom Closet Ending? The Broom Closet Ending is my favourite!") #I spelt favourite like that intentionally by the by
             return bGameState
         #Fell down the Ravine ending
-        elif pPlayer.pLocation == pRavine and mLocations[pRavine.i][2] == None:
+        elif CompareLocations(pPlayer.pLocation, pRavine) and mLocations[pRavine.i][2] == None:
             bGameState = False
             print(pLocation.GetLocationDescription())
             print("\nBaby: Oops, looks like someone found their mortality!")
             return bGameState
         
+#def GetNav(p):
+    #for r in mLocations:
+        #for c in r:
+            #if c is not None:
+                #print(c.i)
+                #if p.i == c.i: #We can compare the indexes still
+                    #print("p:", p)
+                    #print("c:", c)
+                    #return c
+ #   for v in tLocations:
+ #       if v.i == p.i:
+ #           return v
 
 b = Init()
 while b:
     mLocations = None
     mLocations = deepcopy(NAV_MAT_LOCATIONS)
-    print(b)
+    #THIS IS PROBABLY VERY TEDIOUS BUT I THINK IT'LL WORK
+    #Scratch that. It doesn't. I have a better idea though.
+    #for v in tLocations:
+       # print("Before:", v)
+        #v = GetNav(v)
+        #print("After:", v)
+    #print(b)
+    #for r in mLocations:
+    #    for c in r:
+    #        if c is not None:
+    #            c = GetNav(c)
+                
     b = Init()
