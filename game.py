@@ -892,7 +892,7 @@ def Interpret(sInput, pPlayer, FunctionFrom): #Parameters can be reduced once th
                         elif sInput == "disable mutators":
                             print("Baby: Of course, great lord!")
                             #TODO: PASS BOOLEAN THAT IS NEEDED FOR MUTATORS TO BE ACTIVE
-                            #We can skip this since for now
+                            #We can skip this since it isn't useful for testing
                             pass
                         elif sInput == "set start":
                             sInput = input("Baby: ")
@@ -900,10 +900,18 @@ def Interpret(sInput, pPlayer, FunctionFrom): #Parameters can be reduced once th
                                 sInput = int(sInput)
                                 pPlayer.pLocation = tLocations[sInput]
                                 print(pPlayer.pLocation.sDescLong)
-                                print("It is done. How about you? I'm bored.")
+                                print("Baby: It is done. How about you? I'm bored.")
                             except:
-                                print("Idiot. Choose a row index on the navigation matrix.")
+                                print("Baby: Idiot. Choose a row index on the navigation matrix.")
                                 continue
+                        elif sInput == "set moves": #For testing moves limit
+                            sInput = input("Baby: ")
+                            try:
+                                sInput = int(sInput)
+                                pPlayer.iMoves = sInput
+                                print("Baby: Oh course, great lord!")
+                            except:
+                                print("Baby: Gah, I hate you. TYPE. A. NUM. BER.")
                 else:
                     pPlayer.pLocation = pCloset
                 return False, sInput  #May change the return values in the future
@@ -1201,10 +1209,6 @@ mMap = [
         [NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA]
         ]
 
-
-        
-
-
 gMapDesc = ("a = Closet\n"
             "b = Hallway Corner\n"
             "Cc = Office\n"
@@ -1218,10 +1222,6 @@ gMapDesc = ("a = Closet\n"
             "k = ???")
 
 #m = GenerateMap(mMap, gMapDesc, None, False)
-tMap = ["Error: Could not determine location", "M", "N", "S", "E", "W", "a", "b", "c1", "c2", "c3",
-        "C", "c4", "c5", "c6", "c7", "c8", "d", "e", "f", "g", "h", "i", "j", "k"]
-#Since the location at 0 is not used in the game loop, it can be used to display an error message
-#But for now we'll stick with the is not None check
 
 def Main(pPlayer):
     bGameState = True
@@ -1229,7 +1229,6 @@ def Main(pPlayer):
     bDoShowSequence = True
     
     while bGameState:
-     #   bHasLight = DoesHaveItem(pFlashlight, tPlayerInventory)
         print(pPlayer.pLocation.GetLocationDescription())
         #Update pLocation
         UpdateLocation(pPlayer)
@@ -1442,15 +1441,16 @@ def Main(pPlayer):
         ##ENDINGS
         #End of tutorial
         if pPlayer.pLocation.i < 6:
-              if pBlockN in pVoidN.tItems and pBlockS in pVoidS.tItems and pBlockE in pVoidE.tItems and pBlockW in pVoidW.tItems:
-              
-            
-               bGameState = False
-               print(pPlayer.pLocation.GetLocationDescription())
-               return bGameState
+             print(True)
+             #if pBlockN in pVoidN.tItems and pBlockS in pVoidS.tItems and pBlockE in pVoidE.tItems and pBlockW in pVoidW.tItems:
+             if pBlockN in mLocations[1][0].tItems and pBlockS in mLocations[1][1].tItems and pBlockE in mLocations[1][2].tItems and pBlockW in mLocations[1][3].tItems:
+                  print(True)
+                  bGameState = False
+                  print(pPlayer.pLocation.GetLocationDescription())
+                  return bGameState
 
         #Reaching move limit
-        elif pPlayer.iMoves > 75 and pPlayer.Location.i > 5 and bDoShowSequence:
+        elif pPlayer.iMoves > 75 and pPlayer.pLocation.i > 5 and bDoShowSequence:
             print(pPlayer.pLocation.GetLocationDescription())
             print("\nBaby: Well, you certainly seem to be underperforming. It's quite boring actually. "
                   "SERIOUSLY, what could be taking you so long?")
