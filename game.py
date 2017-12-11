@@ -329,7 +329,8 @@ mLocations = [
         
             ]
 
-NAV_MAT_LOCATIONS = mLocations[:] #To reset the nav matrix when restarting
+#NAV_MAT_LOCATIONS = mLocations[:] #To reset the nav matrix when restarting
+NAV_MAT_LOCATIONS = deepcopy(mLocations)
 
 sRavine = ("You take a step forward, not knowing there is nowhere to place your foot. "
                 "Suddenly, you find yourself tumbling down, down, down..."
@@ -445,7 +446,7 @@ def Init(): #Initialization function, runs when the code is run
     #tInventory = []
     #iScore = 0
   
-    #mLocations = NAV_MAT_LOCATIONS[:]
+    #mLocations = []
     pPlayer = Player(pVoidDummy)
     sTitle = ( "*********   *********      ***      *           *********   *********   *       *\n" 
                "*       **  *              * *      *               *           *        *     *\n"
@@ -650,6 +651,7 @@ def SetLocation(pPlayer, iDirection):
 #Takes two rows(location) and two columns(direction) and switches their place on the navigation matrix
 ##==================================
 def SwitchLocations(r1, c1, r2, c2):
+    print('w')
     iLocation = mLocations[r1][c1]
     mLocations[r1][c1] = mLocations[r2][c2]
     mLocations[r2][c2] = iLocation
@@ -661,14 +663,14 @@ def SwitchLocations(r1, c1, r2, c2):
 def ReplaceLocation(r, c, iReplaceWith):
     mLocations[r][c] = iReplaceWith
 
-tCorridorNums = {pCorridor1W:45, pCorridor1E:50, pCorridor3W:51, pCorridor3E:42, pCorridor5W:48, pCorridor5E:40}
+tCorridorNums = {pCorridor1W.i:45, pCorridor1E.i:50, pCorridor3W.i:51, pCorridor3E.i:42, pCorridor5W.i:48, pCorridor5E.i:40}
 ##==================
 #GetWallsTotal
 ##==================
 def GetWallsTotal():
     #We need to get the locations for the nav matrix since they move around... yeah that's what the buttons dooooo
-    sumE = tCorridorNums[mLocations[30][2]] + tCorridorNums[mLocations[34][2]] - tCorridorNums[mLocations[38][2]]
-    sumW = tCorridorNums[mLocations[30][3]] - tCorridorNums[mLocations[34][3]] + tCorridorNums[mLocations[38][3]]
+    sumE = tCorridorNums[mLocations[30][2].i] + tCorridorNums[mLocations[34][2].i] - tCorridorNums[mLocations[38][2].i]
+    sumW = tCorridorNums[mLocations[30][3].i] - tCorridorNums[mLocations[34][3].i] + tCorridorNums[mLocations[38][3].i]
     return sumE, sumW
 ##=======================
 #DoExamine
@@ -1415,5 +1417,7 @@ def Main(pPlayer):
 
 b = Init()
 while b:
+    mLocations = None
+    mLocations = deepcopy(NAV_MAT_LOCATIONS)
     print(b)
     b = Init()
