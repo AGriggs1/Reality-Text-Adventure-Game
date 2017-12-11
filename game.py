@@ -340,7 +340,7 @@ mLocations = [
         [None, None, pRiver, pWaterfall, None, None], #------------------r26 - WaterfallTop(replaces lake)
         [None, None, None, None, pElevatorUp, None], #-------------------r27 - Elevator
         [None, None, None, None, None, pElevator], #---------------------r28 - ElevatorUp(Replace c1 with pOfficeSE)
-        [None, None, None, None, None, None], #--------------------------r29 - Bobbo's Office (New end game)
+        [pCorridor6, None, None, None, None, None], #--------------------r29 - Bobbo's Office (New end game)
         [pOfficeS, pCorridor2, pCorridor1E, pCorridor1W, None, None], #--r30 - Corridor1
         [None, None, None, pCorridor1, None, None], #--------------------r31 - Corridor1E
         [None, None, pCorridor1, None, None, None], #--------------------r32 - Corridor1W
@@ -383,7 +383,7 @@ tLocationsExamine = [           #Examine is dual purpose. It prints the index of
                 #6 - Closet, Map
                 "You rifle through the shelves.",
                 #7 - Hallway, None
-                "There's a glass panel on the wall. Inside you see what could be a 'Map' of this place\n\n" + gMapOffice + "\nYou are at: a",
+                "There's a glass panel on the wall. Inside you see what could be a 'Map' of this place\n\n" + gMapOffice + "\nYou are at: b",
                 #8 - OfficeNW, None
                 "You rumage through the various papers and see nothing particuliarly interesting. Wait! Oh. Nevermind.",
                 #9 - OfficeW, None
@@ -565,6 +565,7 @@ def Init(): #Initialization function, runs when the code is run
         print("Baby: This test is not optional! You're going to participate and you're going to love it! You'll see...\n"
               "Baby: Let's start!")
         #This is changed here too for the boolean test below
+        pPlayer.iMoves = 0
         pPlayer.pLocation = pCloset
     #Block Cave
     ReplaceLocation(pWaterfall.i, 2, None)
@@ -739,7 +740,7 @@ def Copyright(pPlayer, bGameover):
     if bGameover:
         print("Final score:", pPlayer.iScore)
         print("Gameover!\nThanks for playing!\n" + sMessage)
-        sInput = input("Play Again? Y:N").lower()
+        sInput = input("Play Again (Typing skip at 'input:' will attempt to skip the intro!)? Y:N ").lower()
         if "y" in sInput:
             return True
         sys.exit()
@@ -1005,6 +1006,7 @@ def DetermineUse(sParam, pPlayer): #I'M LAZY CAN'T BE BOTHERED TO CHANGE THE PAR
                 print("Using the hammer, you smash the glass casing, allowing you to access the map.")
                 pLocation.tCanPickup[pLocation.GetItemIndex(pMapOffice)] = True
                 tCanUse[4] = False
+                
                 #A listener for when the player reaches pElevator will reset tCanUse for pElevatorUp is needed
             #Use two: is the player in the elevator, did they go up, use examine, and not use the hammer?
             elif CompareLocations(pLocation, pElevatorUp) and tCanUse[4] and pLocation.bHasSearched and pHammer in pPlayer.tInventory:
@@ -1334,7 +1336,10 @@ def Main(pPlayer):
             elif sInput == "examine":
                 DoExamine(pPlayer.pLocation)
                 pPlayer.pLocation.bHasSearched = True
+                if CompareLocations(pPlayer.pLocation, pElevatorUp):
+                        tCanUse[4] = True
                 for i in range(len(pPlayer.pLocation.tItems)):
+                    
                     #Special circumstance items that need more than just examining the location to pick anything up
                     if not (pPlayer.pLocation.tItems[i] == pMapOffice or pPlayer.pLocation.tItems[i] == pKey):
                         pPlayer.pLocation.tCanPickup[i] = True
