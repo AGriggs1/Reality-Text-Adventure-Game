@@ -410,27 +410,35 @@ tLocationsExamine = [           #Examine is dual purpose. It prints the index of
                 #29 - Chair Office
                 sNone,
                 #30 - Corridor1
-                "The door at the end of this corridor... what might it lead to?",
+                "The floor beneath you is red. You see a pair of double doors on the other side. Where might they lead?
+                "You take notice of a map of the corridor:\n\n"
+                "   51--n1--40     \n"
+                "     - |  +      \n"
+                "   50--n2--48     \n"
+                "     + |  -      \n"
+                "   45--n3--42     \n"
+                "     = |  =      \n"
+                "     = 46 =        ",
                 #31 - Corridor1E
-                "The number on the door is 50. There is a red button by the door...",
+                "The number on the door is 50. There is a button by the door. It has an arrow on it pointing north...",
                 #32 - Corridor1W
-                "The number on the door is 45. There is a green button by the door...",
+                "The number on the door is 45. There is a button by the door. It has an arrow on it pointing north..",
                 #33 - Corridor2
                 "On the east side, there is a '+' painted on the wall. On the west side, there is a '-'.",
                 #34 - Corridor3
-                sNone,
+                "The floor beneath you is blue.",
                 #35 - Corridor3E
-                "The number on the door is 42. There is a blue button by the door...",
+                "The number on the door is 42. There is a button by the door...",
                 #36 - Corridor3W
-                "The number on the door is 51. There is a blue button by the door...",
+                "The number on the door is 51. There is a button by the door...",
                 #37 - Corridor4
                 "On the east side, there is a '-' painted on the wall. On the west side, there is a '+'.",
                 #38 - Corridor5
-                sNone,
+                "The floor beneath you is green.",
                 #39 - Corridor5E
-                "The number on the door is 40. There is a red button by the door...",
+                "The number on the door is 40. There is a button by the door. It has an arrow on it pointing south...",
                 #40 - Corridor5W
-                "The number on the door is  48. There is a green button by the door...",
+                "The number on the door is 48. There is a button by the door. It has an arrow on it pointing south...",
                 #41 - Corridor6
                 "The double door has the number 46. On each side of the wall, there is an '=' sign with a number below that."
                 ]
