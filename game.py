@@ -1450,7 +1450,7 @@ def Main(pPlayer):
                return bGameState
 
         #Reaching move limit
-        elif pPlayer.iMoves > 60 and pPlayer.Location.i > 5 and bDoShowSequence:
+        elif pPlayer.iMoves > 75 and pPlayer.Location.i > 5 and bDoShowSequence:
             print(pPlayer.pLocation.GetLocationDescription())
             print("\nBaby: Well, you certainly seem to be underperforming. It's quite boring actually. "
                   "SERIOUSLY, what could be taking you so long?")
