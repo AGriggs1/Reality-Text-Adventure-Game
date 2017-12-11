@@ -9,7 +9,8 @@ from time import sleep # :) Only once
 import sys #Learned about this from https://stackoverflow.com/questions/949504/terminating-a-python-program
 from Locale import *
 from Player import *
-
+#https://stackoverflow.com/questions/8122627/copied-variable-changes-the-original
+from copy import * #Officially can't stand this language
 
 
 
@@ -327,7 +328,9 @@ mLocations = [
         [pCorridor5, pForest, None, None, None] #------------------------r41 - Corridor6
         
             ]
-NAV_MAT_LOCATIONS = mLocations #To reset the nav matrix when restarting
+
+NAV_MAT_LOCATIONS = mLocations[:] #To reset the nav matrix when restarting
+
 sRavine = ("You take a step forward, not knowing there is nowhere to place your foot. "
                 "Suddenly, you find yourself tumbling down, down, down..."
                 " You hit the bottom of the ravine. Hard. You cannot see how broken you are, but you know it's bad. "
@@ -441,7 +444,8 @@ def Init(): #Initialization function, runs when the code is run
 ##=============================================================
     #tInventory = []
     #iScore = 0
-    mLocations = NAV_MAT_LOCATIONS
+  
+    #mLocations = NAV_MAT_LOCATIONS[:]
     pPlayer = Player(pVoidDummy)
     sTitle = ( "*********   *********      ***      *           *********   *********   *       *\n" 
                "*       **  *              * *      *               *           *        *     *\n"
@@ -1304,6 +1308,10 @@ def Main(pPlayer):
         #Did the player enter the center of the office?
         if pPlayer.pLocation == pOfficeC:
             SwitchLocations(pOfficeW.i, 3, pOfficeE.i, 2)
+            ReplaceLocation(mLocations[pOfficeW.i][3].i, 3, None)
+            ReplaceLocation(mLocations[pOfficeW.i][3].i, 2, pOfficeW)
+            ReplaceLocation(mLocations[pOfficeE.i][2].i, 2, None)
+            ReplaceLocation(mLocations[pOfficeE.i][2].i, 3, pOfficeE)
         #Did the player go to the lake?
         elif pPlayer.pLocation == pLake:
             
