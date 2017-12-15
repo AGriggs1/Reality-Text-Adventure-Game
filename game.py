@@ -205,7 +205,7 @@ pRavine = Locale( "You take a step forward, not knowing there is nowhere to plac
                 "You begin to lose consciousness.", "You are at the bottom of a ravine", 25, [])
                  
 pWaterfallTop = Locale("Following the current, you come across the top of a waterfall. It looks like a 15-foot drop, but what do you know?",
-                       "It's the top of a waterfall. Again.", 26, [])
+                       "It's the top of a waterfall. Again. You seem to be stuck in some sort of loop, is there a way to reset it?", 26, [])
 
 pElevator = Locale("You make your way through the ravine, comming to... an elevator. Question is, up or down?",
                    "You are in the elevator", 27, [])
@@ -398,7 +398,8 @@ tLocationsExamine = [           #Examine is dual purpose. It prints the index of
                 sNone,
                 #13 - OfficeS, None
                 "The doors simply won't budge. Is there a key somewhere? \n\nYou notice a panel next to the door: \n\n"
-                "'Beyond this pair lies another... beyond it lies the office of the clown, but only when 46 and 46 is 46'", #Yes
+                "'Beyond this pair lies another... beyond it lies the office of the clown, but only when East and West are 46'\n\n"
+                "Whatever that means... office of the clown?", #Yes
                 #14 - OfficeNE, None
                 "Just an empty watercooler. What a shame.",
                 #15 - OfficeE, None
@@ -1039,7 +1040,7 @@ def DetermineUse(sParam, pPlayer): #I'M LAZY CAN'T BE BOTHERED TO CHANGE THE PAR
             ReplaceLocation(pRavine.i, 2, pElevator)
     elif sParam == "Matches":
         #Is the player in the deep cave and does the cave have the doll
-        if CompareLocations(pLocation, pCaveDeep) and pDoll in pCaveDeep.tItems and pMatches in pPlayer.tInventory: # and iUses > 0:
+        if CompareLocations(pLocation, pCaveDeep) and pDoll in mLocations[pCave.i][3].tItems and pMatches in pPlayer.tInventory: # and iUses > 0:
             if tCanUse[10]:
                 print("With the doll in the incantation circle, you light a match set it ablaze.",
                         "Eventually, once the flames die down, you find among the ashen remains a key.")
@@ -1424,6 +1425,7 @@ def Main(pPlayer):
                 
                 #Block the lake
                 ReplaceLocation(pRiver.i, 3, pWaterfallTop)
+                print("Something feels off... Isn't there supposed to be a cave east of here?")
         #Did the player go to the Forest?
         elif CompareLocations(pLocation, pForest):
             #Is the Lake blocked?
@@ -1436,7 +1438,12 @@ def Main(pPlayer):
         if iSumE == 46 and iSumW == 46:
             #Set the location to the ending
             ReplaceLocation(pCorridor6.i, 1, pChairOffice)
-            print("You win by the by.")
+            print("It seems like both sides equal 46. Where will the 46 door lead now?")
+        elif iSumE > iSumW:
+            ReplaceLocation(pCorridor6.i, 1, pForest)
+        elif iSumE < iSumW:
+            ReplaceLocation(pCorridor6.i, 1, pCorridor1)
+            
         
         ##ENDINGS
         #End of tutorial
